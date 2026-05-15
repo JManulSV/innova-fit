@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Override;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Exercise extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'coach_id',
         'name',

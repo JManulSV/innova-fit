@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkoutDayTemplate extends Model
 {
+    use SoftDeletes;    
+
     protected $fillable = [
         'coach_id',
         'name',
@@ -22,5 +25,10 @@ class WorkoutDayTemplate extends Model
         return $this->belongsToMany(Exercise::class, 'workout_day_template_exercises')
             ->withPivot('sets', 'reps', 'rest_seconds', 'exercise_order')
             ->withTimestamps();
+    }
+
+    public function assignedWorkouts()
+    {
+        return $this->hasMany(AssignedWorkout::class, 'template_id');
     }
 }

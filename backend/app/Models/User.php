@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(WorkoutDayTemplate::class, 'coach_id');
     }
+
+    public function assignedWorkouts()
+    {
+        return $this->hasMany(AssignedWorkout::class, 'client_id');
+    }
 }

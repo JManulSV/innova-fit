@@ -3,7 +3,7 @@
 use App\Http\Controllers\AssignedWorkoutController;
 use App\Http\Controllers\AssignedWorkoutExerciseController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\WorkoutExerciseLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -18,4 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/assigned-workout/{id}', [AssignedWorkoutController::class, 'show']);
 
     Route::patch('/assigned-workout-exercise/{id}', [AssignedWorkoutExerciseController::class, 'update']);
+
+    Route::post('/workout-exercise-log', [WorkoutExerciseLogController::class, 'store']);
 });

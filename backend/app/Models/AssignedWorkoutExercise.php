@@ -14,6 +14,7 @@ class AssignedWorkoutExercise extends Model
         'reps',
         'rest_seconds',
         'exercise_order',
+        'weight',
     ];
 
     public function assignedWorkout()

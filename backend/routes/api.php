@@ -2,15 +2,20 @@
 
 use App\Http\Controllers\AssignedWorkoutController;
 use App\Http\Controllers\AssignedWorkoutExerciseController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/assign-workout', [AssignedWorkoutController::class, 'store']);
-Route::get('/assigned-workouts/{id}', [AssignedWorkoutController::class, 'clientWorkouts']);
-Route::get('/assigned-workout/{id}', [AssignedWorkoutController::class, 'show']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
 
-Route::patch('/assigned-workout-exercise/{id}', [AssignedWorkoutExerciseController::class, 'update']);
+    Route::post('/assign-workout', [AssignedWorkoutController::class, 'store']);
+    Route::get('/assigned-workouts/{id}', [AssignedWorkoutController::class, 'clientWorkouts']);
+    Route::get('/assigned-workout/{id}', [AssignedWorkoutController::class, 'show']);
+
+    Route::patch('/assigned-workout-exercise/{id}', [AssignedWorkoutExerciseController::class, 'update']);
+});

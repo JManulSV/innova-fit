@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AssignedWorkoutResource;
 use App\Models\AssignedWorkout;
 use App\Models\User;
 use App\Models\WorkoutDayTemplate;
@@ -21,16 +22,8 @@ class AssignedWorkoutController extends Controller
         ]);
 
         //2. Search models
-        $client = User::findOrFail($validated['client_id']);
+        $client = User::where('role', 'client')->findOrFail($validated['client_id']);
         $template = WorkoutDayTemplate::findOrFail($validated['template_id']);
-
-        //Validate if the user is a client
-        if ($client->role !== 'client') {
-            return response()->json([
-                'success' => false,
-                'message' => 'The specified user is not a client.',
-            ], 400);
-        }
 
         //3. Call service
         $assignedWorkout = $service->assignWorkoutToClient(
@@ -40,10 +33,12 @@ class AssignedWorkoutController extends Controller
             $validated['name'] ?? null
         );
 
+        $assignedWorkout->load('exercises.exercise', 'template', 'client');
+
         //4. Return response
         return response()->json([
             'success' => true,
-            'data' => $assignedWorkout,
+            'data' => new AssignedWorkoutResource($assignedWorkout),
             'message' => 'Workout assigned successfully',
         ], 201);
         
@@ -59,7 +54,7 @@ class AssignedWorkoutController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $assignedWorkout,
+            'data' => new AssignedWorkoutResource($assignedWorkout),
             'message' => 'Assigned workout retrieved successfully',
         ]);
     }
@@ -74,7 +69,8 @@ class AssignedWorkoutController extends Controller
                         
         return response()->json([
             'success' => true,
-            'data' => $clientWorkouts,
+            'data' => AssignedWorkoutResource::collection($clientWorkouts),
+            'message' => 'Client workouts retrieved successfully',
         ]);
     }
 }

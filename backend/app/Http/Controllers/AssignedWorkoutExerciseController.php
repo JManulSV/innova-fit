@@ -19,16 +19,17 @@ class AssignedWorkoutExerciseController extends Controller
         $assignedWorkoutExercise = AssignedWorkoutExercise::with(
             'assignedWorkout.client'
         )->findOrFail($id);
-
-        $coach = $request->user();
+        
         $client = $assignedWorkoutExercise->assignedWorkout->client;
 
-        if ($client->coach_id !== $coach->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You are not the coach of this client',
-            ], 403);
-        }
+        // if ($client->coach_id !== $coach->id) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'You are not the coach of this client',
+        //     ], 403);
+        // }
+
+        $this->authorize('update', [AssignedWorkoutExercise::class, $client]);
 
         $assignedWorkoutExercise->update($validated);
 

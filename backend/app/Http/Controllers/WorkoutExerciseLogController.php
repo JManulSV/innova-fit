@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\WorkoutExerciseLogResource;
 use App\Models\AssignedWorkoutExercise;
 use App\Models\WorkoutExerciseLog;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class WorkoutExerciseLogController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $log,
+            'data' => new WorkoutExerciseLogResource($log),
             'message' => 'Workout exercise log created successfully',
         ], 201);
     }

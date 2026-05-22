@@ -4,6 +4,7 @@ use App\Http\Controllers\AssignedWorkoutController;
 use App\Http\Controllers\AssignedWorkoutExerciseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\WorkoutDayTemplateController;
 use App\Http\Controllers\WorkoutExerciseLogController;
 use App\Http\Controllers\WorkoutProgressController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/workout-exercise-log', [WorkoutExerciseLogController::class, 'store']);
 
     Route::apiResource('/exercises', ExerciseController::class);
+    Route::apiResource('/workout-day-templates', WorkoutDayTemplateController::class);
 
     Route::get('/progress/summary', [WorkoutProgressController::class, 'progressSummary']);
 });

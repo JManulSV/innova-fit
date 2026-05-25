@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/src/store/authStore"
-import { Redirect, Slot } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
+import  Icon  from "@expo/vector-icons/MaterialIcons";
 
 export default function Layout(){
     const user = useAuthStore((state) => state.user);
@@ -12,5 +13,38 @@ export default function Layout(){
         return <Redirect href="/(coach)/dashboard" />
     }
 
-    return <Slot />
+    
+    return (
+        <Tabs screenOptions={{ headerShown: false }}>
+        <Tabs.Screen
+            name="home"
+            options={{ 
+                title: 'Inicio',
+                tabBarIcon: ({ color, size }) => (
+                    <Icon name="home" color={color} size={size} />
+                ),
+            }}
+        />
+
+        <Tabs.Screen
+            name="routines"
+            options={{ 
+                title: 'Rutinas',
+                tabBarIcon: ({ color, size }) => (
+                    <Icon name="fitness-center" color={color} size={size} />
+                ),
+            }}  
+        />
+
+        <Tabs.Screen
+            name="profile"
+            options={{ 
+                title: 'Perfil',
+                tabBarIcon: ({ color, size }) => (
+                    <Icon name="person" color={color} size={size} />
+                ),
+            }}
+        />
+        </Tabs>
+    )
 }

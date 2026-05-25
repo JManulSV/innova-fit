@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Slot } from 'expo-router'
+import { Stack } from 'expo-router'
 
 import { useAuthStore } from '../src/store/authStore'
 import { LoadingScreen } from '@/src/components/LoadingScreen'
@@ -27,5 +27,5 @@ export default function RootLayout() {
     return <LoadingScreen />
   }
 
-  return <Slot />
+  return (<Stack screenOptions={{ headerShown: false }} />);
 }

@@ -1,8 +1,25 @@
 import {create} from 'axios'
+import { useAuthStore } from '../store/authStore';
 
 export const api = create({
-  baseURL: 'http://192.168.3.158:8000/api',
+  baseURL: 'http://192.168.3.163:8000/api',
   headers: {
     Accept: 'application/json',
   },
 })
+
+api.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token;
+
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+)

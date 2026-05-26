@@ -4,6 +4,7 @@ import { Stack } from 'expo-router'
 
 import { useAuthStore } from '../src/store/authStore'
 import { LoadingScreen } from '@/src/components/LoadingScreen'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 export default function RootLayout() {
   const [hydrated, setHydrated] = useState(false)
@@ -27,5 +28,9 @@ export default function RootLayout() {
     return <LoadingScreen />
   }
 
-  return (<Stack screenOptions={{ headerShown: false }} />);
+  return (
+   <SafeAreaProvider>
+     <Stack screenOptions={{ headerShown: false }} />
+   </SafeAreaProvider>
+  );
 }

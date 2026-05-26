@@ -1,3 +1,4 @@
+import LogoutButton from "@/src/components/LogoutButton";
 import { Text, View } from "react-native";
 
 export default function profileScreen() {
@@ -9,6 +10,7 @@ export default function profileScreen() {
             alignItems: 'center',
             }}>
             <Text>Profile Screen</Text>
+            <LogoutButton />
         </View>
     )
 }

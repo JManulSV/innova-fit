@@ -1,6 +1,7 @@
+import LogoutButton from "@/src/components/LogoutButton";
 import { Text, View } from "react-native";
 
-export default function routinesScreen() {
+export default function profileScreen() {
     return (
         <View
           style={{
@@ -8,7 +9,8 @@ export default function routinesScreen() {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text>Routines Screen</Text>
+          <Text>Profile Screen</Text>
+          <LogoutButton />
         </View>
       )
     }

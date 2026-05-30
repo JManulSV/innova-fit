@@ -45,6 +45,13 @@ export default function Layout(){
                 ),
             }}
         />
+        
+        <Tabs.Screen
+            name="workouts/[id]"
+            options={{
+                href: null,
+            }}
+        />
         </Tabs>
     )
 }

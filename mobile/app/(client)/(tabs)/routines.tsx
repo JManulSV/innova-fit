@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { api } from '@/src/api/client'
 import WorkoutCard from '@/src/components/client-workouts/WorkoutCard'
 import { AssignedWorkout } from '@/src/types/AssignedWorkout'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Link } from 'expo-router'
 
 
 
@@ -50,9 +51,19 @@ export default function RoutinesScreen() {
         data={routines}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <WorkoutCard
-            workoutData={item}
-          />
+          <Link 
+            href={{
+              pathname: "/(client)/workouts/[id]", // Añadimos el grupo aquí para complacer a TypeScript
+              params: { id: item.id.toString() }
+            }}
+            asChild
+          >
+            <Pressable>
+              <WorkoutCard
+                workoutData={item}
+              />
+            </Pressable>
+          </Link>
         )}
         contentContainerStyle={styles.list}
       />

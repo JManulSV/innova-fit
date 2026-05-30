@@ -1,4 +1,4 @@
-import { Exercise } from "./Exercise";
+import { ExerciseElement } from "./Exercise";
 
 export interface AssignedWorkout {
     id:            number;
@@ -6,5 +6,5 @@ export interface AssignedWorkout {
     notes:         string;
     assigned_date: Date;
     //client:        Client;
-    exercises:     Exercise[];
+    exercises:     ExerciseElement[];
 }

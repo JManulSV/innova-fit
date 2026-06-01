@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/assign-workout', [AssignedWorkoutController::class, 'store']);
     Route::get('/assigned-workouts/{id}', [AssignedWorkoutController::class, 'clientWorkouts']);
     Route::get('/assigned-workout/{id}', [AssignedWorkoutController::class, 'show']);
+    Route::get('/my-workouts', [AssignedWorkoutController::class, 'myWorkouts']);
 
     Route::patch('/assigned-workout-exercise/{id}', [AssignedWorkoutExerciseController::class, 'update']);
 

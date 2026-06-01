@@ -46,11 +46,14 @@ class AssignedWorkoutController extends Controller
 
     public function show(int $id)
     {
-        $assignedWorkout = AssignedWorkout::with(
-            'exercises.exercise',
+        $assignedWorkout = AssignedWorkout::with([
             'template',
-            'client'
-        )->findOrFail($id);
+            'client',
+            'exercises' => function ($query) {
+                $query->orderBy('exercise_order');
+            },
+            'exercises.exercise'
+        ])->findOrFail($id);
 
         return response()->json([
             'success' => true,
@@ -71,6 +74,21 @@ class AssignedWorkoutController extends Controller
             'success' => true,
             'data' => AssignedWorkoutResource::collection($clientWorkouts),
             'message' => 'Client workouts retrieved successfully',
+        ]);
+    }
+
+    public function myWorkouts(Request $request)
+    {
+        $client = $request->user();
+
+        $clientWorkouts = $client->assignedWorkouts()
+            ->with('exercises')
+            ->get();
+                        
+        return response()->json([
+            'success' => true,
+            'data' => AssignedWorkoutResource::collection($clientWorkouts),
+            'message' => 'My workouts retrieved successfully',
         ]);
     }
 }

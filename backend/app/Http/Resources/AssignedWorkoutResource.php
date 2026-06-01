@@ -16,13 +16,15 @@ class AssignedWorkoutResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->workout->name,
+            'name' => $this->template->name,
             'notes' => $this->notes,
             'assigned_date' => $this->assigned_date,
+
             'client' => [
-                'id' => $this->assignedWorkout->client->id,
-                'name' => $this->assignedWorkout->client->name,
+                'id' => $this->client->id,
+                'name' => $this->client->name,
             ],
+
             'exercises' => $this->exercises,
         ];
     }

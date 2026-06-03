@@ -1,5 +1,6 @@
 import { AssignedWorkout } from "@/src/types/AssignedWorkout";
 import { Text, View } from "react-native";
+import StartWorkoutButton from "./StartWorkoutButton";
 
 interface AssignedWorkoutData {
     data: AssignedWorkout;
@@ -7,7 +8,7 @@ interface AssignedWorkoutData {
 
 export default function WorkoutDetailsComponent({ data }: AssignedWorkoutData) {
     return (
-        <View className="p-4 bg-white flex gap-4">
+        <View className="p-4 bg-white flex gap-4 relative h-full">
             <View className="flex gap-2">
                 <Text className="text-lg font-semibold text-gray-500">{new Date(data.assigned_date).toLocaleDateString()}</Text>
                 <Text className="text-4xl font-semibold ">Rutina: {data.name}</Text>
@@ -46,6 +47,9 @@ export default function WorkoutDetailsComponent({ data }: AssignedWorkoutData) {
                         </View>
                     </View>
                 ))}
+                <View className="absolute bottom-0 left-0 right-0 ">
+                    <StartWorkoutButton id={data.id.toString()} />
+                </View>
             </View>
         </View>
     );

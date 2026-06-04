@@ -10,7 +10,7 @@ class WorkoutExerciseLog extends Model
         'assigned_workout_exercise_id',
         'completed_sets',
         'completed_reps',
-        'completed_weight',
+        'performed_weight',
         'notes',
         'completed_at',
     ];

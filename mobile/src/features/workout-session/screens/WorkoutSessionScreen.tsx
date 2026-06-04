@@ -1,14 +1,16 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import WorkoutHeader from "../components/WorkoutHeader";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import WorkoutProgress from "../components/WorkoutProgress";
 import ExerciseCard from "../components/ExcerciseCard";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useWorkoutSession } from "../hooks/useWorkoutSession";
 
 export default function WorkoutSessionScreen() {
     const { id } = useLocalSearchParams();
     const { workoutSession, exercises, logs, updateExerciseStatus, isLoading, completedExercises, totalExercises, updateWeight, getLog } = useWorkoutSession(id.toString());
+
+    const router = useRouter();
 
     if (isLoading) {
         return (
@@ -25,7 +27,16 @@ export default function WorkoutSessionScreen() {
             </SafeAreaView>
         );
     }
-    console.log(logs);
+
+    const handleFinishSession = () => {
+        router.push({
+            pathname: "/workout-session/[id]/review",
+            params: {
+                id,
+                logs: JSON.stringify(logs),
+            },
+        });
+    };
     return (
         <SafeAreaView>
             <View className="p-4">
@@ -40,7 +51,7 @@ export default function WorkoutSessionScreen() {
                             <ExerciseCard 
                                 exercise={item}
                                 completed={log?.status === "completed"}
-                                performedWeight={log?.performedWeight}
+                                performedWeight={log?.performed_weight}
 
                                 onToggleComplete={() => 
                                     updateExerciseStatus(item.id)
@@ -53,6 +64,9 @@ export default function WorkoutSessionScreen() {
                         )
                     }}
                 />
+                <Pressable className="bg-blue-700 p-4 rounded-lg mt-4" onPress={handleFinishSession}>
+                    <Text className="text-white text-center">Terminar sesión</Text>
+                </Pressable>
             </View>
         </SafeAreaView>
     )

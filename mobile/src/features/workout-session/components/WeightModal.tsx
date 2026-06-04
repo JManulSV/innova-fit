@@ -1,5 +1,5 @@
 import { ExerciseElement } from "@/src/types/Exercise";
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
 
 interface WeightModalProps{
@@ -15,26 +15,28 @@ interface WeightModalProps{
 const weightList = [20, 40, 60, 80, 100, 120];
 
 export default function WeightModal({isVisible, setIsVisible, exercise, logWeight, onChangeWeight}:WeightModalProps){
-    const [weight, setWeight] = useState(Number(logWeight));
+    const [weight, setWeight] = useState(logWeight ?? "0");
     const [weightSelected, setWeightSelected] = useState(0);
 
+    useEffect(() => {
+        setWeight(logWeight ?? "0");
+    }, [logWeight]);
+
     const handleSum = () => {
-        setWeight((prev) => Number((prev + 2.5).toFixed(1)));
-    };
-
-    const handleRes = () => {
-        setWeight((prev) => Number(Math.max(0, prev - 2.5).toFixed(1)));
-    };
-
-    const changeWeight = (amount: number) => {
         setWeight((prev) =>
-            Number(Math.max(0, prev + amount).toFixed(1))
+            (Number(prev || 0) + 2.5).toFixed(1)
         );
     };
 
-    const handleSaveWeight = (weight: string) => {
-        onChangeWeight(weight)
-        setIsVisible((prev) => !prev)
+    const handleRes = () => {
+        setWeight((prev) =>
+            Math.max(0, Number(prev || 0) - 2.5).toFixed(1)
+        );
+    };
+
+    const handleSaveWeight = () => {
+        onChangeWeight(weight);
+        setIsVisible(false);
     };
 
     return(
@@ -47,7 +49,7 @@ export default function WeightModal({isVisible, setIsVisible, exercise, logWeigh
             onPress={() => setIsVisible((prev) => !prev)}>
                 
             <Pressable className="bg-white p-6" onPress={(e) => e.stopPropagation()}>
-                    <Text className="text-orange-600">{'Modificar Peso'.toLocaleUpperCase()}</Text>
+                    <Text className="text-orange-600">{'Modificar Peso (kg)'.toLocaleUpperCase()}</Text>
                     <Text className=" font-semibold text-4xl mb-8">{exercise.exercise_name}</Text>
                     <View className="flex-row items-center border rounded-lg overflow-hidden mb-6">
                         <Pressable 
@@ -58,9 +60,10 @@ export default function WeightModal({isVisible, setIsVisible, exercise, logWeigh
                         </Pressable>
                         <TextInput
                             className="flex-1 h-20 text-center text-3xl"
-                            value={weight.toString() + 'kg'}
-                            keyboardType="numeric"
-                            onChangeText={(text) => changeWeight(Number(text) || 0)}
+                            value={weight}
+                            placeholder="0 kg"
+                            keyboardType="decimal-pad"
+                            onChangeText={setWeight}
                         />
                         <Pressable 
                             className="w-16 h-20 items-center justify-center " 
@@ -71,12 +74,12 @@ export default function WeightModal({isVisible, setIsVisible, exercise, logWeigh
                     </View>
                     <View className="flex-row gap-2 mb-6">
                         {weightList.map((weightItem, index) => (
-                            <Pressable onPress={() => {setWeight(weightItem); setWeightSelected(weightItem)}} key={index} className={`p-2 border rounded ${weightSelected === weightItem ? 'border-orange-500':''}`} >
+                            <Pressable onPress={() => {setWeight(weightItem.toString()); setWeightSelected(weightItem)}} key={index} className={`p-2 border rounded ${weightSelected === weightItem ? 'border-orange-500':''}`} >
                                 <Text className={`text-sm font-semibold ${weightSelected === weightItem ? 'text-orange-500 font-bold':''}`} >{weightItem} kg</Text>
                             </Pressable>
                         ))}
                     </View>
-                    <Pressable className="w-full bg-orange-600 p-3 rounded-xl" onPress={() => handleSaveWeight(weight.toString())}>
+                    <Pressable className="w-full bg-orange-600 p-3 rounded-xl" onPress={handleSaveWeight}>
                         <Text className="text-white text-xl text-center">{"Guardar Peso".toLocaleUpperCase()}</Text>
                     </Pressable>
                 </Pressable>

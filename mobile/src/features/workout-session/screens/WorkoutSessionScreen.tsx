@@ -58,7 +58,7 @@ export default function WorkoutSessionScreen() {
                                 }
                                 
                                 onChangeWeight={(weight) => 
-                                    updateWeight(item.id, weight)
+                                    updateWeight(item.id, weight ?? 0)
                                 }
                             />
                         )

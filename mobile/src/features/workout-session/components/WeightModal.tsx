@@ -6,36 +6,36 @@ interface WeightModalProps{
     isVisible: boolean,
     setIsVisible: Dispatch<SetStateAction<boolean>>;
     exercise: ExerciseElement,
-    logWeight: string,
+    logWeight: number | null,
     onChangeWeight: (
-        weight: string | null
+        weight: number | null
     ) => void
 }
 
 const weightList = [20, 40, 60, 80, 100, 120];
 
 export default function WeightModal({isVisible, setIsVisible, exercise, logWeight, onChangeWeight}:WeightModalProps){
-    const [weight, setWeight] = useState(logWeight ?? "0");
+    const [weight, setWeight] = useState(logWeight ?? 0);
     const [weightSelected, setWeightSelected] = useState(0);
 
     useEffect(() => {
-        setWeight(logWeight ?? "0");
+        setWeight(logWeight ?? 0);
     }, [logWeight]);
 
     const handleSum = () => {
         setWeight((prev) =>
-            (Number(prev || 0) + 2.5).toFixed(1)
+            Number(prev || 0) + 2.5
         );
     };
 
     const handleRes = () => {
         setWeight((prev) =>
-            Math.max(0, Number(prev || 0) - 2.5).toFixed(1)
+            Math.max(0, Number(prev || 0) - 2.5)
         );
     };
 
     const handleSaveWeight = () => {
-        onChangeWeight(weight);
+        onChangeWeight(Number(weight));
         setIsVisible(false);
     };
 

@@ -20,6 +20,6 @@ export interface ExerciseElement {
     exercise_order:      number;
     created_at:          Date;
     updated_at:          Date;
-    weight:              null | string;
+    weight:              null | number;
     exercise:            Exercise;
 }

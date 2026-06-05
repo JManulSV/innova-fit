@@ -26,7 +26,7 @@ export function useWorkoutSession(id: string) {
                 const createdLog: WorkoutLog[] = response.data.data.exercises.map((exercise: ExerciseElement) => ({
                     assigned_workout_exercise_id: exercise.id,
                     status: "pending",
-                    performed_weight: exercise.weight ? exercise.weight.toString() : null,
+                    performed_weight: exercise.weight ? exercise.weight : null,
                 }));
                 setLogs(createdLog);
             }
@@ -61,7 +61,7 @@ export function useWorkoutSession(id: string) {
         );
     };
 
-    const updateWeight = (exerciseId: number, weight: string|null) => {
+    const updateWeight = (exerciseId: number, weight: number) => {
         setLogs(prev => 
             prev.map(log => 
                 log.assigned_workout_exercise_id === exerciseId

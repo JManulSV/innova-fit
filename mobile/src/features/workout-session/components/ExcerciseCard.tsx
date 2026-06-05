@@ -6,10 +6,10 @@ import WeightModal from "./WeightModal";
 interface ExerciseCardProps {
     exercise: ExerciseElement;
     completed: boolean;
-    performedWeight?: string | null;
+    performedWeight?: number | null;
     onToggleComplete: () => void;
     onChangeWeight: (
-        weight: string | null
+        weight: number | null
     ) => void;
 }
 
@@ -66,7 +66,7 @@ export default function ExerciseCard({ exercise, completed, performedWeight, onT
                 exercise={exercise} 
                 isVisible={weightModalVisible} 
                 setIsVisible={setWeightModalVisible} 
-                logWeight={performedWeight ?? ""} 
+                logWeight={performedWeight ?? null} 
                 onChangeWeight={onChangeWeight} 
             />
         )}

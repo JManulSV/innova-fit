@@ -18,7 +18,7 @@ export default function LoginForm() {
         e.preventDefault();
         
         const response = await loginMutation.mutateAsync({ email, password });
-        const userData = response.user;
+        const userData = response.data.user;
         setUser(userData);
 
         if (userData) {

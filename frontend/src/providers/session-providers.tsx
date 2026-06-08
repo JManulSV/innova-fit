@@ -14,7 +14,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
 
     useEffect(() => {
         if (data?.success) {
-            setUser(data.data);
+            setUser(data.data.user);
         }
     }, [data, setUser]);
 

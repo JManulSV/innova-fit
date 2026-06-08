@@ -1,7 +1,7 @@
-import axios from "axios";
 import { MeResponse } from "../types/auth.types";
+import api from "@/lib/api";
 
 export async function getMe() {
-    const response = await axios.get<MeResponse>('/api/auth/me');
+    const response = await api.get<MeResponse>('/api/auth/me');
     return response.data;
 }

@@ -1,3 +1,5 @@
+import { ApiResponse } from "@/types/api";
+
 export interface User{
     id: number;
     email: string;
@@ -13,16 +15,26 @@ export interface LoginRequest{
     password: string;
 }
 
-export interface LoginResponse{
-    success: boolean;
-    data: {
-        user: User;
-        token: string;
-        token_type: string;
-    };
-}
+// export interface LoginResponse{
+//     success: boolean;
+//     data: {
+//         user: User;
+//         token: string;
+//         token_type: string;
+//     };
+// }
 
-export interface MeResponse{
-    success: boolean;
-    data: User;
+export type LoginResponse =
+  ApiResponse<UserResponse>;
+
+// export interface MeResponse{
+//     success: boolean;
+//     data: User;
+// }
+
+export type MeResponse =
+  ApiResponse<UserResponse>;
+
+export interface UserResponse {
+  user: User;
 }

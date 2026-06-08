@@ -9,7 +9,7 @@ export function useLogin() {
     mutationFn: login,
 
     onSuccess: (data) => {
-      setUser(data.user);
+      setUser(data.data.user);
     },
 
     onError: (error) => {

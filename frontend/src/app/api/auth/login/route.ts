@@ -17,7 +17,12 @@ export async function POST(request: Request) {
             path: '/',
         });
         
-        return NextResponse.json({ success: true, user: res.data.data.user });
+        return NextResponse.json({
+            success: true,
+            data: {
+                user: res.data.data.user,
+            },
+        });
     } catch (error) {
         console.error('Error en login:', error);
         return NextResponse.json({ error: 'Error al iniciar sesión' }, { status: 500 });

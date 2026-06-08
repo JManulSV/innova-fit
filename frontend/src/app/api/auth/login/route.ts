@@ -1,17 +1,12 @@
-import axios from "axios";
+import laravelApi from "@/lib/laravel-api";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { email, password } = body;
         
-        const res = await axios.post(`${process.env.API_URL}/login`, { email, password });
-
-        if(res.status !== 200) {
-            return NextResponse.json({ error: 'No autorizado' }, { status: res.status });
-        }
+        const res = await laravelApi.post(`/login`, body);
 
         const cookieStore = await cookies();
         cookieStore.set('auth-token', res.data.data.token, {

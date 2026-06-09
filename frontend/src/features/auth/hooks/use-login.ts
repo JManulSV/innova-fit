@@ -3,7 +3,9 @@ import { useAuthStore } from "@/stores/auth-store";
 import { login } from "../services/login";
 
 export function useLogin() {
-  const { setUser } = useAuthStore();
+  const setUser = useAuthStore(
+    (state) => state.setUser
+  );
   
   return useMutation({
     mutationFn: login,

@@ -19,13 +19,13 @@ export default function LoginForm() {
         
         const response = await loginMutation.mutateAsync({ email, password });
         const userData = response.data.user;
-        setUser(userData);
+        console.log("Redirecting:", userData.role);
 
         if (userData) {
             if (userData.role === 'coach') {
-                router.push('/coach/dashboard');
+                router.replace('/coach/dashboard');
             } else {
-                router.push('/client/dashboard');
+                router.replace('/client/dashboard');
             }
         }
     };

@@ -1,5 +1,6 @@
 "use client"
 
+import CoachShell from "@/components/layout/coach/CoachShell";
 import { useAuthStore } from "@/stores/auth-store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -42,8 +43,8 @@ export default function CoachLayout({children}: {children: React.ReactNode}) {
     }
     
     return (
-        <>
+        <CoachShell>
             {children}
-        </>
+        </CoachShell>
     );
 }

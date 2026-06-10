@@ -25,8 +25,8 @@ export default function CoachLayout({children}: {children: React.ReactNode}) {
         return;
     }
 
-    if (user.role !== "client") {
-        router.replace("/coach/dashboard");
+    if (user.role !== "coach") {
+        router.replace("/client/dashboard");
     }
 }, [user, isCheckingAuth, router]);
     

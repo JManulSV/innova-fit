@@ -3,6 +3,7 @@
 use App\Http\Controllers\AssignedWorkoutController;
 use App\Http\Controllers\AssignedWorkoutExerciseController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\WorkoutDayTemplateController;
 use App\Http\Controllers\WorkoutExerciseLogController;
@@ -30,4 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/workout-day-templates', WorkoutDayTemplateController::class);
 
     Route::get('/progress/summary', [WorkoutProgressController::class, 'progressSummary']);
+
+    Route::apiResource('/clients', ClientController::class);
+    Route::get('/clients/{id}/assigned-workouts', [ClientController::class, 'assignedWorkouts']);
 });

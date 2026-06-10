@@ -16,21 +16,25 @@ class AssignedWorkoutController extends Controller
         //1. Validate request
         $validated = $request->validate([
             'client_id' => 'required|exists:users,id',
-            'template_id' => 'required|exists:workout_day_templates,id',
+            'template_id' => 'nullable|exists:workout_day_templates,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'notes' => 'nullable|string',
             'name' => 'nullable|string',    
         ]);
 
         //2. Search models
         $client = User::where('role', 'client')->findOrFail($validated['client_id']);
-        $template = WorkoutDayTemplate::findOrFail($validated['template_id']);
+        $template = $validated['template_id'] ? WorkoutDayTemplate::findOrFail($validated['template_id']) : null;
 
         //3. Call service
         $assignedWorkout = $service->assignWorkoutToClient(
             $client,
             $template,
             $validated['notes'] ?? null,
-            $validated['name'] ?? null
+            $validated['name'] ?? null,
+            $validated['start_date'],
+            $validated['end_date'],
         );
 
         $assignedWorkout->load('exercises.exercise', 'template', 'client');
@@ -77,18 +81,22 @@ class AssignedWorkoutController extends Controller
         ]);
     }
 
-    public function myWorkouts(Request $request)
+    public function myAssignedWorkouts(Request $request)
     {
         $client = $request->user();
-
-        $clientWorkouts = $client->assignedWorkouts()
-            ->with('exercises')
-            ->get();
-                        
+        
+        $workouts = AssignedWorkout::with([
+            'template',
+            'exercises.exercise',
+        ])
+        ->where('client_id', $client->id)
+        ->orderBy('start_date', 'asc')
+        ->get();
+        
         return response()->json([
             'success' => true,
-            'data' => AssignedWorkoutResource::collection($clientWorkouts),
-            'message' => 'My workouts retrieved successfully',
+            'data' => AssignedWorkoutResource::collection($workouts),
+            'message' => 'My assigned workouts retrieved successfully',
         ]);
     }
 }

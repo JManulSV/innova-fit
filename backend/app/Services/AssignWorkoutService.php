@@ -13,9 +13,11 @@ class AssignWorkoutService {
     User $client,
     WorkoutDayTemplate $template,
     ?string $notes = null,
-    ?string $name = null
+    ?string $name = null,
+    ?string $startDate = null,
+    ?string $endDate = null
     ) {
-        return DB::transaction(function () use ($client, $template, $notes, $name) {
+        return DB::transaction(function () use ($client, $template, $notes, $name, $startDate, $endDate) {
 
             $assignedWorkoutCreated = AssignedWorkout::create([
                 'client_id' => $client->id,
@@ -23,6 +25,9 @@ class AssignWorkoutService {
                 'name' => $name ?? $template->name,
                 'notes' => $notes,
                 'assigned_date' => now()->toDateString(),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'status' => 'active',
             ]);
 
             $exercises = $template->exercises()

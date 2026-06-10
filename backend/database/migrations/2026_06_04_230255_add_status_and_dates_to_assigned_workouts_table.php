@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('assigned_workouts', function (Blueprint $table) {
-            //
+            $table->date('start_date')->nullable()->after('notes');
+            $table->date('end_date')->nullable()->after('start_date');
+            $table->enum('status',['active','completed'])->default('active')->after('end_date');
         });
     }
 
@@ -22,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('assigned_workouts', function (Blueprint $table) {
-            //
+            $table->dropColumn(['start_date', 'end_date', 'status']);
         });
     }
 };

@@ -12,6 +12,14 @@ class AssignedWorkout extends Model
         'name',
         'notes',
         'assigned_date',
+        'start_date',
+        'end_date',
+        'status',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     public function client()
@@ -27,5 +35,22 @@ class AssignedWorkout extends Model
     public function exercises()
     {
         return $this->hasMany(AssignedWorkoutExercise::class);
+    }
+
+    public function getComputedStatusAttribute()
+    {
+        if ($this->status === 'completed') {
+            return 'completed';
+        }
+
+        if(
+            $this->status === 'active'
+            && $this->end_date
+            && now()->gt($this->end_date)
+        ) {
+            return 'expired';
+        }
+
+        return 'active';
     }
 }

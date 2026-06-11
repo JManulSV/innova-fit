@@ -30,3 +30,15 @@ export interface CreateClientResponse {
     data: Client;
     message: string;
 }
+
+export interface EditClientRequest {
+    name?: string;
+    email?: string;
+    password?: string;
+}
+
+export interface EditClientResponse {
+    success: boolean;
+    data: Client;
+    message: string;
+}

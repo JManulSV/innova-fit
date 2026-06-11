@@ -3,6 +3,7 @@
 import { useClients } from "@/features/clients/hooks/use-clients";
 import { Client } from "@/features/clients/types/clients.types";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function ClientsPage() {
   const { data, isLoading, error } = useClients();
@@ -38,14 +39,15 @@ export default function ClientsPage() {
 
       <div className="space-y-4">
         {clients.map((client: Client) => (
-          <div
+          <Link
             key={client.id}
-            className="border rounded-lg p-4"
+            href={`/coach/clients/${client.id}`}
+            className="border rounded-lg p-4 block"
           >
             <h2>{client.name}</h2>
             <p>{client.email}</p>
             <p className="text-sm text-gray-600">{new Date(client.created_at).toLocaleDateString()}</p>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

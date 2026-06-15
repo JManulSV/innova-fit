@@ -23,3 +23,26 @@ export async function GET() {
         return Response.json({message: 'Internal server error'}, {status: 500});
     }
 }
+
+export async function POST(request: Request){
+    try {
+        const cookiesStore = await cookies();
+        const token = cookiesStore.get('auth-token')?.value;
+        
+        if (!token) {
+            return Response.json({message: 'Unauthorized'}, {status: 401});
+        }
+        
+        const body = await request.json();
+        const response = await laravelApi.post('/workout-day-templates', body, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        return Response.json(response.data);
+    } catch (error) {
+        console.error('Error creating template:', error);
+        return Response.json({message: 'Internal server error'}, {status: 500});
+    }
+}

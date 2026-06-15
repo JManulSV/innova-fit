@@ -1,0 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { getTemplate } from "../services/get-template";
+
+export function useTemplate(id: string) {
+    return useQuery({
+        queryKey: ['template', id],
+        queryFn: () => getTemplate(id),
+    })
+}

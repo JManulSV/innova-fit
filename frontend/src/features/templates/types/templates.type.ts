@@ -1,3 +1,8 @@
+export interface TemplateRequest {
+    name: string;
+    description: string;
+}
+
 export interface TemplateResponse {
     success: boolean;
     data:    Data;

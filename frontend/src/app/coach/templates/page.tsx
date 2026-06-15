@@ -5,7 +5,6 @@ import Link from "next/link";
 
 export default function TemplatesPage() {
   const { data: templates } = useTemplates();
-  console.log(templates);
   
   return (
     <div className="max-w-6xl mx-auto p-6">

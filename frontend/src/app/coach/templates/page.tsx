@@ -2,9 +2,11 @@
 import { useTemplates } from "@/features/templates/hooks/use-templates";
 import { Template } from "@/features/templates/types/templates.type";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function TemplatesPage() {
   const { data: templates } = useTemplates();
+  const router = useRouter();
   
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -27,6 +29,7 @@ export default function TemplatesPage() {
             border
             hover:bg-gray-50
           "
+          onClick={() => router.push("/coach/templates/create")}
         >
           Crear Plantilla
         </button>

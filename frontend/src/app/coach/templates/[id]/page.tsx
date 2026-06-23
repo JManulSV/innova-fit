@@ -71,6 +71,21 @@ export default function TemplateDetailPage() {
         </h2>
 
         <div className="space-y-4">
+          {templateData.exercises?.map((exercise) => (
+            <div key={exercise.id}>
+              <h3 className="text-lg font-semibold">
+                {exercise.name}
+              </h3>
+              <p className="text-gray-500">
+                {exercise.description}
+              </p>
+              <div className="flex gap-4 text-sm text-gray-600 mt-2">
+                <p>Series: {exercise.pivot?.sets}</p>
+                <p>Repeticiones: {exercise.pivot?.reps}</p>
+                <p>Descanso: {exercise.pivot?.rest_seconds} segundos</p>
+              </div>
+            </div>
+          ))}
         </div>
 
       </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { WorkoutTemplateExercise } from "../types/templates.type";
+import { TemplateExercise, WorkoutTemplateExercise } from "../types/templates.type";
 import { Exercise } from "@/features/exercises/types/exercise.types";
 
 export function useTemplateBuilder() {
@@ -41,12 +41,26 @@ export function useTemplateBuilder() {
         return selectedExercises.find((exercise) => 
             exercise.exercise_id === id );
     }
+
+    const initializeExercises = (exercise: TemplateExercise[]) => {
+        const initializeExercises = exercise.map((item, index) => ({
+            exercise_id: item.id,
+            name: item.name,
+            sets: item.pivot.sets,
+            reps: item.pivot.reps,
+            rest_seconds: item.pivot.rest_seconds,
+            exercise_order: index + 1,
+        }));
+        
+        setSelectedExercises(initializeExercises);
+    }
     
     return {
         selectedExercises,
         addExercise,
         deleteExercise,
         updateExercise,
-        getExercise
+        getExercise,
+        initializeExercises
     };
 }

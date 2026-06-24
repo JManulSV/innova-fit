@@ -1,20 +1,27 @@
 "use client";
-import { useState } from "react"
-import { useCreateTemplate } from "../hooks/use-create-template";
-import { WorkoutTemplateExercise } from "../types/templates.type";
+import { useState, useEffect } from "react"
+import { Template, WorkoutTemplateExercise } from "../types/templates.type";
 import AddExerciseModal from "./AddExerciseModal";
 import { useExercises } from "@/features/exercises/hooks/use-exercises";
 import { useTemplateBuilder } from "../hooks/useTemplateBuilder";
 import { EllipsisVerticalIcon } from "lucide-react";
 import EditExerciseModal from "./EditExerciseModal";
+import { useRouter } from "next/navigation";
 
-export default function TemplateForm(){
+
+interface TemplateFormProps {
+  mode: "create" | "edit";
+  initialData?: Template;
+  onSubmit: (data: {name: string, description: string, exercises: WorkoutTemplateExercise[]}) => void;
+  isLoading?: boolean;
+}
+
+export default function TemplateForm({ mode, initialData, onSubmit, isLoading }: TemplateFormProps){
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     
-    const { mutate: createTemplate, isPending } = useCreateTemplate();
     const { data: exercises, isLoading: isLoadingExercises } = useExercises();
-    const { selectedExercises, getExercise, addExercise, deleteExercise, updateExercise } = useTemplateBuilder();
+    const { selectedExercises, getExercise, addExercise, deleteExercise, updateExercise, initializeExercises } = useTemplateBuilder();
 
     const [activeModal, setActiveModal] = useState<"add" | "edit" | null>(null);
     const [exerciseToEdit, setExerciseToEdit] = useState<WorkoutTemplateExercise|null>(null);
@@ -22,17 +29,36 @@ export default function TemplateForm(){
         setActiveModal(null);
         setExerciseToEdit(null);
     };
+    console.log("initialData", initialData);
+
+    const formTitle = mode === "create" ? "Crear Plantilla" : "Editar Plantilla";
+    const submitButtonText = mode === "create" ? "Crear" : "Guardar";
+    const loadingButtonText = mode === "create" ? "Creando..." : "Guardando...";
+
+    const router = useRouter();
+
+      useEffect(() => {
+        if (!initialData) return;
+
+        setName(initialData.name);
+        setDescription(initialData.description);
+
+        initializeExercises(initialData.exercises || []);
+
+    }, [initialData]);
     
-    const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(JSON.stringify({name, description, selectedExercises}));
+        
+        await onSubmit({name, description, exercises: selectedExercises});
+        router.push("/coach/templates");
     }
 
     return (
     <div className="max-w-2xl">
 
       <h1 className="text-3xl font-bold mb-6">
-        Crear Plantilla
+        {formTitle}
       </h1>
 
       <form className="space-y-4" onSubmit={handleOnSubmit}>
@@ -112,7 +138,7 @@ export default function TemplateForm(){
 
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isLoading}
           className="
             px-4 py-2
             rounded-lg
@@ -120,7 +146,7 @@ export default function TemplateForm(){
             hover:bg-gray-50
           "
         >
-          {isPending ? "Guardando..." : "Guardar Plantilla"}
+          {isLoading ? loadingButtonText : submitButtonText}
         </button>
 
 

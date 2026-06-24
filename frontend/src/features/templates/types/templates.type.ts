@@ -1,6 +1,7 @@
 export interface TemplateRequest {
     name: string;
     description: string;
+    exercises: WorkoutTemplateExercise[];
 }
 
 export interface TemplateResponse {

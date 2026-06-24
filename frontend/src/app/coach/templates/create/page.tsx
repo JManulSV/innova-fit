@@ -1,5 +1,5 @@
-import TemplateForm from "@/features/templates/components/TemplateForm";
+import CreateTemplatePage from "@/features/templates/pages/CreateTemplatePage";
 
-export default function CreateTemplatePage() {
-    return <TemplateForm />;
+export default function CreatePage() {
+    return <CreateTemplatePage />;
 }

@@ -6,6 +6,7 @@ use App\Models\WorkoutDayTemplate;
 use App\Http\Requests\StoreWorkoutDayTemplateRequest;
 use App\Http\Requests\UpdateWorkoutDayTemplateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WorkoutDayTemplateController extends Controller
 {
@@ -26,7 +27,8 @@ class WorkoutDayTemplateController extends Controller
 
     public function show(int $id)
     {
-        $workoutDayTemplate = WorkoutDayTemplate::with('exercises.exercise')->findOrFail($id);
+        $workoutDayTemplate = WorkoutDayTemplate::with('exercises')->findOrFail($id);
+        // $workoutDayTemplate = WorkoutDayTemplate::findOrFail($id);
 
         return response()->json([
             'success' => true,
@@ -40,17 +42,41 @@ class WorkoutDayTemplateController extends Controller
         $this->authorize('create', WorkoutDayTemplate::class);
         $validated = $request->validated();
 
-        $workoutDayTemplate = WorkoutDayTemplate::create(
-            array_merge($validated, [
-                'coach_id' => $request->user()->id,
-            ])
-        );
+        try {
+            $workoutDayTemplate = DB::transaction(function () use ($validated, $request) {
+                $workoutDayTemplate = WorkoutDayTemplate::create([
+                    'name' => $validated['name'],
+                    'description' => $validated['description'],
+                    'coach_id' => $request->user()->id,
+                ]);
 
-        return response()->json([
-            'success' => true,
-            'data' => $workoutDayTemplate,
-            'message' => 'Workout day template created successfully',
-        ], 201);
+                $pivotData = [];
+                foreach ($validated['exercises'] as $exercise) {
+                    $pivotData[$exercise['exercise_id']] = [
+                        'sets' => $exercise['sets'],
+                        'reps' => $exercise['reps'],
+                        'exercise_order' => $exercise['exercise_order'],
+                        'rest_seconds' => $exercise['rest_seconds'],
+                    ];
+                }
+
+                $workoutDayTemplate->exercises()->attach($pivotData);
+                
+                return $workoutDayTemplate;
+            });
+           
+            return response()->json([
+                'success' => true,
+                'data' => $workoutDayTemplate,
+                'message' => 'Workout day template created successfully',
+            ], 201);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating workout day template',
+            ], 500);
+        }
     }
 
     public function update(UpdateWorkoutDayTemplateRequest $request, int $id)
@@ -59,13 +85,41 @@ class WorkoutDayTemplateController extends Controller
         $this->authorize('update', $workoutDayTemplate);
         
         $validated = $request->validated();
-        $workoutDayTemplate->update($validated);
+        try {
+            $updateWorkoutDayTemplate = DB::transaction(function () use ($workoutDayTemplate, $validated) {
+                
+                $workoutDayTemplate->update([
+                    'name' => $validated['name'],
+                    'description' => $validated['description'],
+                ]);
 
-        return response()->json([
-            'success' => true,
-            'data' => $workoutDayTemplate,
-            'message' => 'Workout day template updated successfully',
-        ]);
+                $pivotData = [];
+                foreach ($validated['exercises'] as $exercise) {
+                    $pivotData[$exercise['exercise_id']] = [
+                        'sets' => $exercise['sets'],
+                        'reps' => $exercise['reps'],
+                        'exercise_order' => $exercise['exercise_order'],
+                        'rest_seconds' => $exercise['rest_seconds'],
+                    ];
+                }
+                
+                $workoutDayTemplate->exercises()->sync($pivotData);
+
+                return $workoutDayTemplate;
+            });
+
+            return response()->json([
+                'success' => true,
+                'data' => $updateWorkoutDayTemplate,
+                'message' => 'Workout day template updated successfully',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating workout day template',
+            ], 500);
+        }
+
     }
 
     public function destroy(int $id)

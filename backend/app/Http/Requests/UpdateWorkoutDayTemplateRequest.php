@@ -23,8 +23,14 @@ class UpdateWorkoutDayTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|max:255',
-            'description' => 'sometimes|nullable|string',
+            'name' => 'required|string|max:255',
+            'description' => 'required|nullable|string',
+            'exercises' => 'required|array|min:1',
+            'exercises.*.exercise_id' => 'required|exists:exercises,id',
+            'exercises.*.sets' => 'required|integer|min:1',
+            'exercises.*.reps' => 'required|integer|min:1',
+            'exercises.*.rest_seconds' => 'required|integer|min:0',
+            'exercises.*.exercise_order' => 'required|integer|min:0',
         ];
     }
 }

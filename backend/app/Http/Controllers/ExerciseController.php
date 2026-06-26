@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreExerciseRequest;
+use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
 use Illuminate\Http\Request;
 
@@ -30,20 +32,15 @@ class ExerciseController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreExerciseRequest $request)
     {
         $coach = $request->user();
         $this->authorize('create', Exercise::class);
         
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'muscle_group' => 'nullable|string|max:255',
-        ]);
-
+        $validatedExercise = $request->validated();
 
         $exercise = Exercise::create([
-            ...$validated,
+            ...$validatedExercise,
             'coach_id' => $coach->id,
         ]);
 
@@ -54,19 +51,13 @@ class ExerciseController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, int $id)
+    public function update(UpdateExerciseRequest $request, int $id)
     {
         $exercise = Exercise::findOrFail($id);
 
-        $coach = $request->user();
-
         $this->authorize('update', $exercise);
 
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'description' => 'sometimes|nullable|string',
-            'muscle_group' => 'sometimes|nullable|string|max:255',
-        ]);
+        $validated = $request->validated();
 
         $exercise->update($validated);
 

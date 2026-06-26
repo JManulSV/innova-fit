@@ -25,6 +25,12 @@ class StoreWorkoutDayTemplateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'exercises' => 'required|array',
+            'exercises.*.exercise_id' => 'required|exists:exercises,id',
+            'exercises.*.sets' => 'required|integer|min:1',
+            'exercises.*.reps' => 'required|integer|min:1',
+            'exercises.*.rest_seconds' => 'required|integer|min:0',
+            'exercises.*.exercise_order' => 'required|integer|min:0',
         ];
     }
 }

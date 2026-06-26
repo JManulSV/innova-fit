@@ -25,7 +25,9 @@ class StoreExerciseRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'muscle_group' => 'nullable|string|max:255',
+            'muscle_groups' => 'nullable|array',
+            'muscle_groups.*' => 'string|max:255',
+            'instructions' => 'nullable|string',
         ];
     }
 }

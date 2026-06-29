@@ -134,6 +134,20 @@ export default function ClientDetailPage() {
       {/* Acciones */}
       <div className="mt-6 flex gap-4">
         <button
+        className="
+            cursor-pointer
+            px-4 py-2
+            rounded-lg
+            border
+            text-blue-500
+            hover:bg-gray-50
+          "
+          onClick={() => router.push(`/coach/clients/${client?.id}/assign-routine`)}
+        >
+          Asignar Rutina
+        </button>
+
+        <button
           className="
             cursor-pointer
             px-4 py-2

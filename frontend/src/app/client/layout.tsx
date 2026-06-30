@@ -1,4 +1,5 @@
 "use client"
+import ClientShell from "@/components/layout/client/ClientShell";
 import { useAuthStore } from "@/stores/auth-store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -45,5 +46,9 @@ export default function ClientLayout({children}: {children: React.ReactNode}) {
         isCheckingAuth
     });
   
-  return <main>{children}</main>
+  return(
+    <ClientShell>
+      {children}
+    </ClientShell>
+  )
 } 

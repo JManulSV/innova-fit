@@ -1,5 +1,6 @@
 "use client";
 
+import LogoutButton from "@/components/LogoutButton";
 import Link from "next/link";
 
 export default function CoachSidebar() {
@@ -25,6 +26,8 @@ export default function CoachSidebar() {
         <Link href="/coach/templates">
           Plantillas
         </Link>
+
+        <LogoutButton />
       </nav>
     </aside>
   );

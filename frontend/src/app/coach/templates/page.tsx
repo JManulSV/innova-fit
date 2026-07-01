@@ -1,6 +1,6 @@
 "use client"
-import { useTemplates } from "@/features/templates/hooks/use-templates";
-import { Template } from "@/features/templates/types/templates.type";
+import { useTemplates } from "@/features/coach/templates/hooks/use-templates";
+import { Template } from "@/features/coach/templates/types/templates.type";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

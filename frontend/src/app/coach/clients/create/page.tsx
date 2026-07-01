@@ -1,5 +1,5 @@
 "use client";
-import { useCreateClient } from "@/features/clients/hooks/use-create-client";
+import { useCreateClient } from "@/features/coach/clients/hooks/use-create-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

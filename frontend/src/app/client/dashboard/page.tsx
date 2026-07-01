@@ -1,5 +1,6 @@
 "use client"
 import LogoutButton from '@/components/LogoutButton'
+import RoutinesGrid from '@/features/client/my-routine/components/RoutinesGrid'
 import { useAuthStore } from '@/stores/auth-store'
 
 function ClientDashboard() {
@@ -7,6 +8,7 @@ function ClientDashboard() {
   return (
     <div>
       Dashboard Client - {user?.email}
+      <RoutinesGrid />
       <LogoutButton />
     </div>
   )

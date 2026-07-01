@@ -1,5 +1,5 @@
 "use client";
-import { useMe } from "@/features/auth/hooks/use-me";
+import { useMe } from "@/features/coach/auth/hooks/use-me";
 import { useAuthStore } from "@/stores/auth-store";
 import { useEffect } from "react";
 

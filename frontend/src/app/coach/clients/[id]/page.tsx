@@ -1,7 +1,7 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { useClient } from "@/features/clients/hooks/use-client";
-import { useDeleteClient } from "@/features/clients/hooks/use-delete-client";
+import { useClient } from "@/features/coach/clients/hooks/use-client";
+import { useDeleteClient } from "@/features/coach/clients/hooks/use-delete-client";
 
 export default function ClientDetailPage() {
   const { id } = useParams();

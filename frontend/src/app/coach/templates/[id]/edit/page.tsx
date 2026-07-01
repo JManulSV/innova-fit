@@ -1,4 +1,4 @@
-import EditTemplatePage from "@/features/templates/pages/EditTemplatePage";
+import EditTemplatePage from "@/features/coach/templates/pages/EditTemplatePage";
 
 export default function TemplateEditPage() {
   return (

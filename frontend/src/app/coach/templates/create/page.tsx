@@ -1,4 +1,4 @@
-import CreateTemplatePage from "@/features/templates/pages/CreateTemplatePage";
+import CreateTemplatePage from "@/features/coach/templates/pages/CreateTemplatePage";
 
 export default function CreatePage() {
     return <CreateTemplatePage />;

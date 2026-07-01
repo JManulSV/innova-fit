@@ -2,8 +2,8 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useExercise } from "@/features/exercises/hooks/use-exercise";
-import { useDeleteExercise } from "@/features/exercises/hooks/use-delete-exercise";
+import { useExercise } from "@/features/coach/exercises/hooks/use-exercise";
+import { useDeleteExercise } from "@/features/coach/exercises/hooks/use-delete-exercise";
 
 export default function ExerciseDetailPage() {
   const { id } = useParams();

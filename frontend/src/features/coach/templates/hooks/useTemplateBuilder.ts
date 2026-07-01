@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TemplateExercise, WorkoutTemplateExercise } from "../types/templates.type";
-import { Exercise } from "@/features/exercises/types/exercise.types";
+import { Exercise } from "@/features/coach/exercises/types/exercise.types";
 
 export function useTemplateBuilder() {
     const [selectedExercises, setSelectedExercises] = useState<WorkoutTemplateExercise[]>([]);

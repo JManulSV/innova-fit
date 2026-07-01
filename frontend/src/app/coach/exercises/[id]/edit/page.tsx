@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { useExercise } from "@/features/exercises/hooks/use-exercise";
-import { useEditExercise } from "@/features/exercises/hooks/use-edit-exercise";
+import { useExercise } from "@/features/coach/exercises/hooks/use-exercise";
+import { useEditExercise } from "@/features/coach/exercises/hooks/use-edit-exercise";
 
 export default function EditExercisePage() {
   const { id } = useParams();

@@ -1,15 +1,15 @@
 "use client";
-import { useExercises } from '@/features/exercises/hooks/use-exercises';
-import AddExerciseModal from '@/features/templates/components/AddExerciseModal';
-import EditExerciseModal from '@/features/templates/components/EditExerciseModal';
-import { useTemplate } from '@/features/templates/hooks/use-template';
-import { useTemplates } from '@/features/templates/hooks/use-templates';
-import { useTemplateBuilder } from '@/features/templates/hooks/useTemplateBuilder';
-import { Template, WorkoutTemplateExercise } from '@/features/templates/types/templates.type';
+import { useExercises } from '@/features/coach/exercises/hooks/use-exercises';
+import AddExerciseModal from '@/features/coach/templates/components/AddExerciseModal';
+import EditExerciseModal from '@/features/coach/templates/components/EditExerciseModal';
+import { useTemplate } from '@/features/coach/templates/hooks/use-template';
+import { useTemplates } from '@/features/coach/templates/hooks/use-templates';
+import { useTemplateBuilder } from '@/features/coach/templates/hooks/useTemplateBuilder';
+import { Template, WorkoutTemplateExercise } from '@/features/coach/templates/types/templates.type';
 import { EllipsisVerticalIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useAssignedRoutine } from '@/features/assigned-routines/hooks/use-assigned-routines';
+import { useAssignedRoutine } from '@/features/coach/assigned-routines/hooks/use-assigned-routines';
 
 function AssignRoutinePage() {
     const router = useRouter();

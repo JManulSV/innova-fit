@@ -1,7 +1,7 @@
 "use client";
 
-import { useClients } from "@/features/clients/hooks/use-clients";
-import { Client } from "@/features/clients/types/clients.types";
+import { useClients } from "@/features/coach/clients/hooks/use-clients";
+import { Client } from "@/features/coach/clients/types/clients.types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 

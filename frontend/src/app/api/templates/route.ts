@@ -1,4 +1,4 @@
-import { TemplateResponse } from "@/features/templates/types/templates.type";
+import { TemplateResponse } from "@/features/coach/templates/types/templates.type";
 import laravelApi from "@/lib/laravel-api";
 import { cookies } from "next/headers";
 

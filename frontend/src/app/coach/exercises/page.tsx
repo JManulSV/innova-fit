@@ -1,6 +1,6 @@
 "use client"
-import { useExercises } from "@/features/exercises/hooks/use-exercises";
-import { Exercise } from "@/features/exercises/types/exercise.types";
+import { useExercises } from "@/features/coach/exercises/hooks/use-exercises";
+import { Exercise } from "@/features/coach/exercises/types/exercise.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

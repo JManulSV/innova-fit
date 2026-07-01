@@ -1,9 +1,9 @@
 "use client"
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
-import { useEditClient } from "@/features/clients/hooks/use-edit-client";
+import { useEditClient } from "@/features/coach/clients/hooks/use-edit-client";
 import { useParams } from "next/navigation";
-import { useClient } from "@/features/clients/hooks/use-client";
+import { useClient } from "@/features/coach/clients/hooks/use-client";
 
 export default function EditClientPage() {
     const [name, setName] = useState("");

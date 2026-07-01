@@ -1,7 +1,7 @@
 "use client";
-import { useCreateExercise } from "@/features/exercises/hooks/use-create-exercise";
+import { useCreateExercise } from "@/features/coach/exercises/hooks/use-create-exercise";
 import { useState } from "react";
-import { ExerciseCreateRequest } from "@/features/exercises/types/exercise.types";
+import { ExerciseCreateRequest } from "@/features/coach/exercises/types/exercise.types";
 import { useRouter } from "next/navigation";
 
 export default function CreateExercisePage() {

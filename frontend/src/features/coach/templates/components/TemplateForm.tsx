@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { Template, WorkoutTemplateExercise } from "../types/templates.type";
 import AddExerciseModal from "./AddExerciseModal";
-import { useExercises } from "@/features/exercises/hooks/use-exercises";
+import { useExercises } from "@/features/coach/exercises/hooks/use-exercises";
 import { useTemplateBuilder } from "../hooks/useTemplateBuilder";
 import { EllipsisVerticalIcon } from "lucide-react";
 import EditExerciseModal from "./EditExerciseModal";

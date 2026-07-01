@@ -1,8 +1,8 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { useTemplate } from "@/features/templates/hooks/use-template";
-import { Template } from "@/features/templates/types/templates.type";
-import { useDeleteTemplate } from "@/features/templates/hooks/use-delete-template";
+import { useTemplate } from "@/features/coach/templates/hooks/use-template";
+import { Template } from "@/features/coach/templates/types/templates.type";
+import { useDeleteTemplate } from "@/features/coach/templates/hooks/use-delete-template";
 
 export default function TemplateDetailPage() {
   const { id } = useParams();

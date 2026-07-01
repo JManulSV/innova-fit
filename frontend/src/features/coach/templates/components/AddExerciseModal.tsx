@@ -1,5 +1,5 @@
 "use client";
-import { Exercise } from '@/features/exercises/types/exercise.types';
+import { Exercise } from '@/features/coach/exercises/types/exercise.types';
 import React, { useRef } from 'react'
 import { Check, Plus } from 'lucide-react';
 

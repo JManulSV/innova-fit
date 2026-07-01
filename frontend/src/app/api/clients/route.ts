@@ -1,5 +1,5 @@
 import laravelApi from "@/lib/laravel-api";
-import { ClientsResponse } from "@/features/clients/types/clients.types";
+import { ClientsResponse } from "@/features/coach/clients/types/clients.types";
 import { cookies } from "next/headers";
 
 export async function GET() {

@@ -1,7 +1,7 @@
 import { ChevronRight, X } from 'lucide-react';
 import { WorkoutExerciseLog } from '../hooks/use-workout-session';
 
-interface ExerciseListProps {
+interface ExerciseSelectorProps {
   exercise: WorkoutExerciseLog[];
   isOpen: boolean;
   onClose: () => void;
@@ -9,7 +9,7 @@ interface ExerciseListProps {
   changeCurrentExercise: (id: number) => void;
 }
 
-export default function ExerciseList({ exercise, isOpen, onClose, activeExerciseId, changeCurrentExercise }: ExerciseListProps) {
+export default function ExerciseSelector({ exercise, isOpen, onClose, activeExerciseId, changeCurrentExercise }: ExerciseSelectorProps) {
   // Si el modal no está abierto, no renderiza nada
   if (!isOpen) return null;
   if (!exercise) return null;

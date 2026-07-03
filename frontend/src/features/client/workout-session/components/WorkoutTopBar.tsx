@@ -6,7 +6,7 @@ interface WorkoutProgressProps{
     openModal: () => void;
 }
 
-export default function WorkoutProgress({exercises, openModal}: WorkoutProgressProps) {
+export default function WorkoutTopBar({exercises, openModal}: WorkoutProgressProps) {
   return (
     <div className="flex flex-col gap-5">
         <div className="flex justify-between">

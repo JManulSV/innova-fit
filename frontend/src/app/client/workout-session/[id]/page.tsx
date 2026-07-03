@@ -2,14 +2,14 @@
 
 import { useMyRoutine } from '@/features/client/my-routine/hooks/use-get-my-routines';
 import { RoutineExercise } from '@/features/client/my-routine/types';
-import WorkoutProgress from '@/features/client/workout-session/components/WorkoutProgress';
 import WorkoutHeader from '@/features/client/workout-session/components/WorkoutHeader';
 import { useWorkoutSession } from '@/features/client/workout-session/hooks/use-workout-session';
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import WorkoutInput from '@/features/client/workout-session/components/WorkoutTable';
-import WorkoutButton from '@/features/client/workout-session/components/WorkoutButton';
-import ExerciseList from '@/features/client/workout-session/components/ExerciseList';
+import WorkoutExerciseTable from '@/features/client/workout-session/components/WorkoutExerciseTable';
+import NextExerciseButton from '@/features/client/workout-session/components/NextExerciseButton';
+import WorkoutTopBar from '@/features/client/workout-session/components/WorkoutTopBar';
+import ExerciseSelector from '@/features/client/workout-session/components/ExerciseSelector';
 
 export default function WorkOutPage() {
   const { id } = useParams();
@@ -18,7 +18,7 @@ export default function WorkOutPage() {
   const exercises: RoutineExercise[] = routine?.exercises;
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
 
-  const { exercisesLogs, initializeExercises, currentIndex, nextExercise, handleFinishSet, setCurrentIndex } = useWorkoutSession();
+  const { exercisesLogs, initializeExercises, currentIndex, nextExercise, handleFinishSet, setCurrentIndex, currentExercise } = useWorkoutSession();
 
   const closeModal = () => {
     setIsVisibleModal(false)
@@ -49,11 +49,11 @@ export default function WorkOutPage() {
 
   return (
     <div className='flex flex-col gap-6'>
-      <WorkoutProgress exercises={exercisesLogs} openModal={openModal} />
-      <WorkoutHeader exercises={exercisesLogs} currentExercise={exercisesLogs[currentIndex]} currentIndex={currentIndex} />
-      <WorkoutInput exercise={exercisesLogs[currentIndex]} handleFinishSet={handleFinishSet}/>
-      <WorkoutButton onClick={nextExercise} />
-      <ExerciseList exercise={exercisesLogs} isOpen={isVisibleModal} onClose={closeModal} activeExerciseId={exercisesLogs[currentIndex].id} changeCurrentExercise={changeCurrentExercise} />
+      <WorkoutTopBar exercises={exercisesLogs} openModal={openModal} />
+      <WorkoutHeader exercises={exercisesLogs} currentExercise={currentExercise} currentIndex={currentIndex} />
+      <WorkoutExerciseTable exercise={currentExercise} handleFinishSet={handleFinishSet}/>
+      <NextExerciseButton onClick={nextExercise} />
+      <ExerciseSelector exercise={exercisesLogs} isOpen={isVisibleModal} onClose={closeModal} activeExerciseId={currentExercise.id} changeCurrentExercise={changeCurrentExercise} />
     </div>
   )
 }

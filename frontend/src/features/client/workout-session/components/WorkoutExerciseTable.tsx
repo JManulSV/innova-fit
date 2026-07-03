@@ -6,7 +6,7 @@ interface WorkoutTableProps {
     handleFinishSet: (exercise_id: number, set_number: number) => void;
 }
 
-export default function WorkoutTable({exercise, handleFinishSet}: WorkoutTableProps) {
+export default function WorkoutExerciseTable({exercise, handleFinishSet}: WorkoutTableProps) {
   
   if(!exercise){
     return <div>Cargando...</div>;

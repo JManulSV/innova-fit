@@ -16,6 +16,7 @@ export interface WorkoutExerciseLog{
 export function useWorkoutSession() {
     const [exercisesLogs, setExercisesLogs] = useState<WorkoutExerciseLog[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const currentExercise = exercisesLogs[currentIndex];
 
     const initializeExercises = (exercises: RoutineExercise[], assigned_workout_id: number) => {
         const initializedExercises: WorkoutExerciseLog[] = exercises.map((exercise) => ({
@@ -56,5 +57,5 @@ export function useWorkoutSession() {
         )
     }
 
-    return { exercisesLogs, initializeExercises, currentIndex, setCurrentIndex, nextExercise, handleFinishSet };
+    return { exercisesLogs, initializeExercises, currentIndex, setCurrentIndex, nextExercise, handleFinishSet, currentExercise };
 }

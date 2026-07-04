@@ -20,7 +20,14 @@ class AssignedWorkoutController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'notes' => 'nullable|string',
-            'name' => 'nullable|string',    
+            'name' => 'nullable|string',
+            
+            'exercises' => 'min:1|array',
+            'exercises.*.exercise_id' => 'required|exists:exercises,id',
+            'exercises.*.sets' => 'required|integer|min:1',
+            'exercises.*.reps' => 'required|integer|min:1',
+            'exercises.*.rest_seconds' => 'required|integer|min:0',
+            'exercises.*.exercise_order' => 'required|integer|min:0',
         ]);
 
         //2. Search models
@@ -28,13 +35,14 @@ class AssignedWorkoutController extends Controller
         $template = $validated['template_id'] ? WorkoutDayTemplate::findOrFail($validated['template_id']) : null;
 
         //3. Call service
-        $assignedWorkout = $service->assignWorkoutToClient(
+        $assignedWorkout = $service->AssignedWorkout(
             $client,
             $template,
             $validated['notes'] ?? null,
             $validated['name'] ?? null,
             $validated['start_date'],
             $validated['end_date'],
+            $validated['exercises'] ?? []
         );
 
         $assignedWorkout->load('exercises.exercise', 'template', 'client');

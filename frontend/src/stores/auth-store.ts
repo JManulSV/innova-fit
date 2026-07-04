@@ -1,4 +1,4 @@
-import { User } from "@/features/coach/auth/types/auth.types";
+import { User } from "@/features/auth/types/auth.types";
 import { create } from "zustand";
 
 interface AuthStore {

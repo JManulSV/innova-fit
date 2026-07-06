@@ -3,6 +3,7 @@ import {  Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
 import { SessionProvider } from "@/providers/session-providers";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,13 +37,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <QueryProvider>
-          <SessionProvider>
-            {children}
-          </SessionProvider>
+          <ThemeProvider>
+            <SessionProvider>
+              {children}
+            </SessionProvider>
+          </ThemeProvider>
         </QueryProvider>
       </body>
     </html>

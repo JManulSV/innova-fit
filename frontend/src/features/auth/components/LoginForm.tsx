@@ -5,6 +5,7 @@ import { useLogin } from "../hooks/use-login";
 import { User } from "../types/auth.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { H2, Mono, Muted, Text } from "@/components/typography";
 
 export default function LoginForm() {
 
@@ -35,16 +36,16 @@ export default function LoginForm() {
            <div className="w-full max-w-md space-y-6">
 
                 <div>
-                    <h2 className="text-4xl font-bold text-foreground font-heading">Bienvenido de nuevo</h2>
-                    <p className="mt-2 text-muted-foreground">Ingresá tus datos para ver tu rutina y tu progreso.</p>
+                    <H2>Bienvenido de nuevo</H2>
+                    <Muted className="mt-2 text-md">Ingresá tus datos para ver tu rutina y tu progreso.</Muted>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="flex flex-col gap-3">
-                        <label className="font-mono" htmlFor="email">Correo</label>
+                        <label className="font-mono" htmlFor="email"><Mono>Correo</Mono></label>
                         <Input type="email" id="email" placeholder="Email" disabled={isPending} value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
                     <div className="flex flex-col gap-3">
-                        <label className="font-mono" htmlFor="password">Contraseña</label>
+                        <label className="font-mono" htmlFor="password"><Mono>Contraseña</Mono></label>
                         <Input type="password" id="password" placeholder="Password" disabled={isPending} value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
                     {error && <p>Correo o contraseña incorrectos</p>}
@@ -52,7 +53,7 @@ export default function LoginForm() {
                     <div className="flex items-center justify-between">
                         <label className="flex items-center gap-2">
                             <Input type="checkbox" disabled/>
-                            Recordarme
+                            <Text>Recordarme</Text> 
                         </label>
                         <Button variant={"link"} className="text-primary text-sm cursor-pointer">
                             ¿Olvidaste tu contraseña?

@@ -1,4 +1,5 @@
-import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { ColorPalette } from "@/components/design-system/color-palette";
+import { PageHeader } from "@/components/design-system/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,23 +14,13 @@ import { Input } from "@/components/ui/input";
 export default function DesignSystemPage() {
   return (
     <main className="min-h-screen bg-background p-10">
-      <div className="mx-auto max-w-6xl space-y-10">
+      <div className="mx-auto max-w-7xl space-y-12">
 
         {/* Header */}
+        {<PageHeader />}
 
-        <section className="flex items-center justify-between">
-            <div>
-                <h1 className="text-4xl font-bold text-foreground">
-                Innova-Fit Design System
-                </h1>
-
-                <p className="mt-2 text-muted-foreground">
-                Laboratorio de componentes y tokens.
-                </p>
-            </div>
-
-            <ThemeToggle />
-        </section>
+        {/* Color Palette */}
+        <ColorPalette />
 
         {/* Buttons */}
 

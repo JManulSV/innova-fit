@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { useAuthStore } from "@/stores/auth-store";
 
 export default function CoachHeader() {
@@ -9,8 +10,9 @@ export default function CoachHeader() {
   );
 
   return (
-    <header className="border-b p-4">
-      Hola {user?.name} 👋
+    <header className="border-b p-4 flex items-center justify-between">
+      <span>Hola {user?.name} 👋</span>
+      <ThemeToggle />
     </header>
   );
 }

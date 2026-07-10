@@ -9,7 +9,7 @@ export function Page({
   return (
     <main
       className={cn(
-        "min-h-screen bg-background py-10",
+        "min-h-full bg-background py-10",
         className
       )}
       {...props}

@@ -1,0 +1,48 @@
+services:
+
+  backend:
+    build:
+      context: ../../
+      dockerfile: docker/development/backend/Dockerfile
+
+    container_name: innova-backend
+
+    restart: unless-stopped
+
+    working_dir: /var/www
+
+    volumes:
+      - ../../backend:/var/www
+
+    ports:
+      - "8000:8000"
+
+    networks:
+      - innova-network
+
+  frontend:
+    build:
+      context: ../../
+      dockerfile: docker/development/frontend/Dockerfile
+
+    container_name: innova-frontend
+
+    restart: unless-stopped
+
+    working_dir: /app
+
+    volumes:
+      - ../../frontend:/app
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+
+    networks:
+      - innova-network
+
+networks:
+  innova-network:
+    external: true

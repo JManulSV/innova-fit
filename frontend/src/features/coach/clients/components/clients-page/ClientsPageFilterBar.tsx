@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Search } from "lucide-react"
 
-function ClientPageFilterBar() {
+function ClientsPageFilterBar() {
   return (
     <div className="flex items-center justify-between gap-4">
         {/* Search Bar */}
@@ -23,4 +23,4 @@ function ClientPageFilterBar() {
   )
 }
 
-export default ClientPageFilterBar
+export default ClientsPageFilterBar

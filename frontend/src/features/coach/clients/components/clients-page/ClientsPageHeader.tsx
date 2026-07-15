@@ -1,21 +1,25 @@
 import { H2, Text } from "@/components/typography";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 
-interface ClientPageHeaderProps {
+interface ClientsPageHeaderProps {
   clientCount: number;
 }
 
-export default function ClientPageHeader({ clientCount }: ClientPageHeaderProps) {
+export default function ClientsPageHeader({ clientCount }: ClientsPageHeaderProps) {
   return (
     <div className="flex items-center justify-between">
         <div>
             <H2>Clientes</H2>
             <Text>Tienes {clientCount} clientes en tu lista</Text>
         </div>
-        <Button asChild>
-            <Link href="/coach/clients/add">Añadir Cliente</Link>
-        </Button>
+        <Link href="/coach/clients/add">
+          <Button>
+            <Plus className="h-4 w-4" />
+            <span>Añadir Cliente</span>
+          </Button>
+        </Link>
     </div>
   )
 }

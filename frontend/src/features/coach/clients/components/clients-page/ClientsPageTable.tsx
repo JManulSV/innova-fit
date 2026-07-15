@@ -1,10 +1,10 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Client } from '../types/clients.types'
 import Link from 'next/link'
 import ClientDropdownMenu from './ClientDropdownMenu'
+import { Client } from '../../types/clients.types'
 
-interface ClientPageTableProps {
+interface ClientsPageTableProps {
   clients: Client[]
 }
 
@@ -22,7 +22,7 @@ function getStatusVariant(status?: string) {
   return 'outline'
 }
 
-export default function ClientPageTable({ clients }: ClientPageTableProps) {
+export default function ClientsPageTable({ clients }: ClientsPageTableProps) {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
       <Table className="min-w-full">

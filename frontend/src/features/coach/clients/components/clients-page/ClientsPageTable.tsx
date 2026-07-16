@@ -48,12 +48,12 @@ export default function ClientsPageTable({ clients }: ClientsPageTableProps) {
           {clients.map((client) => (
             <TableRow key={client.id} className="group hover:bg-muted/50">
               <TableCell className="whitespace-nowrap px-4 py-2">
-                <Link href={`/coach/clients/${client.id}`} className="flex items-center gap-3 no-underline hover:underline">
+                <Link href={`/coach/clients/${client.id}`} className="flex items-center gap-3 no-underline">
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">
                     {client.name?.slice(0, 2).toUpperCase() || '??'}
                   </span>
                   <div className="min-w-0">
-                    <div className="font-medium text-foreground">{client.name}</div>
+                    <div className="font-medium text-foreground hover:underline">{client.name}</div>
                     <div className="text-xs text-muted-foreground">{client.email}</div>
                   </div>
                 </Link>

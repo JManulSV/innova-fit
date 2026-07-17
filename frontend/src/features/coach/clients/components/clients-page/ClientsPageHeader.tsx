@@ -14,7 +14,7 @@ export default function ClientsPageHeader({ clientCount }: ClientsPageHeaderProp
             <H2>Clientes</H2>
             <Text>Tienes {clientCount} clientes en tu lista</Text>
         </div>
-        <Link href="/coach/clients/add">
+        <Link href="/coach/clients/create">
           <Button>
             <Plus className="h-4 w-4" />
             <span>Añadir Cliente</span>

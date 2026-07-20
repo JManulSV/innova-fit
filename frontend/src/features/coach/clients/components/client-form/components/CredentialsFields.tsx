@@ -4,20 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Lock, Eye, EyeOff, Wand2 } from "lucide-react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { cn } from "@/lib/utils";
-import React from "react";
-import { CreateClientFormData } from "../../../schemas/create-client.schema";
+import React, { useState } from "react";
+import { EditClientFormData } from "../../../schemas/create-client.schema";
 import { FieldErrorMessage } from "./FieldErrorMessage";
-import { Mono } from "@/components/typography";
 
 interface CredentialsFieldsProps {
-  register: UseFormRegister<CreateClientFormData>;
-  errors: FieldErrors<CreateClientFormData>;
+  register: UseFormRegister<EditClientFormData>;
+  errors: FieldErrors<EditClientFormData>;
   isPending: boolean;
   showPassword: boolean;
   showConfirmPassword: boolean;
   onTogglePasswordVisibility: () => void;
   onToggleConfirmPasswordVisibility: () => void;
   onGeneratePassword: () => void;
+  isEditMode?: boolean;
 }
 
 /**
@@ -33,12 +33,30 @@ export const CredentialsFields: React.FC<CredentialsFieldsProps> = ({
   onTogglePasswordVisibility,
   onToggleConfirmPasswordVisibility,
   onGeneratePassword,
+  isEditMode = false,
 }) => {
+  const [showSection, setShowSection] = useState(!isEditMode);
+
+  const handleGenerate = () => {
+    if (!showSection) setShowSection(true);
+    onGeneratePassword();
+  };
+
+  if (isEditMode && !showSection) {
+    return (
+      <div>
+        <Button type="button" variant="outline" onClick={() => setShowSection(true)}>
+          Cambiar contraseña
+        </Button>
+        <p className="mt-2 text-sm text-muted-foreground">Dejar vacío para mantener la contraseña actual.</p>
+      </div>
+    );
+  }
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {/* Contraseña */}
       <Field>
-        <FieldLabel htmlFor="password"><Mono>Contraseña</Mono></FieldLabel>
+        <FieldLabel htmlFor="password">Contraseña</FieldLabel>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
@@ -46,7 +64,7 @@ export const CredentialsFields: React.FC<CredentialsFieldsProps> = ({
             disabled={isPending}
             {...register("password")}
             type={showPassword ? "text" : "password"}
-            className={cn("pl-10 pr-10", errors.password && "border-destructive")}
+            className={cn("pl-10 pr-10", errors.password && "border-red-500")}
           />
           <Button
             type="button"
@@ -68,7 +86,7 @@ export const CredentialsFields: React.FC<CredentialsFieldsProps> = ({
         {/* Botón generar contraseña */}
         <button
           type="button"
-          onClick={onGeneratePassword}
+          onClick={handleGenerate}
           disabled={isPending}
           className="mt-2 flex gap-2 items-center cursor-pointer text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
@@ -79,7 +97,7 @@ export const CredentialsFields: React.FC<CredentialsFieldsProps> = ({
 
       {/* Confirmar Contraseña */}
       <Field>
-        <FieldLabel htmlFor="confirmPassword"><Mono>Confirmar Contraseña</Mono></FieldLabel>
+        <FieldLabel htmlFor="confirmPassword">Confirmar Contraseña</FieldLabel>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
@@ -89,7 +107,7 @@ export const CredentialsFields: React.FC<CredentialsFieldsProps> = ({
             type={showConfirmPassword ? "text" : "password"}
             className={cn(
               "pl-10 pr-10",
-              errors.confirmPassword && "border-destructive"
+              errors.confirmPassword && "border-red-500"
             )}
           />
           <Button

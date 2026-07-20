@@ -1,13 +1,13 @@
 import { useState, useCallback } from "react";
 import { UseFormSetValue } from "react-hook-form";
-import { CreateClientFormData } from "../../../schemas/create-client.schema";
+import { EditClientFormData } from "../../../schemas/create-client.schema";
 
 const PASSWORD_LENGTH = 12;
 const PASSWORD_CHARSET =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
 
 export function usePasswordField(
-  setValue: UseFormSetValue<CreateClientFormData>
+  setValue: UseFormSetValue<EditClientFormData>
 ) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

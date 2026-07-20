@@ -26,6 +26,7 @@ function ClientDetailPage() {
     <Page className='p-1'>
         <Container>
                 <ClientDetailHeader 
+                  clientId={id}
                   clientName={client?.name || ''}
                   email={client?.email || ''}
                   statusLabel='Activo' 

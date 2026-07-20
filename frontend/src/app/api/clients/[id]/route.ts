@@ -49,7 +49,7 @@ export async function PUT(request: Request, context: context) {
     
         return Response.json(response.data);
     } catch (error) {
-        //console.error(error);
+        console.error(error);
 
         return Response.json(
             {

@@ -1,6 +1,6 @@
 import { Page } from '@/components/layout/page';
 import { H2, Muted, Mono } from '@/components/typography';
-import AddClientForm from '../components/client-create-page/AddClientForm';
+import ClientForm from '../components/client-form/ClientForm';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -25,7 +25,7 @@ function ClientCreatePage() {
             Crea la cuenta del cliente con su acceso inicial y sus datos principales.
           </Muted>
         </div>
-        <AddClientForm />  
+        <ClientForm mode="create" />  
       </div>
     </Page>
   )

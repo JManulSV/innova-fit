@@ -5,6 +5,7 @@ import { ArrowLeftIcon, Edit, Mail, Phone, Target, Trash } from 'lucide-react'
 import Link from 'next/link'
 
 type ClientDetailHeaderProps = {
+    clientId: string;
     clientName?: string;
     email?: string;
     phone?: string;
@@ -13,6 +14,7 @@ type ClientDetailHeaderProps = {
 }
 
 export default function ClientDetailHeader({
+    clientId,
     clientName = 'Nombre del Cliente',
     email = 'Correo del Cliente',
     phone = 'Teléfono del Cliente',
@@ -64,10 +66,12 @@ export default function ClientDetailHeader({
             </div>
 
             {/* Botons actions */}
-            <div className="mt-4 flex gap-2 md:mt-0">
-                <Button variant="outline" >
-                    <Edit className="inline-block mr-2 h-4 w-4" aria-hidden="true" />
-                    Editar Cliente
+            <div  className="mt-4 flex gap-2 md:mt-0">
+                <Button asChild variant="outline" >
+                    <Link href={`/coach/clients/${clientId}/edit`}>
+                        <Edit className="inline-block mr-2 h-4 w-4" aria-hidden="true" />
+                        Editar Cliente
+                    </Link>
                 </Button>
                 <Button variant="destructive">
                     <Trash className="inline-block mr-2 h-4 w-4" aria-hidden="true" />

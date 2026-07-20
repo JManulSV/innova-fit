@@ -6,15 +6,17 @@ import { useRouter } from "next/navigation";
 
 interface FormActionsProps {
   isPending: boolean;
+  submitText?: string;
   onCancel?: () => void;
 }
 
 /**
  * FormActions - Sección de acciones del formulario
- * Incluye: botón crear, botón cancelar
+ * Incluye: botón crear/actualizar, botón cancelar
  */
 export const FormActions: React.FC<FormActionsProps> = ({
   isPending,
+  submitText = "Crear Cliente",
   onCancel,
 }) => {
   const router = useRouter();
@@ -34,7 +36,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
     >
       <Button className="flex" disabled={isPending} type="submit">
         <Plus className="h-4 w-4 mr-1" />
-        {isPending ? "Creando..." : "Crear Cliente"}
+        {submitText}
       </Button>
       <Button
         type="button"

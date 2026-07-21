@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { H1, Muted } from '@/components/typography';
 import { ArrowLeftIcon, Edit, Mail, Phone, Target, Trash } from 'lucide-react'
 import Link from 'next/link'
+import DeleteClientDialog from '../client-delete/DeleteClientDialog';
 
 type ClientDetailHeaderProps = {
     clientId: string;
@@ -73,10 +74,7 @@ export default function ClientDetailHeader({
                         Editar Cliente
                     </Link>
                 </Button>
-                <Button variant="destructive">
-                    <Trash className="inline-block mr-2 h-4 w-4" aria-hidden="true" />
-                    Eliminar Cliente
-                </Button>
+                <DeleteClientDialog buttonLabel='Eliminar-cliente' clientId={Number(clientId)} />
             </div>
 
         </div>

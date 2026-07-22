@@ -5,5 +5,6 @@ export function useExercises() {
     return useQuery({
         queryKey: ["exercises"],
         queryFn: getExercises,
+        select: (response) => response.data.data,
     })
 }

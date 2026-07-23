@@ -33,7 +33,7 @@ export default function LogoutButton() {
       onClick={handleLogout}
     >
       <LogOut className="size-4" />
-      <span>Cerrar sesión</span>
+      <span className="text-xs">Logout</span>
     </Button>
   );
 }

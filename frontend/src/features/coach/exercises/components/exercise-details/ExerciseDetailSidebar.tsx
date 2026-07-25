@@ -21,11 +21,11 @@ export default function ExerciseDetailSidebar({ bodyPart }: ExerciseDetailSideba
                 <h3 className="text-lg font-semibold">{bodyPart?.[0]}</h3>
             </div>
             {bodyPart && bodyPart?.length > 1 && (
-                <div className="border-l-6 rounded-sm border-primary p-2">
+                <div className="border-l-4 rounded-sm border-secondary p-2 w-full bg-muted/30">
                         <>
-                            <Mono className="text-muted-foreground">Secundario</Mono>
+                            <Mono className="text-xs text-muted-foreground font-medium">Secundario</Mono>
                             {bodyPart?.slice(1).map((part, index) => (
-                                <h3 key={index} className="text-lg font-semibold">{part}</h3>
+                                <h3 key={index} className="text-sm font-medium text-foreground">{part}</h3>
                             ))}
                         </>
                 </div>

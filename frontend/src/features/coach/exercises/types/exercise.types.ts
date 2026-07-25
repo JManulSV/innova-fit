@@ -41,9 +41,9 @@ export interface Link {
 
 export interface ExerciseCreateRequest {
     name: string;
-    muscle_groups: string[];
-    description: string;
-    instructions: string;
+    muscle_groups: string[]|null;
+    description: string|null;
+    instructions: string|null;
 }
 
 export interface ExerciseUpdateRequest {

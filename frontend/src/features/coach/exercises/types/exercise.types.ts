@@ -48,8 +48,8 @@ export interface ExerciseCreateRequest {
 
 export interface ExerciseUpdateRequest {
     name: string;
-    muscle_groups: string[];
-    description: string;
-    instructions: string;
+    muscle_groups: string[]|null;
+    description: string|null;
+    instructions: string|null;
 }
 

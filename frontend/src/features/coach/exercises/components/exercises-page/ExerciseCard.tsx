@@ -5,8 +5,10 @@ import { Mono, Muted } from "@/components/typography";
 import { ChevronDown, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Exercise } from "../../types/exercise.types";
+import { useRouter } from "next/navigation";
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
+  const router = useRouter();
   return (
     <div className="rounded-3xl border border-border bg-card p-5 flex flex-col gap-3 h-full min-h-44 hover:border-primary dark:hover:border-primary transition-colors hover:-translate-y-0.5 hover:shadow-md">
       {/* Title + Badge */}
@@ -60,6 +62,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
           className="flex-1 cursor-pointer *:hover:text-primary dark:hover:text-primary hover:border-primary dark:hover:border-primary "
           onClick={(e) => {
             e.stopPropagation();
+            router.push(`/coach/exercises/${exercise.id}/edit`);
           }}
         >
           <Pencil className="h-4 w-4" /> Editar

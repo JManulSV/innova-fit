@@ -67,7 +67,10 @@ export default function ExercisePageDetails() {
           />
         </div>
         <div className="md:col-span-1">
-          <ExerciseDetailSidebar bodyPart={exercise.muscle_groups} />
+          <ExerciseDetailSidebar 
+            bodyPart={exercise.muscle_groups} 
+            exerciseId={exercise.id}
+          />
         </div>
       </div>
     </Container>

@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation";
 interface ExerciseDetailSidebarProps {
   title?: string;
   bodyPart?: string[];
+  exerciseId: string;
 }
 
-export default function ExerciseDetailSidebar({ bodyPart }: ExerciseDetailSidebarProps) {
-
+export default function ExerciseDetailSidebar({ bodyPart, exerciseId }: ExerciseDetailSidebarProps) {
+    const router = useRouter(); 
     return (
     <div>
         {/* Body parts list component */}
@@ -34,11 +35,20 @@ export default function ExerciseDetailSidebar({ bodyPart }: ExerciseDetailSideba
       
       {/* Button components */}
         <Card className="flex flex-col items-start gap-3 p-6 mt-6">
-            <Button className="w-full cursor-pointer" size={"lg"}>
+            <Button 
+                className="w-full cursor-pointer" 
+                size={"lg"}
+                onClick={() => router.push(`/coach/exercises/${exerciseId}/edit`)}
+            >
                 <Edit className="h-6 w-6" />
                 Editar Ejercicio
             </Button>
-            <Button className="w-full cursor-pointer" variant="destructive" size={"lg"}>
+            <Button 
+                className="w-full cursor-pointer" 
+                variant="destructive" 
+                size={"lg"}
+                onClick={() => router.push(`/coach/exercises/${exerciseId}/delete`)}
+            >
                 <Trash className="h-6 w-6" />
                 Eliminar Ejercicio
             </Button>

@@ -6,6 +6,7 @@ import { ChevronDown, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Exercise } from "../../types/exercise.types";
 import { useRouter } from "next/navigation";
+import DeleteExerciseDialog from "../exercise-delete/DeleteExerciseDialog";
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
       )}
 
       {/* Actions */}
-      <div className="flex gap-2 mt-auto pt-2 border-t border-border">
+      <div className="flex justify-between gap-2 mt-auto pt-2 border-t border-border">
         <Button
           variant="outline"
           size="sm"
@@ -67,16 +68,23 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
         >
           <Pencil className="h-4 w-4" /> Editar
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 text-gray-500 dark:text-gray-400 cursor-pointer hover:text-destructive dark:hover:text-destructive hover:border-destructive dark:hover:border-destructive"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <Trash2 className="h-4 w-4" /> Eliminar
-        </Button>
+        <DeleteExerciseDialog
+          exerciseId={exercise.id}
+          buttonLabel="Eliminar"
+          trigger={
+            <Button
+              variant="destructive"
+              size="sm"
+              className="flex-1 cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Trash2 className="inline-block h-4 w-4" aria-hidden="true" />
+              Eliminar
+            </Button>
+          }
+        />
       </div>
     </div>
   );

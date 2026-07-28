@@ -12,10 +12,10 @@ export function Text({ children, className, ...props }: React.ComponentProps<'p'
   return <p className={cn("text-base leading-7", className)} {...props}>{children}</p>;
 }
 
-export function Muted({ children, className, ...props }: React.ComponentProps<'p'>) {
-  return <p {...props} className={cn("text-sm text-muted-foreground", className)}>
+export function Muted({ children, className, ...props }: React.ComponentProps<'span'>) {
+  return <span {...props} className={cn("text-sm text-muted-foreground", className)}>
     {children}
-  </p>;
+  </span>;
 }
 
 export function Mono({ children, className, ...props }: React.ComponentProps<'span'>) {

@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
-import { H2, Mono, Text } from "@/components/typography";
-import { ArrowLeft, Edit, Trash } from "lucide-react";
+import { Mono } from "@/components/typography";
+import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import DeleteExerciseDialog from "../exercise-delete/DeleteExerciseDialog";
 
 interface ExerciseDetailSidebarProps {
   title?: string;
@@ -43,15 +44,13 @@ export default function ExerciseDetailSidebar({ bodyPart, exerciseId }: Exercise
                 <Edit className="h-6 w-6" />
                 Editar Ejercicio
             </Button>
-            <Button 
-                className="w-full cursor-pointer" 
-                variant="destructive" 
-                size={"lg"}
-                onClick={() => router.push(`/coach/exercises/${exerciseId}/delete`)}
-            >
-                <Trash className="h-6 w-6" />
-                Eliminar Ejercicio
-            </Button>
+            <div className="w-full">
+                <DeleteExerciseDialog  
+                exerciseId={parseInt(exerciseId)} 
+                buttonLabel="Eliminar ejercicio" 
+                linkRedirect={`/coach/exercises`}
+                />
+            </div>
         </Card>
     </div>
   )

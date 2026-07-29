@@ -28,7 +28,7 @@ class UpdateClientRequest extends FormRequest
             'email' => [
                 'sometimes',
                 'email',
-                Rule::unique('users')->ignore($this->route('id')),
+                Rule::unique('users')->ignore($this->route('client')),
             ],
             'password' => 'sometimes|string|min:8',
         ];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WorkoutDayTemplate;
+use App\Http\Resources\WorkoutDayTemplateResource;
 use App\Http\Requests\StoreWorkoutDayTemplateRequest;
 use App\Http\Requests\UpdateWorkoutDayTemplateRequest;
 use Illuminate\Http\Request;
@@ -12,15 +13,18 @@ class WorkoutDayTemplateController extends Controller
 {
     public function index(Request $request)
     {
-        $query = WorkoutDayTemplate::where(
-            'coach_id', 
-            $request->user()->id
-        )->orderBy('name');
-        $workoutDayTemplates = $query->paginate(10);
+        $query = WorkoutDayTemplate::where('coach_id', $request->user()->id)
+            ->with(['exercises' => function ($q) {
+                $q->orderBy('workout_day_template_exercises.exercise_order');
+            }])
+            ->withCount('exercises')
+            ->orderBy('name');
+
+        $paginator = $query->paginate(10);
 
         return response()->json([
             'success' => true,
-            'data' => $workoutDayTemplates,
+            'data' => WorkoutDayTemplateResource::collection($paginator),
             'message' => 'Workout day templates retrieved successfully',
         ]);
     }

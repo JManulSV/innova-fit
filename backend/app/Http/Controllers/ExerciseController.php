@@ -6,6 +6,7 @@ use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
 use Illuminate\Http\Request;
+use App\Http\Resources\ExerciseResource;
 
 class ExerciseController extends Controller
 {
@@ -16,7 +17,7 @@ class ExerciseController extends Controller
         
         return response()->json([
             'success' => true,
-            'data' => $exercisesPaginated,
+            'data' => ExerciseResource::collection($exercisesPaginated),
             'message' => 'Exercises retrieved successfully',
         ]);
     }

@@ -27,14 +27,14 @@ export interface Data {
 }
 
 export interface Template {
-    id:          number;
-    coach_id:    number;
-    name:        string;
-    description: string;
-    exercises?:   TemplateExercise[];
-    created_at:  Date;
-    updated_at:  Date;
-    deleted_at:  null;
+    id:                 number;
+    name:               string;
+    description:        string;
+    exercises:          TemplateExercise[];
+    total_exercises:    number;
+    has_more_exercises: boolean;
+    created_at:         Date;
+    updated_at:         Date;
 }
 
 export interface Link {
@@ -45,16 +45,15 @@ export interface Link {
 }
 
 export interface TemplateExercise {
-    id:            number;
-    coach_id:      number;
-    name:          string;
-    description:   string;
+    id:             number;
+    name:           string;
+    description:    string;
     instructions:  string;
-    muscle_groups: string[];
-    created_at:    Date;
-    updated_at:    Date;
-    deleted_at:    null;
-    pivot:         Pivot;
+    muscle_groups:  string[];
+    sets:           number;
+    reps:           number;
+    rest_seconds:   number;
+    exercise_order: number;
 }
 
 export interface Pivot {

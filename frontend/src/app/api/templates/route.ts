@@ -17,7 +17,7 @@ export async function GET() {
             }
         })
     
-        return Response.json(response.data.data.data);
+        return Response.json(response.data.data);
     } catch (error) {
         console.error('Error fetching templates:', error);
         return Response.json({message: 'Internal server error'}, {status: 500});

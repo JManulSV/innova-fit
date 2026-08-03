@@ -5,7 +5,7 @@ import { useExercise } from "../hooks/use-exercise";
 import ExerciseDetailMain from "../components/exercise-details/ExerciseDetailMain";
 import ExerciseDetailSkeleton from "../components/exercise-details/ExerciseDetailSkeleton";
 import ExerciseDetailSidebar from "../components/exercise-details/ExerciseDetailSidebar";
-import { Container } from "@/components/layout/container";
+import { Container } from "@/components/design-system/container";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Mono } from "@/components/typography";

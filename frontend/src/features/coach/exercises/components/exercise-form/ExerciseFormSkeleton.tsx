@@ -1,6 +1,6 @@
 "use client"
 import { Card } from '@/components/ui/card'
-import { Page } from '@/components/layout/page'
+import { Page } from '@/components/design-system/page'
 
 export default function ExerciseFormSkeleton() {
   return (

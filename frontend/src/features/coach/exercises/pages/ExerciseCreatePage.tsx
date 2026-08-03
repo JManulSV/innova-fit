@@ -1,6 +1,6 @@
 "use client"
 
-import { Page } from '@/components/layout/page'
+import { Page } from '@/components/design-system/page'
 import { H2, Mono, Muted } from '@/components/typography'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'

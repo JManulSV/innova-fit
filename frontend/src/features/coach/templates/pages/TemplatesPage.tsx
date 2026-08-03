@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Page } from "@/components/layout/page";
-import { Container } from "@/components/layout/container";
+import { Page } from "@/components/design-system/page";
+import { Container } from "@/components/design-system/container";
 import { Text, Muted } from "@/components/typography";
 
 import { useDeleteTemplate } from "@/features/coach/templates/hooks/use-delete-template";

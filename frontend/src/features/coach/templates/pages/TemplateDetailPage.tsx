@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
-import { Container } from "@/components/layout/container";
+import { Container } from "@/components/design-system/container";
 import { H1, Muted, Text } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

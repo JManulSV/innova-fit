@@ -1,4 +1,4 @@
-import { Page } from '@/components/layout/page';
+import { Page } from '@/components/design-system/page';
 import { H2, Muted, Mono } from '@/components/typography';
 import ClientForm from '../components/client-form/ClientForm';
 import { ArrowLeft } from 'lucide-react';

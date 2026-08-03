@@ -1,5 +1,5 @@
-import { Container } from '@/components/layout/container'
-import { Page } from '@/components/layout/page'
+import { Container } from '@/components/design-system/container'
+import { Page } from '@/components/design-system/page'
 import { Button } from '@/components/ui/button'
 
 type ClientDetailErrorProps = {

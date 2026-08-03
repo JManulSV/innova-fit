@@ -1,7 +1,7 @@
 "use client";
 
-import { Container } from "@/components/layout/container";
-import { Stack } from "@/components/layout/stack";
+import { Container } from "@/components/design-system/container";
+import { Stack } from "@/components/design-system/stack";
 import ExercisesPageHeader from "../components/exercises-page/ExercisesPageHeader";
 import { useExercises } from "../hooks/use-exercises";
 import ExercisesPageFilterBar from "../components/exercises-page/ExercisesPageFilterBar";

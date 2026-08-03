@@ -1,6 +1,6 @@
-import { Page } from '@/components/layout/page'
+import { Page } from '@/components/design-system/page'
 import ClientDetailHeader from '../components/client-detail-page/ClientDetailHeader'
-import { Container } from '@/components/layout/container'
+import { Container } from '@/components/design-system/container'
 import ClientDetailMetrics from '../components/client-detail-page/ClientDetailMetrics'
 import ClientDetailTabs from '../components/client-detail-page/ClientDetailTabs'
 import ClientDetailSkeleton from '../components/client-detail-page/ClientDetailSkeleton'

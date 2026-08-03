@@ -2,7 +2,7 @@ import { useParams, useRouter } from "next/navigation";
 import ClientForm from "../components/client-form/ClientForm";
 import { useClient } from "../hooks/use-client";
 import ClientFormSkeleton from "../components/client-form/components/ClientFormSkeleton";
-import { Page } from "@/components/layout/page";
+import { Page } from "@/components/design-system/page";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { H2, Mono, Muted } from "@/components/typography";

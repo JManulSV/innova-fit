@@ -3,8 +3,8 @@ import ClientsPageHeader from "../components/clients-page/ClientsPageHeader"
 import ClientsPageSkeleton from "../components/clients-page/ClientsPageSkeleton";
 import ClientsPageTable from "../components/clients-page/ClientsPageTable";
 import { useClients } from "../hooks/use-clients";
-import { Container } from "@/components/layout/container";
-import { Stack } from "@/components/layout/stack";
+import { Container } from "@/components/design-system/container";
+import { Stack } from "@/components/design-system/stack";
 
 function ClientsPage() {
   const { data, isPending } = useClients();

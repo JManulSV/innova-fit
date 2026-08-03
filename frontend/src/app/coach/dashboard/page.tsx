@@ -1,6 +1,6 @@
 "use client";
-import { Container } from '@/components/layout/container'
-import { Page } from '@/components/layout/page'
+import { Container } from '@/components/design-system/container'
+import { Page } from '@/components/design-system/page'
 import { H2, Text } from '@/components/typography'
 import { Button } from '@/components/ui/button'
 import QuickAction from '@/features/coach/dashboard/components/QuickAction'

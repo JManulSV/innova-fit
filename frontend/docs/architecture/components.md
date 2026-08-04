@@ -1,417 +1,391 @@
-# Components Architecture
+# Components
 
 ## Purpose
 
-This document defines the architecture, responsibilities and conventions for every React component in Innova-Fit.
+This document defines how UI components are created, organized, and reused throughout the Innova-Fit frontend.
 
-The objective is to build a frontend that is:
+The goal is to build a consistent, maintainable, and predictable component architecture.
 
-* Consistent
-* Maintainable
-* Scalable
-* Predictable
-* Easy to understand for both developers and AI assistants.
-
-These guidelines apply to every component in the project.
+Every new component should have a clear responsibility and an obvious place in the project.
 
 ---
 
-# Philosophy
+# Core Principles
 
-Components are **building blocks**.
+Components should:
 
-Every screen should be assembled from small, reusable components with a single responsibility.
+* Have a single responsibility.
+* Be composable.
+* Be reusable when appropriate.
+* Be easy to understand.
+* Prefer existing abstractions over creating new ones.
 
-Before creating a new component, always ask:
-
-> **Can an existing component solve this problem?**
-
-If the answer is yes, prefer extending or composing the existing component instead of creating a new one.
-
----
-
-# Design System
-
-Innova-Fit uses **shadcn/ui** as the foundation of its Design System.
-
-Before creating a new UI primitive:
-
-1. Verify whether shadcn/ui already provides the component.
-2. Prefer composing or extending existing shadcn components.
-3. Avoid recreating components that already exist.
-
-Create a custom primitive only when:
-
-* The component does not exist in shadcn/ui.
-* The application requires project-specific behavior.
-* Composition is not enough to satisfy the requirements.
-
-Whenever possible, composition should be preferred over customization.
+Avoid creating duplicate UI.
 
 ---
 
 # Component Hierarchy
 
-Every component belongs to one of the following architectural layers.
+Before creating a new component, follow this order:
 
 ```text
-Pages
-    ↓
-Feature Components
-    ↓
+shadcn/ui
+      ↓
+Design System
+      ↓
 Shared Components
-    ↓
-Design System Components
-    ↓
-UI Components (shadcn/ui)
+      ↓
+Feature Components
+      ↓
+New Component
 ```
 
-Dependencies always flow downward.
-
-Lower layers must never depend on higher layers.
+Always reuse before creating.
 
 ---
 
-# UI Components
+# Component Selection Priority
 
-## Purpose
+## 1. shadcn/ui
 
-UI Components are the lowest level of the application.
+Always check whether shadcn/ui already provides the component.
 
-They should be generic, reusable and independent from the business domain.
-
-Whenever possible, use **shadcn/ui** components instead of creating new primitives.
-
-Examples:
+Prefer using existing components such as:
 
 * Button
 * Input
-* Select
+* Form
 * Dialog
+* Alert Dialog
+* Card
+* Table
 * Badge
+* Tabs
+* Select
+* Dropdown Menu
+* Popover
 * Tooltip
-* Checkbox
+* Sheet
 * Skeleton
 
-### Responsibilities
-
-A UI Component should only:
-
-* Render UI
-* Expose reusable props
-* Handle visual states
-* Remain accessible
-
-### Must NOT
-
-* Fetch data
-* Know business entities
-* Import Feature Components
-* Contain application-specific logic
+Do not recreate shadcn/ui components with custom Tailwind unless the design requires behavior or styling that cannot reasonably be achieved by composing or extending them.
 
 ---
 
-# Design System Components
+## 2. Design System
 
-## Purpose
+Location:
 
-Design System Components standardize the application's layout and visual consistency.
+```text
+src/components/design-system/
+```
+
+Contains layout primitives and reusable design language.
 
 Examples:
 
-* Page
-* Container
-* Stack
+```text
+Page
+Container
+Stack
+```
 
-These components provide reusable layout primitives that define:
+Always use these components instead of recreating layout utilities.
 
-* spacing
-* widths
-* alignment
-* page structure
+Documentation:
 
-Before creating custom layouts or spacing utilities, verify whether an existing Design System component already solves the problem.
-
-Detailed documentation is available in:
-
-`docs/design-system/layout.md`
+```text
+docs/design-system/layout.md
+```
 
 ---
 
-# Shared Components
+## 3. Shared Components
 
-## Purpose
+Location:
 
-Shared Components contain business-related UI that is reused across multiple features.
+```text
+src/components/shared/
+```
+
+Contains reusable business-agnostic components used across multiple features.
 
 Examples:
 
-* MetricCard
-* SearchBar
-* EmptyState
-* DeleteDialog
-* ClientAvatar
+```text
+DataTable
+EmptyState
+SearchInput
+ConfirmDialog
+LoadingOverlay
+```
 
-A Shared Component may:
+A shared component should not contain feature-specific logic.
 
-* Receive domain models
-* Use custom hooks
-* Display business information
+---
 
-A Shared Component should remain generic enough to be reused by different features.
+## 4. Feature Components
 
-If a component is reused by multiple features, it belongs in:
+Location:
 
 ```text
-src/components/shared
+features/<feature>/components/
 ```
 
----
+Contains components used only by a single feature.
 
-# Feature Components
-
-## Purpose
-
-Feature Components belong to a single feature.
-
-Examples:
-
-* ExerciseTable
-* ExerciseForm
-* ExerciseFilters
-* ExerciseDeleteDialog
-
-Feature Components may:
-
-* Use TanStack Query
-* Use React Hook Form
-* Use feature-specific hooks
-* Handle mutations
-* Manage feature state
-
-If a component is only used inside one feature, it should remain inside that feature.
-
----
-
-# Page Components
-
-Pages compose the application.
-
-Their responsibility is assembling Feature Components into a complete user interface.
-
-Pages should contain as little business logic as possible.
-
-Business logic belongs in:
-
-* hooks
-* services
-* feature components
-
----
-
-# Dependency Rules
-
-Allowed
+Example:
 
 ```text
-Pages
-    ↓
-Feature Components
-    ↓
-Shared Components
-    ↓
-Design System Components
-    ↓
-UI Components
+ExerciseCard
+ExerciseForm
+ExerciseTable
+DeleteDialog
 ```
 
-Not Allowed
+Feature components may use:
+
+* Design System components.
+* Shared components.
+* shadcn/ui components.
+
+They should not be imported by unrelated features unless they are promoted to `shared`.
+
+---
+
+# Component Organization
+
+## Small Components
+
+Simple components remain as a single file.
+
+Example:
 
 ```text
-UI Components
-    ↓
-Feature Components
+components/
+
+DeleteDialog.tsx
+
+ExerciseCard.tsx
 ```
 
-A lower-level component must never import a higher-level component.
+Keep the implementation concise and focused.
 
 ---
 
-# Single Responsibility Principle
+## Large Components
 
-Every component should have exactly one reason to change.
+Complex components should have their own directory.
 
-If a component is responsible for:
-
-* rendering UI
-* fetching data
-* validating forms
-* opening dialogs
-* handling mutations
-
-it should probably be split into multiple components.
-
----
-
-# Composition over Configuration
-
-Prefer composing components instead of creating highly configurable ones.
-
-Good
-
-```tsx
-<Card>
-    <CardHeader />
-    <CardContent />
-    <CardFooter />
-</Card>
-```
-
-Avoid components with dozens of configuration props.
-
----
-
-# Reusability
-
-Do not create reusable components preemptively.
-
-A component should usually become reusable after it has appeared in multiple places.
-
-Promote components gradually.
-
-The typical lifecycle is:
+Example:
 
 ```text
-Screen Component
-        ↓
-Feature Component
-        ↓
-Shared Component
+components/
+
+exercise-table/
+
+├── ExerciseTable.tsx
+├── ExerciseTable.columns.tsx
+├── ExerciseTable.types.ts
+└── index.ts
 ```
 
-This approach avoids premature abstraction.
-
----
-
-# Component Location
-
-The detailed folder organization is documented in:
-
-`docs/architecture/folders.md`
-
-As a general rule:
-
-* Components used by a single screen stay inside that screen.
-* Components reused within a feature belong to that feature.
-* Components reused across multiple features belong to `src/components/shared`.
-* UI primitives belong to `src/components/ui`.
-* Layout primitives belong to `src/components/design-system`.
-
----
-
-# Component Folder Structure
-
-Large reusable components should use their own folder.
+Another example:
 
 ```text
-ExerciseCard/
+components/
 
-    ExerciseCard.tsx
-    ExerciseCard.types.ts
-    ExerciseCard.docs.md
-    index.ts
+exercise-form/
+
+├── ExerciseForm.tsx
+├── ExerciseFormFields.tsx
+├── ExerciseForm.types.ts
+└── index.ts
 ```
 
-Small UI primitives may remain as a single file when appropriate.
+Create a dedicated directory when a component:
+
+* Has multiple files.
+* Contains subcomponents.
+* Has custom types.
+* Has configuration.
+* Has complex internal logic.
+
+---
+
+# Component Responsibilities
+
+A component is responsible for:
+
+* Rendering UI.
+* Handling user interaction.
+* Composing smaller components.
+* Receiving data through props.
+* Emitting events.
+
+Components should remain focused on presentation.
+
+---
+
+# What Components Should NOT Do
+
+Components should not:
+
+* Perform API requests directly.
+* Contain business logic.
+* Access backend services.
+* Duplicate validation logic.
+* Duplicate server state.
+
+Instead, use feature hooks.
+
+Flow:
+
+```text
+Page
+
+↓
+
+Component
+
+↓
+
+Feature Hook
+
+↓
+
+Service
+
+↓
+
+Laravel API
+```
 
 ---
 
 # Props
 
-Props should be explicit.
+Components should receive everything they need through props whenever possible.
 
-Good examples:
+Avoid hidden dependencies.
 
-* variant
-* size
-* loading
-* disabled
+Prefer:
 
-Avoid generic props such as:
+```tsx
+<ExerciseCard exercise={exercise} />
+```
 
-* config
-* options
-* data
+Instead of:
 
-unless they represent an actual domain model.
+```tsx
+const exercise = useExerciseStore();
+```
+
+unless the component is specifically designed to work with global state.
+
+---
+
+# Reusability
+
+A component should only become shared when it is actually reused.
+
+Promotion strategy:
+
+```text
+Feature
+
+↓
+
+Shared
+```
+
+Do not create shared abstractions prematurely.
+
+---
+
+# Naming Conventions
+
+Use PascalCase for component names.
+
+Examples:
+
+```text
+ExerciseCard
+
+ExerciseForm
+
+DeleteDialog
+
+ClientAvatar
+```
+
+Component folders should use kebab-case.
+
+Examples:
+
+```text
+exercise-table/
+
+exercise-form/
+
+client-selector/
+```
+
+The main component should match the folder name.
+
+Example:
+
+```text
+exercise-table/
+
+ExerciseTable.tsx
+```
 
 ---
 
 # Styling
 
-All styling must follow the project's Design System.
+Styling should follow the project's Design System.
 
-Theme tokens, colors, spacing and typography are defined in:
+Before adding custom spacing or layout:
 
-`src/app/globals.css`
+1. Check the Design System.
+2. Check existing layout primitives.
+3. Use Container, Page and Stack whenever appropriate.
 
-Components should reuse those tokens instead of introducing arbitrary visual values.
+Avoid arbitrary spacing values.
 
-Prefer existing Design System components before adding custom spacing or layout classes.
+Theme values are defined in:
 
----
+```text
+src/app/globals.css
+```
 
-# Accessibility
-
-Interactive components must support:
-
-* Keyboard navigation
-* Focus states
-* Disabled states
-* Appropriate ARIA attributes when necessary
-
-Accessibility is a requirement, not an optional enhancement.
+Do not redefine design tokens inside components.
 
 ---
 
-# Documentation
+# Component Checklist
 
-Every reusable component should include documentation describing:
-
-* Purpose
-* Responsibilities
-* When to use it
-* When not to use it
-* Props
-* Examples
-
-Documentation is considered part of the component.
-
----
-
-# Before Creating a New Component
-
-Before implementing a new component, verify:
+Before creating a new component, ask:
 
 1. Does shadcn/ui already provide it?
-2. Can an existing Design System component solve the layout?
-3. Does a Shared Component already exist?
-4. Is the component specific to a single feature?
-5. Does it have only one responsibility?
+2. Does the Design System already solve this?
+3. Does a shared component already exist?
+4. Does the feature already contain something similar?
+5. Can I extend an existing component instead?
 
-If the answer is unclear, create it inside the feature first.
-
-It can always be promoted later.
+Only create a new component if the answer to all previous questions is "No".
 
 ---
 
-# Core Principle
+# Guiding Principles
 
-A component should be:
-
-* Easy to understand
-* Easy to maintain
-* Easy to replace
-* Easy to remove
-
-Small, focused and composable components are always preferred over large, highly configurable ones.
+* Prefer composition over duplication.
+* Keep components small and focused.
+* Keep business logic outside the UI.
+* Reuse before creating.
+* Promote components only when reuse is proven.
+* Follow the Design System.
+* Prefer shadcn/ui whenever possible.
+* Every component should have a single responsibility.

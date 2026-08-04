@@ -2,279 +2,168 @@
 
 ## Purpose
 
-This document defines how business features are structured and developed in the Innova-Fit frontend.
+This document defines how business features are designed and implemented in the Innova-Fit frontend.
 
-A feature represents a self-contained business capability of the application.
+A feature represents a complete business capability of the application.
 
 The objective is to create features that are:
 
 * Independent.
-* Easy to understand.
-* Easy to maintain.
-* Scalable.
-* Predictable for developers and AI assistants.
+* Maintainable.
+* Predictable.
+* Easy to extend.
+* Consistent across the project.
+
+The directory structure is documented in `folders.md`. This document focuses on responsibilities and data flow.
 
 ---
 
-# Core Principle
+# Core Principles
 
-## Features are business modules
+Every feature should:
 
-A feature contains everything required to implement a specific business capability.
+* Solve a single business capability.
+* Keep related code together.
+* Reuse existing abstractions whenever possible.
+* Follow the project's Design System.
+* Keep business logic outside of UI components.
+
+A feature should be understandable without reading unrelated parts of the application.
+
+---
+
+# What is a Feature?
+
+A feature encapsulates everything required to implement a business domain.
 
 Examples:
 
 ```text
 features/
 
-├── exercises/
+├── auth/
 ├── clients/
+├── exercises/
 ├── templates/
-├── workouts/
-└── auth/
+└── workouts/
 ```
 
-Each feature owns:
+Each feature owns its:
 
-* Screens.
+* Pages.
 * Components.
 * Hooks.
 * Services.
-* Schemas.
+* Validation schemas.
 * Types.
-* Utils.
-* Constants.
-* Feature-specific state.
 
 ---
 
-# Feature Philosophy
+# Data Flow
 
-## Local First, Promote Later
-
-Code should start as close as possible to where it is used.
-
-Do not create shared abstractions before reuse exists.
-
-The promotion flow is:
+Every feature follows the same flow.
 
 ```text
-Screen
-   ↓
-Feature
-   ↓
-Shared
+Next.js Route
+
+        ↓
+
+Feature Page
+
+        ↓
+
+Feature Components
+
+        ↓
+
+Feature Hooks
+
+        ↓
+
+Feature Services
+
+        ↓
+
+Laravel API
 ```
 
-Example:
-
-A component used only in exercise creation:
-
-```text
-screens/create/components/
-```
-
-When reused by another exercise screen:
-
-```text
-features/exercises/components/
-```
-
-When reused by another feature:
-
-```text
-components/shared/
-```
-
-This rule applies to:
-
-* Components.
-* Hooks.
-* Utils.
-* Schemas.
-* Types.
-* Constants.
+Each layer has a single responsibility.
 
 ---
 
-# Feature Structure
-
-A typical feature follows this structure:
-
-```text
-features/
-
-└── exercises/
-
-    ├── screens/
-    ├── components/
-    ├── hooks/
-    ├── services/
-    ├── schemas/
-    ├── types/
-    ├── utils/
-    ├── constants/
-    └── stores/
-```
-
-Not every feature requires every folder.
-
-Create folders only when they are needed.
-
----
-
-# Screens
+# Pages
 
 ## Purpose
 
-A Screen represents a complete application page.
+Pages represent complete application views.
 
-A Screen corresponds to a user-facing route or navigable view.
-
-Examples:
-
-```text
-features/exercises/
-
-screens/
-
-├── list/
-├── create/
-└── edit/
-```
+A page is rendered by a Next.js route and is responsible for composing the user interface.
 
 Examples:
 
 ```text
-CreateExerciseScreen
+ListPage
 
-ExerciseListScreen
+CreatePage
 
-EditExerciseScreen
+DetailsPage
+
+EditPage
 ```
 
----
+Pages should:
 
-## Screen Responsibilities
+* Compose feature components.
+* Connect feature hooks.
+* Coordinate user interactions.
+* Manage page-level UI state.
 
-Screens are composition layers.
+Pages should NOT:
 
-They are responsible for:
+* Make HTTP requests.
+* Contain business logic.
+* Implement validation rules.
+* Duplicate reusable UI.
 
-* Composing components.
-* Connecting feature hooks.
-* Coordinating user flows.
-* Managing screen-specific UI state.
-
----
-
-## Screens should NOT
-
-Screens should not:
-
-* Make API requests directly.
-* Contain business rules.
-* Contain complex validation logic.
-* Implement reusable logic.
-
-The rule:
-
-> Screens coordinate the feature, but they do not own business logic.
+Pages orchestrate the feature; they do not implement it.
 
 ---
 
-# Component Organization
+# Components
 
-Components follow the same promotion strategy.
+## Purpose
 
-## Screen Components
+Components build the feature's user interface.
 
-Components used by only one screen belong to that screen.
+Examples:
 
-Example:
+* ExerciseForm
+* ExerciseTable
+* DeleteDialog
+* ExerciseCard
 
-```text
-screens/create/
+Components should:
 
-components/
+* Render UI.
+* Receive data through props.
+* Handle user interactions.
+* Compose smaller components.
 
-└── ExercisePreview.tsx
-```
+Components should NOT:
 
----
+* Call backend services directly.
+* Perform HTTP requests.
+* Contain business logic.
+* Manage server state.
 
-## Feature Components
+When possible, use:
 
-Components reused by multiple screens inside the same feature belong to the feature.
+1. shadcn/ui
+2. Design System
+3. Shared Components
+4. Feature Components
 
-Example:
-
-```text
-features/exercises/
-
-components/
-
-├── ExerciseCard.tsx
-├── ExerciseTable.tsx
-└── ExerciseFilters.tsx
-```
-
----
-
-## Shared Components
-
-Components reused by multiple features belong to:
-
-```text
-src/components/shared
-```
-
-Only promote components when reuse is proven.
-
----
-
-# Component Organization Style
-
-Innova-Fit uses a mixed approach.
-
-## Small components
-
-Simple components remain as single files.
-
-Example:
-
-```text
-components/
-
-└── MuscleBadge.tsx
-```
-
----
-
-## Complex components
-
-Large components receive their own folder.
-
-Example:
-
-```text
-components/
-
-└── exercise-table/
-
-    ├── ExerciseTable.tsx
-    ├── ExerciseTable.columns.tsx
-    ├── ExerciseTable.types.ts
-    └── index.ts
-```
-
-A component deserves a folder when it has:
-
-* Multiple related files.
-* Custom types.
-* Configuration.
-* Complex logic.
-* Subcomponents.
+before creating new UI.
 
 ---
 
@@ -282,51 +171,34 @@ A component deserves a folder when it has:
 
 ## Purpose
 
-Hooks connect the UI layer with feature logic.
+Hooks connect the UI with the business layer.
 
-The flow is:
+Hooks are the entry point for every data operation.
 
-```text
-Component
-
-    ↓
-
-Feature Hook
-
-    ↓
-
-Service
-
-    ↓
-
-Laravel API
-```
-
----
-
-## Hook Location
-
-Follow the promotion strategy.
-
-Example:
-
-Only one screen:
+Examples:
 
 ```text
-screens/create/hooks/
+useExercises()
+
+useExercise()
+
+useCreateExercise()
+
+useUpdateExercise()
 ```
 
-Multiple screens:
+Hooks may:
 
-```text
-features/exercises/hooks/
-```
+* Use TanStack Query.
+* Coordinate mutations.
+* Transform data for the UI.
+* Connect services.
 
-Multiple features:
+Hooks should NOT:
 
-```text
-src/hooks/
-```
+* Render UI.
+* Perform routing.
+* Contain JSX.
 
 ---
 
@@ -334,270 +206,196 @@ src/hooks/
 
 ## Purpose
 
-Services handle communication with the backend.
+Services communicate with the backend.
 
-Example:
+Examples:
 
 ```text
-features/exercises/
+exercise.service.ts
 
-services/
+client.service.ts
 
-└── exercise.service.ts
+template.service.ts
 ```
 
----
+Services are responsible for:
 
-## Services are responsible for:
-
-* API requests.
+* HTTP requests.
 * Request formatting.
 * Response transformation.
 
----
+Services should remain framework-independent whenever possible.
 
-## Services are NOT responsible for:
+Services should NOT:
 
-* React logic.
-* UI state.
-* Notifications.
-* Component behavior.
-
----
-
-# Schemas
-
-## Purpose
-
-Schemas define validation rules.
-
-Schemas follow the Local First principle.
-
----
-
-## Screen schema
-
-Only one screen uses it:
-
-```text
-screens/create/schemas/
-```
-
----
-
-## Feature schema
-
-Multiple screens use it:
-
-```text
-features/exercises/schemas/
-```
-
----
-
-## Global schema
-
-Only for application-wide concepts:
-
-```text
-src/schemas/
-```
-
-Avoid placing business-specific schemas globally.
+* Use React hooks.
+* Access component state.
+* Render UI.
 
 ---
 
 # Types
 
-## Purpose
+Each feature owns its own TypeScript types.
 
-Types define contracts between layers.
+Examples:
 
-Types follow the same promotion strategy.
+```text
+types.ts
+```
+
+Types define:
+
+* Domain models.
+* API contracts.
+* Form values.
+
+If the file becomes difficult to maintain, it may be promoted into a `types/` directory.
+
+Avoid creating global business types unless they are shared across multiple features.
 
 ---
 
-## Screen types
+# Validation Schemas
 
-Only one screen:
+Each feature owns its validation schemas.
 
-```text
-screens/create/types/
-```
-
----
-
-## Feature types
-
-Multiple screens:
+Examples:
 
 ```text
-features/exercises/types/
+schemas.ts
 ```
 
----
+Schemas define:
 
-## Global types
+* Form validation.
+* Input constraints.
+* Data transformations.
 
-Only shared application concepts:
+If the file grows significantly, it may be promoted into a `schemas/` directory.
 
-```text
-src/types/
-```
-
-Avoid creating global business types prematurely.
+Validation should not be duplicated inside components.
 
 ---
 
 # State Management
 
-Innova-Fit separates state by responsibility.
+Choose the appropriate tool depending on the type of state.
 
----
+## Local UI State
 
-# Local UI State
-
-Use React state for temporary UI behavior.
+Use React state.
 
 Examples:
 
-* Modal visibility.
-* Selected tabs.
-* Dropdown state.
+* Dialog visibility.
+* Selected tab.
+* Expanded sections.
 * Temporary interactions.
 
 Tools:
 
-* useState.
-* useReducer.
+* useState
+* useReducer
 
 ---
 
-# Server State
+## Server State
 
-Server data belongs to TanStack Query.
+Use TanStack Query.
 
 Examples:
 
-* Exercises.
+* Exercise list.
 * Clients.
-* Workout templates.
-* Progress data.
-
-Flow:
-
-```text
-Component
-
-↓
-
-Feature Hook
-
-↓
-
-TanStack Query
-
-↓
-
-Laravel API
-```
+* Templates.
+* Progress history.
 
 Do not duplicate server state inside Zustand.
 
 ---
 
-# Global Application State
+## Global State
 
-Use Zustand only for truly global state.
+Use Zustand only for application-wide state.
 
 Examples:
 
 * Authentication.
-* Preferences.
-* Application settings.
+* User preferences.
+* Global settings.
 
-Location:
-
-```text
-src/stores/
-```
+Avoid storing temporary page state globally.
 
 ---
 
-# Feature State
+# Reusability
 
-Feature-specific shared workflows may use feature stores.
+Start local.
 
-Example:
+Promote only when reuse is proven.
+
+Promotion flow:
 
 ```text
-features/workouts/
+Feature
 
-stores/
+      ↓
 
-└── workout-builder.store.ts
+Shared
 ```
 
-Use this only when multiple screens need the same temporary feature state.
+Do not create abstractions before they are needed.
 
 ---
 
 # Feature Documentation
 
-Feature documentation is optional.
-
-General architecture is documented in:
+General architecture lives in:
 
 ```text
 docs/
+
+architecture/
+
+design-system/
 ```
 
-A feature may contain a README.md when it has:
+A feature may include a `README.md` only when it contains:
 
 * Complex business rules.
 * Important workflows.
 * Architectural decisions.
-
-Example:
-
-```text
-features/
-
-└── billing/
-
-    ├── README.md
-    ├── screens/
-    ├── hooks/
-    └── services/
-```
+* Domain-specific documentation.
 
 Avoid creating README files that only describe obvious functionality.
 
 ---
 
-# Creating a New Feature Checklist
+# Creating a New Feature
 
-Before creating a new feature:
+Before implementing a feature:
 
 1. Define the business capability.
-2. Create the feature folder.
-3. Add only required directories.
-4. Start code locally.
-5. Promote reusable code only when necessary.
-6. Keep screens focused on composition.
-7. Keep business logic inside hooks/services.
+2. Identify existing reusable components.
+3. Review the Design System.
+4. Review available shadcn/ui components.
+5. Reuse existing hooks and services whenever possible.
+6. Keep Pages focused on composition.
+7. Keep business logic inside Hooks.
+8. Keep API communication inside Services.
 
 ---
 
-# Core Principle
+# Guiding Principles
 
-A feature should clearly communicate:
-
-* What business problem it solves.
-* Where its logic lives.
-* How its data flows.
-* How it can evolve.
-
-The best architecture is not the one with the most abstractions.
-
-It is the one where every piece has an obvious place.
+* Features own business logic.
+* Pages compose the interface.
+* Components build the UI.
+* Hooks connect the UI with business logic.
+* Services communicate with Laravel.
+* Prefer reuse over duplication.
+* Prefer composition over abstraction.
+* Follow the Design System.
+* Prefer shadcn/ui whenever possible.
+* Every file should have a single responsibility.

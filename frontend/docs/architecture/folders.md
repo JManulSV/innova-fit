@@ -1,31 +1,22 @@
-# Folder Architecture
+# Folder Structure
 
 ## Purpose
 
 This document defines the directory structure used throughout the Innova-Fit frontend.
 
-Its goal is to keep the project:
+The goal is to create a predictable architecture where every file has an obvious place.
 
-* Predictable
-* Easy to navigate
-* Scalable
-* Consistent
+The project separates:
 
-Every new file should have a clear and predictable location.
-
----
-
-# Core Principle
-
-Files should live as close as possible to the feature that owns them.
-
-Promote code only when it becomes reusable.
-
-Avoid placing files in shared folders "just in case".
+* Application routing.
+* Business features.
+* Shared UI.
+* Global utilities.
+* Documentation.
 
 ---
 
-# Project Structure
+# High-Level Structure
 
 ```text
 src/
@@ -33,403 +24,405 @@ src/
 ├── app/
 ├── components/
 ├── features/
-├── hooks/
 ├── lib/
 ├── providers/
 ├── stores/
+├── hooks/
 ├── types/
-└── utils/
+├── utils/
+└── ...
 ```
 
-Each top-level directory has a single responsibility.
+Each directory has a single responsibility.
 
 ---
 
 # app/
 
-Contains the application's routes using the Next.js App Router.
+## Purpose
 
-Responsibilities:
+The `app` directory defines the application's routes using the Next.js App Router.
 
-* Define routes.
-* Configure layouts.
-* Configure route groups.
-* Mount feature screens.
+It should remain as thin as possible.
 
-Pages should contain little or no business logic.
+Route files should delegate rendering to the corresponding Feature Page.
 
 Example:
 
 ```text
 app/
 
-└── (coach)/
+└── dashboard/
+
     └── exercises/
-        └── create/
-            └── page.tsx
+
+        ├── page.tsx
+
+        ├── create/
+        │   └── page.tsx
+
+        ├── [id]/
+        │   ├── page.tsx
+        │   └── edit/
+        │       └── page.tsx
 ```
+
+Example:
 
 ```tsx
 export default function Page() {
-  return <CreateExerciseScreen />;
+  return <ExerciseListPage />;
 }
 ```
 
----
-
-# components/
-
-Contains reusable components shared outside a single feature.
-
-```text
-components/
-
-├── ui/
-├── design-system/
-└── shared/
-```
-
-## ui/
-
-Contains generic UI primitives.
-
-Examples:
-
-* Button
-* Input
-* Dialog
-* Badge
-
-Whenever possible, these should come directly from shadcn/ui.
-
----
-
-## design-system/
-
-Contains layout and visual primitives used throughout the application.
-
-Examples:
-
-* Page
-* Container
-* Stack
-* PageHeader
-
-These components standardize layout and spacing.
-
----
-
-## shared/
-
-Contains business-aware components reused across multiple features.
-
-Examples:
-
-* EmptyState
-* DeleteDialog
-* MetricCard
-* SearchBar
-
-A component should only be promoted here after being reused by multiple features.
+The route should not contain business logic.
 
 ---
 
 # features/
 
-Each business domain owns its own feature.
+## Purpose
 
-Examples:
+A feature represents a business capability of the application.
 
-```text
-features/
+Each feature owns everything required to implement that domain.
 
-├── exercises/
-├── clients/
-├── templates/
-└── auth/
-```
-
-A feature owns:
-
-* Screens
-* Components
-* Hooks
-* Services
-* Types
-* Schemas
-* Utilities
-
-A feature should be as self-contained as possible.
-
----
-
-# Feature Structure
-
-A typical feature should follow this structure.
+Example:
 
 ```text
 features/
 
 └── exercises/
 
-    ├── screens/
+    ├── pages/
     ├── components/
     ├── hooks/
     ├── services/
-    ├── schemas/
-    ├── types/
-    ├── utils/
-    └── constants/
+    ├── schemas.ts
+    └── types.ts
 ```
+
+Features should remain independent whenever possible.
 
 ---
 
-## screens/
+# Feature Structure
 
-Contains complete application screens.
+## pages/
 
-Example:
+Contains page-level components.
 
-```text
-screens/
-
-├── list/
-├── create/
-└── edit/
-```
-
-Each screen owns everything that is exclusive to that screen.
+Each page represents a complete screen of the application.
 
 Example:
 
 ```text
-create/
+pages/
 
-├── CreateExerciseScreen.tsx
-├── components/
-├── hooks/
-└── utils/
+├── ListPage.tsx
+├── CreatePage.tsx
+├── DetailsPage.tsx
+└── EditPage.tsx
 ```
 
-A screen should compose components, not contain large amounts of business logic.
+Pages are responsible for:
+
+* Composing the UI.
+* Connecting feature hooks.
+* Managing page-level UI state.
+
+Pages should not contain business logic or API communication.
 
 ---
 
 ## components/
 
-Contains components reused by multiple screens within the same feature.
+Contains reusable UI components that belong to the feature.
 
-Examples:
+### Small components
 
-* ExerciseCard
-* ExerciseSelector
-* ExerciseMuscleBadge
+Small components remain as a single file.
 
-If a component is only used by one screen, keep it inside that screen.
+Example:
+
+```text
+components/
+
+├── DeleteDialog.tsx
+├── ExerciseCard.tsx
+└── ExerciseBadge.tsx
+```
+
+---
+
+### Large components
+
+Complex components should own their own directory.
+
+Example:
+
+```text
+components/
+
+exercise-table/
+
+├── ExerciseTable.tsx
+├── ExerciseTable.columns.tsx
+├── ExerciseTable.types.ts
+└── index.ts
+```
+
+Example:
+
+```text
+components/
+
+exercise-form/
+
+├── ExerciseForm.tsx
+├── ExerciseFormFields.tsx
+├── ExerciseForm.types.ts
+└── index.ts
+```
+
+Create a dedicated folder when a component:
+
+* Has multiple files.
+* Has subcomponents.
+* Has custom types.
+* Has configuration.
+* Has complex logic.
 
 ---
 
 ## hooks/
 
-Contains hooks specific to the feature.
+Contains feature hooks.
 
-Examples:
+Hooks connect the UI with the business layer.
 
-* useExercises
-* useCreateExercise
-* useDeleteExercise
+Example:
 
-Hooks should encapsulate reusable business logic.
+```text
+hooks/
+
+├── useExercises.ts
+├── useExercise.ts
+├── useCreateExercise.ts
+└── useUpdateExercise.ts
+```
+
+Hooks are the entry point for data operations.
+
+Pages and components should never communicate directly with services.
 
 ---
 
 ## services/
 
-Contains API communication.
+Contains communication with the backend.
+
+Example:
+
+```text
+services/
+
+└── exercise.service.ts
+```
 
 Responsibilities:
 
-* HTTP requests
-* Request transformations
-* Response transformations
+* HTTP requests.
+* Request formatting.
+* Response transformation.
 
-Services should not contain UI logic.
-
----
-
-## schemas/
-
-Contains validation schemas.
-
-Examples:
-
-* exercise.schema.ts
-* client.schema.ts
-
-Prefer Zod for schema validation.
+Services should not contain React logic.
 
 ---
 
-## types/
+## schemas.ts
 
-Contains feature-specific TypeScript types.
+Contains feature validation schemas.
 
-Examples:
+If the file becomes large, promote it into a folder.
 
-* Exercise
-* ExerciseFormValues
+Example:
 
-Avoid duplicating shared types.
+```text
+schemas/
 
----
+├── create-exercise.schema.ts
+└── update-exercise.schema.ts
+```
 
-## utils/
-
-Contains pure helper functions.
-
-Utilities should:
-
-* Have no side effects.
-* Not depend on React.
-* Not depend on UI.
+Do not split prematurely.
 
 ---
 
-## constants/
+## types.ts
 
-Contains feature-specific constants.
+Contains feature TypeScript types.
 
-Examples:
+If the file grows significantly, promote it into a folder.
 
-* Exercise categories.
-* Default form values.
-* Limits.
-* Labels.
+Example:
+
+```text
+types/
+
+├── exercise.types.ts
+├── exercise-form.types.ts
+└── exercise-api.types.ts
+```
+
+Do not split until it improves readability.
 
 ---
 
-# hooks/
+# components/
 
-Contains hooks shared across the entire application.
+Contains reusable components shared across multiple features.
 
-Only place a hook here if it is reused by multiple features.
+Example:
+
+```text
+components/
+
+├── design-system/
+│
+│   ├── page.tsx
+│   ├── container.tsx
+│   ├── stack.tsx
+│   └── ...
+│
+├── shared/
+│
+│   ├── DataTable.tsx
+│   ├── EmptyState.tsx
+│   └── ...
+│
+└── ui/
+```
 
 ---
 
-# lib/
+## ui/
 
-Contains application infrastructure.
+Contains shadcn/ui components.
 
-Examples:
+These components should be preferred over custom implementations whenever possible.
 
-* API clients
-* Helper libraries
-* External integrations
+Before creating a custom component, verify whether an equivalent shadcn/ui component already exists.
 
-Business logic does not belong here.
+Avoid recreating:
+
+* Button
+* Input
+* Dialog
+* Card
+* Table
+* Select
+* Dropdown Menu
+* Badge
+* Form
+* Tabs
+
+unless the design requires custom behavior.
 
 ---
 
 # providers/
 
-Contains global React providers.
+Contains application-wide providers.
 
-Examples:
+Example:
 
-* ThemeProvider
-* QueryProvider
-* SessionProvider
+```text
+providers/
+
+QueryProvider
+
+ThemeProvider
+
+SessionProvider
+```
 
 ---
 
 # stores/
 
-Contains global application state.
+Contains global Zustand stores.
 
-Only truly global state belongs here.
+Only application-wide state belongs here.
 
 Examples:
 
-* Authentication
-* Theme
-* Preferences
+* Authentication.
+* User preferences.
+* Global settings.
 
-Avoid storing feature-specific state globally.
+Feature-specific state should remain inside its feature when appropriate.
+
+---
+
+# hooks/
+
+Contains reusable hooks shared by multiple features.
+
+Do not place feature-specific hooks here.
+
+---
+
+# lib/
+
+Contains shared libraries and application infrastructure.
+
+Examples:
+
+* Axios instance.
+* Utilities for API communication.
+* Shared helper libraries.
 
 ---
 
 # types/
 
-Contains shared TypeScript types.
+Contains application-wide types shared across multiple features.
 
-Only place a type here when it is reused across multiple features.
+Avoid placing business-specific types here.
 
 ---
 
 # utils/
 
-Contains application-wide utility functions.
+Contains generic helper functions shared across the application.
 
-Utilities should be generic and framework-independent whenever possible.
+Do not place feature-specific utilities here.
 
 ---
 
-# Promotion Rules
+# Documentation
 
-A file should move only when its responsibility grows.
-
-Typical evolution:
+Architecture documentation lives inside:
 
 ```text
-Screen
+docs/
 
-↓
+architecture/
 
-Feature
-
-↓
-
-Shared
+design-system/
 ```
 
-Examples:
-
-```text
-screens/create/components/
-
-↓
-
-features/exercises/components/
-
-↓
-
-components/shared/
-```
-
-Avoid promoting code before it is actually reused.
+Features may include a `README.md` only when they contain complex business rules or workflows.
 
 ---
 
-# Decision Guide
+# Guiding Principles
 
-| Question                                      | Location                         |
-| --------------------------------------------- | -------------------------------- |
-| Is it a Next.js route?                        | `app/`                           |
-| Is it a screen?                               | `features/<feature>/screens/`    |
-| Used by one screen only?                      | `screens/<screen>/components/`   |
-| Used by multiple screens of the same feature? | `features/<feature>/components/` |
-| Used by multiple features?                    | `components/shared/`             |
-| Generic UI primitive?                         | `components/ui/`                 |
-| Layout primitive?                             | `components/design-system/`      |
-| API communication?                            | `services/`                      |
-| Form validation?                              | `schemas/`                       |
-| Business hook?                                | `hooks/`                         |
-| Pure helper?                                  | `utils/`                         |
-
----
-
-# Core Principle
-
-The location of a file should communicate its responsibility.
-
-If it is difficult to decide where a file belongs, it is often a sign that its responsibility is not yet well defined.
+1. Keep route files thin.
+2. Features own business logic.
+3. Prefer composition over duplication.
+4. Keep code close to where it belongs.
+5. Promote files only when reuse is proven.
+6. Prefer existing Design System and shadcn/ui components.
+7. Every directory should have a single responsibility.

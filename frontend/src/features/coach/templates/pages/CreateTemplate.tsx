@@ -1,20 +1,22 @@
 "use client"
 
 import { useState } from "react";
+import { useRef } from "react";
+
+import { Stack } from "@/components/design-system/stack";
 import { Page, PageHeader, PageTitle, PageDescription, PageTitleGroup } from "@/components/design-system/page";
 import { Container } from "@/components/design-system/container";
-import TemplateCreateForm, { TemplateCreateFormHandle } from "@/features/coach/templates/screens/create/components/TemplateCreateForm";
+import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
 import AddExerciseModal from "@/features/coach/templates/components/AddExerciseModal";
-import TemplateExercisesList from "@/features/coach/templates/screens/create/components/TemplateExercisesList";
+import TemplateCreateForm, { TemplateCreateFormHandle } from "@/features/coach/templates/components/create-template/TemplateCreateForm";
+import TemplateExercisesList from "@/features/coach/templates/components/create-template/TemplateExercisesList";
 import { useTemplateBuilder } from "@/features/coach/templates/hooks/useTemplateBuilder";
 import { useExercises } from "@/features/coach/exercises/hooks/use-exercises";
 import { useCreateTemplate } from "@/features/coach/templates/hooks/use-create-template";
-import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
-import { useRef } from "react";
 import type { TemplateFormValues } from "@/features/coach/templates/schemas/template.schema";
 
-export default function CreateTemplateScreen() {
+export default function CreateTemplatePage() {
   const { state: sidebarState } = useSidebar();
   const { selectedExercises, toggleExercise, deleteExercise, updateExerciseFields, resetExercises } = useTemplateBuilder();
   const { data: exercisesData, isLoading: isLoadingExercises } = useExercises();
@@ -56,13 +58,13 @@ export default function CreateTemplateScreen() {
           </PageTitleGroup>
         </PageHeader>
 
-        <div className="mx-auto mt-6 grid w-full grid-cols-1 gap-6 pb-28">
-          <div className="w-full">
+        <Stack gap="6" className="mt-6 pb-28">
+          <div>
             <TemplateCreateForm ref={formRef} onSubmit={handleSaveTemplate} />
           </div>
 
-          <div className="w-full">
-            <div className="flex items-center justify-between mb-3">
+          <section>
+            <div className="mb-3 flex items-center justify-between">
               <h3 className="text-lg font-semibold">Ejercicios</h3>
               <div className="text-sm text-muted-foreground">{selectedExercises.length} ejercicios</div>
             </div>
@@ -74,8 +76,8 @@ export default function CreateTemplateScreen() {
             )}
 
             <TemplateExercisesList exercises={selectedExercises} onDelete={(id) => deleteExercise(id)} onUpdate={updateExerciseFields} onAddClick={() => setShowAddModal(true)} />
-          </div>
-        </div>
+          </section>
+        </Stack>
 
         {showAddModal && (
           <AddExerciseModal

@@ -1,5 +1,6 @@
-import CreateTemplateScreen from "@/features/coach/templates/screens/create/CreateTemplateScreen";
+import CreateTemplatePage from "@/features/coach/templates/pages/CreateTemplate";
+
 
 export default function CreatePage() {
-    return <CreateTemplateScreen />;
+    return <CreateTemplatePage />;
 }

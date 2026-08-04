@@ -1,5 +1,5 @@
-import TemplateDetailPage from "@/features/coach/templates/pages/TemplateDetailPage";
+import TemplateDetailScreen from "@/features/coach/templates/screens/detail/TemplateDetailScreen";
 
 export default function Page() {
-  return <TemplateDetailPage />;
+  return <TemplateDetailScreen />;
 }

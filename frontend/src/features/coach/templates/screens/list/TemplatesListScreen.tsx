@@ -9,14 +9,13 @@ import { Text, Muted } from "@/components/typography";
 
 import { useDeleteTemplate } from "@/features/coach/templates/hooks/use-delete-template";
 import { useTemplates } from "@/features/coach/templates/hooks/use-templates";
+import TemplatesHeader from "./components/TemplatesHeader";
+import SearchSortBar from "./components/SearchSortBar";
+import TemplatesSkeleton from "./components/TemplatesSkeleton";
+import EmptyTemplates from "./components/EmptyTemplates";
+import TemplatesGrid from "./components/TemplatesGrid";
 
-import {
-  TemplatesSkeleton,
-  SearchSortBar,
-  TemplatesHeader,
-  EmptyTemplates,
-  TemplatesGrid,
-} from "@/features/coach/templates/components";
+
 
 type SortMode = "recent" | "oldest" | "name";
 
@@ -26,13 +25,12 @@ const sortOptions: Array<{ value: SortMode; label: string }> = [
   { value: "name", label: "Nombre A-Z" },
 ];
 
-export default function TemplatesPage() {
+export default function TemplatesListScreen() {
   const router = useRouter();
   const { data, isLoading, error } = useTemplates();
   const { mutateAsync: deleteTemplate, isPending: isDeleting } = useDeleteTemplate();
   const [search, setSearch] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("recent");
-  console.log("data", data);
 
   const templates = useMemo(() => data ?? [], [data]);
 

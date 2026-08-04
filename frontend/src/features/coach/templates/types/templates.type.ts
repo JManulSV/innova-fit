@@ -70,6 +70,7 @@ export interface Pivot {
 export interface WorkoutTemplateExercise {
   exercise_id: number;
   name: string;
+  muscle_groups?: string[] | null;
   sets: number;
   reps: number;
   rest_seconds: number;

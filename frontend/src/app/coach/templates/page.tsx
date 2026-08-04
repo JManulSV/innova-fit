@@ -1,7 +1,5 @@
-import TemplatesPage from "@/features/coach/templates/pages/TemplatesPage";
+import TemplatesListScreen from "@/features/coach/templates/screens/list/TemplatesListScreen";
 
 export default function Page() {
-  return (
-    <TemplatesPage />
-  )
+  return <TemplatesListScreen />;
 }

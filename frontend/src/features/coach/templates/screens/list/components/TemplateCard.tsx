@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatDate } from "./utils";
+import { formatDate } from "@/features/coach/templates/components/utils";
 import { Template } from "@/features/coach/templates/types/templates.type";
 import { Muted, Text, Mono } from "@/components/typography";
 

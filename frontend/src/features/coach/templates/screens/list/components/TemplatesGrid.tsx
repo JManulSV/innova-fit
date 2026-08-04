@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FilePlus } from "lucide-react";
 
-import TemplateCard from "./TemplateCard";
+import TemplateCard from "@/features/coach/templates/screens/list/components/TemplateCard";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { Template } from "@/features/coach/templates/types/templates.type";

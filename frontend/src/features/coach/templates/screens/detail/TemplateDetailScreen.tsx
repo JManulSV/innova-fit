@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDeleteTemplate } from "@/features/coach/templates/hooks/use-delete-template";
 import { useTemplate } from "@/features/coach/templates/hooks/use-template";
-import TemplateDetailHeader from "@/features/coach/templates/components/template-detail-page/TemplateDetailHeader";
-import TemplateDetailMetrics from "@/features/coach/templates/components/template-detail-page/TemplateDetailMetrics";
-import TemplateDetailSkeleton from "@/features/coach/templates/components/template-detail-page/TemplateDetailSkeleton";
-import TemplateExerciseSequence from "@/features/coach/templates/components/template-detail-page/TemplateExerciseSequence";
+import TemplateDetailSkeleton from "./components/TemplateDetailSkeleton";
+import TemplateDetailHeader from "./components/TemplateDetailHeader";
+import TemplateDetailMetrics from "./components/TemplateDetailMetrics";
+import TemplateExerciseSequence from "./components/TemplateExerciseSequence";
 import { ArrowLeft } from "lucide-react";
 
-export default function TemplateDetailPage() {
+export default function TemplateDetailScreen() {
   const { id } = useParams();
   const templateId = id as string | undefined;
   const router = useRouter();
@@ -40,9 +40,7 @@ export default function TemplateDetailPage() {
             <CardTitle>ID de plantilla inválido</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Text className="text-sm text-muted-foreground">
-              No fue posible resolver la plantilla solicitada.
-            </Text>
+            <Text className="text-sm text-muted-foreground">No fue posible resolver la plantilla solicitada.</Text>
             <Button asChild variant="outline" className="w-fit">
               <Link href="/coach/templates">
                 <ArrowLeft className="h-4 w-4" />
@@ -92,9 +90,7 @@ export default function TemplateDetailPage() {
             <CardTitle>Plantilla no encontrada</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Text className="text-sm text-muted-foreground">
-              La plantilla que buscas no existe o no tienes permiso para verla.
-            </Text>
+            <Text className="text-sm text-muted-foreground">La plantilla que buscas no existe o no tienes permiso para verla.</Text>
             <Button asChild variant="outline" className="w-fit">
               <Link href="/coach/templates">
                 <ArrowLeft className="h-4 w-4" />
@@ -109,21 +105,14 @@ export default function TemplateDetailPage() {
 
   return (
     <Container className="space-y-6 py-6 md:space-y-8 md:py-8">
-      <TemplateDetailHeader
-        template={templateData}
-        templateId={templateId}
-        isDeleting={isPending}
-        onDelete={handleOnDelete}
-      />
+      <TemplateDetailHeader template={templateData} templateId={templateId} isDeleting={isPending} onDelete={handleOnDelete} />
 
       <TemplateDetailMetrics template={templateData} />
 
       <div className="space-y-3">
         <div className="flex items-end justify-between gap-4">
           <div className="space-y-1">
-            <Muted className="text-xs uppercase tracking-[0.18em] text-primary/80">
-              Secuencia de ejercicios
-            </Muted>
+            <Muted className="text-xs uppercase tracking-[0.18em] text-primary/80">Secuencia de ejercicios</Muted>
             <H1 className="text-2xl md:text-3xl">Orden de ejecución</H1>
           </div>
         </div>

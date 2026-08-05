@@ -23,6 +23,8 @@ import {
 import { formatDate } from "@/features/coach/templates/components/utils";
 import { Template } from "@/features/coach/templates/types/templates.type";
 import { Muted, Text, Mono } from "@/components/typography";
+import { De } from "zod/v4/locales";
+import DeleteTemplateDialog from "../../../components/dialog/DeleteTemplateDialog";
 
 interface TemplateCardProps {
   template: Template;
@@ -74,17 +76,18 @@ export default function TemplateCard({ template, onDelete, hasMoreExercises }: T
                 Duplicar
               </DropdownMenuItem>
 
-              <DropdownMenuItem
-                variant="destructive"
-                className="flex items-center gap-2"
-                onClick={async () => {
-                  if (window.confirm("¿Eliminar esta plantilla?")) {
-                    await onDelete(template.id);
+              <DropdownMenuItem asChild className="flex items-center gap-2">
+                <DeleteTemplateDialog
+                  templateId={template.id}
+                  buttonLabel="Eliminar"
+                  linkRedirect="/coach/templates"
+                  trigger={
+                    <Button variant={"ghost"} className="w-full justify-start text-destructive hover:text-destructive">
+                      <Trash2 className="w-4 h-4" />
+                      <span>Eliminar</span>
+                    </Button>
                   }
-                }}
-              >
-                <Trash2 className="w-4 h-4" />
-                Eliminar
+                />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -137,19 +140,21 @@ export default function TemplateCard({ template, onDelete, hasMoreExercises }: T
           <span className="sr-only">Duplicar plantilla</span>
         </Button>
 
-        <Button
-          variant="outline"
-          size="icon-sm"
-          className="border-border bg-transparent text-muted-foreground hover:bg-popover/5 hover:text-destructive"
-          onClick={async () => {
-            if (window.confirm("¿Eliminar esta plantilla?")) {
-              await onDelete(template.id);
-            }
-          }}
-        >
-          <Trash2 className="w-4 h-4" />
-          <span className="sr-only">Eliminar plantilla</span>
-        </Button>
+        <DeleteTemplateDialog
+          templateId={template.id}
+          buttonLabel="Eliminar"
+          linkRedirect="/coach/templates"
+          trigger={
+            <Button
+              variant="outline"
+              size="icon-sm"
+              className="border-border cursor-pointer bg-transparent text-muted-foreground hover:bg-popover/5 hover:text-destructive"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span className="sr-only">Eliminar plantilla</span>
+            </Button>
+          }
+        />
       </CardFooter>
     </Card>
   );

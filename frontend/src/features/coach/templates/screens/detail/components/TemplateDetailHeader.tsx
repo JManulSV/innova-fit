@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Template } from "@/features/coach/templates/types/templates.type";
 import { formatDate } from "@/features/coach/templates/components/utils";
+import DeleteTemplateDialog from "../../../components/dialog/DeleteTemplateDialog";
 
 interface TemplateDetailHeaderProps {
   template: Template;
@@ -70,15 +71,11 @@ export default function TemplateDetailHeader({
                 </Link>
               </Button>
 
-              <Button
-                variant="destructive"
-                className="justify-center sm:col-span-1"
-                onClick={onDelete}
-                disabled={isDeleting}
-              >
-                <Trash2 className="h-4 w-4" />
-                {isDeleting ? "Eliminando..." : "Eliminar"}
-              </Button>
+              <DeleteTemplateDialog 
+                templateId={Number(templateId)} 
+                buttonLabel="Eliminar" 
+                linkRedirect="/coach/templates" 
+              />
             </div>
           </div>
         </CardHeader>

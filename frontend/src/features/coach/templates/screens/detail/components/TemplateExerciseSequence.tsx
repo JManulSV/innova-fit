@@ -14,17 +14,17 @@ function ExerciseMetrics({ exercise }: { exercise: TemplateExercise }) {
     <div className="flex items-center gap-2 sm:justify-end">
       <div className="flex items-center gap-2">
         <Card className="flex flex-col items-center justify-center gap-1 rounded-lg border-0 px-3 py-2 text-center shadow-sm transition-all hover:shadow-md">
-          <Mono className="text-lg font-bold">{exercise.sets}</Mono>
+          <Mono className="text-sm font-bold">{exercise.sets}</Mono>
           <Mono className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">series</Mono>
         </Card>
 
         <Card className="flex flex-col items-center justify-center gap-1 rounded-lg border-0 px-3 py-2 text-center shadow-sm transition-all hover:shadow-md">
-          <Mono className="text-lg font-bold ">{exercise.reps}</Mono>
+          <Mono className="text-sm font-bold ">{exercise.reps}</Mono>
           <Mono className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">reps</Mono>
         </Card>
 
         <Card className="flex flex-col items-center justify-center gap-1 rounded-lg border-0 px-3 py-2 text-center shadow-sm transition-all hover:shadow-md">
-          <Mono className="text-lg font-bold text-primary">{exercise.rest_seconds}s</Mono>
+          <Mono className="text-sm font-bold text-primary">{exercise.rest_seconds}s</Mono>
           <Mono className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">descanso</Mono>
         </Card>
       </div>
@@ -39,14 +39,14 @@ function ExerciseRow({ exercise, index }: { exercise: TemplateExercise; index: n
         {String(index + 1).padStart(2, "0")}
       </div>
 
-      <Card className="border-border bg-card text-card-foreground hover:shadow-md transition-shadow">
-        <CardContent className="flex  flex-col gap-4 px-3 py-0.5 md:flex-row md:items-center md:justify-between md:gap-6">
+      <Card className="border-border bg-card py-2 text-card-foreground hover:shadow-md transition-shadow">
+        <CardContent className="flex  flex-col gap-4 px-3 md:flex-row md:items-center md:justify-between md:gap-6">
           <div className="hidden md:flex bg-linear-to-br from-primary/20 to-primary/10 items-center justify-center p-3 rounded-2xl">
-            <Dumbbell className="text-primary size-6" />
+            <Dumbbell className="text-primary size-5" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="space-y-2">
-              <Text className="truncate text-base font-semibold leading-6 text-card-foreground md:text-lg">
+              <Text className="truncate text-base font-semibold leading-6 text-card-foreground">
                 {exercise.name}
               </Text>
               <div className="flex flex-wrap items-center gap-2">

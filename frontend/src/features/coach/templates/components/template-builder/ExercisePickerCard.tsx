@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
 import { Plus } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 
-interface AddExerciseCardProps {
+interface ExercisePickerCardProps {
   onClick?: () => void;
 }
 
-export default function AddExerciseCard({ onClick }: AddExerciseCardProps) {
+export default function ExercisePickerCard({ onClick }: ExercisePickerCardProps) {
   return (
     <Card
       className="group w-full cursor-pointer border border-dashed border-border bg-card/40 text-card-foreground transition-colors hover:border-primary hover:bg-card hover:text-primary hover:shadow-md"

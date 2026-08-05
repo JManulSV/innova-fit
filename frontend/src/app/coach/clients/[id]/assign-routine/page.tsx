@@ -1,6 +1,6 @@
 "use client";
 import { useExercises } from '@/features/coach/exercises/hooks/use-exercises';
-import AddExerciseModal from '@/features/coach/templates/components/AddExerciseModal';
+import ExercisePickerModal from '@/features/coach/templates/components/template-builder/ExercisePickerModal';
 import EditExerciseModal from '@/features/coach/templates/components/EditExerciseModal';
 import { useTemplate } from '@/features/coach/templates/hooks/use-template';
 import { useTemplates } from '@/features/coach/templates/hooks/use-templates';
@@ -147,7 +147,7 @@ function AssignRoutinePage() {
         </div>
         <button type="submit" disabled={isAssigning} className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">{isAssigning ? "Asignando..." : "Asignar rutina"}</button>
       </form>
-      {activeModal === "add" && (<AddExerciseModal exercises={exercises?.data?.data || []} isLoading={isLoadingExercises} onClose={closeModal} getExercise={getExercise} onAdd={addExercise} />)}
+      {activeModal === "add" && (<ExercisePickerModal exercises={exercises?.data?.data || []} isLoading={isLoadingExercises} onClose={closeModal} onAdd={addExercise} />)}
       {activeModal === "edit" && exerciseToEdit && (<EditExerciseModal exercise={exerciseToEdit} closeModal={closeModal} updateExercise={updateExercise}  />)}
     </div>
   )

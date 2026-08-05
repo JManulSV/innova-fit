@@ -1,25 +1,28 @@
-"use client"
+"use client";
 
 import { useMemo, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Exercise } from "@/features/coach/exercises/types/exercise.types";
+
 import { Check, Dumbbell } from "lucide-react";
 
-interface AddExerciseModalProps {
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Exercise } from "@/features/coach/exercises/types/exercise.types";
+
+interface ExercisePickerModalProps {
   exercises: Exercise[];
   isLoading?: boolean;
   onClose: () => void;
   onAdd: (exercise: Exercise) => void;
+  onRemove?: (exerciseId: number) => void;
   selectedExerciseIds?: number[];
 }
 
 const CATEGORIES = ["TODOS", "PECHO", "PIERNA", "ESPALDA", "HOMBRO", "BRAZO"];
 
-export default function AddExerciseModal({ exercises = [], isLoading, onClose, onAdd, selectedExerciseIds = [] }: AddExerciseModalProps) {
+export default function ExercisePickerModal({ exercises = [], isLoading, onClose, onAdd, onRemove, selectedExerciseIds = [] }: ExercisePickerModalProps) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("TODOS");
   const [selectedIds, setSelectedIds] = useState<number[]>(selectedExerciseIds);
@@ -41,13 +44,16 @@ export default function AddExerciseModal({ exercises = [], isLoading, onClose, o
   };
 
   const handleAddSelected = () => {
-    const items = exercises.filter((e) => selectedIds.includes(e.id));
-    items.forEach((it) => onAdd(it));
+    const addedItems = exercises.filter((exercise) => selectedIds.includes(exercise.id) && !selectedExerciseIds.includes(exercise.id));
+    const removedIds = selectedExerciseIds.filter((id) => !selectedIds.includes(id));
+
+    addedItems.forEach((exercise) => onAdd(exercise));
+    removedIds.forEach((id) => onRemove?.(id));
     onClose();
   };
 
   return (
-    <Dialog open={true} onOpenChange={(open) => { if (!open) onClose() }}>
+    <Dialog open={true} onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent className="w-full max-w-xl p-5 sm:max-w-md md:max-w-lg lg:max-w-xl">
         <DialogHeader className="space-y-1.5 pb-1">
           <DialogTitle>Agregar ejercicios</DialogTitle>
@@ -57,9 +63,9 @@ export default function AddExerciseModal({ exercises = [], isLoading, onClose, o
         <div className="space-y-4 py-1">
           <div className="space-y-2.5">
             <Input placeholder="Buscar ejercicio guardado..." value={query} onChange={(e) => setQuery(e.target.value)} />
-            <div className="flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               {CATEGORIES.map((cat) => (
-                <button key={cat} type="button" onClick={() => setCategory(cat)} className={`px-3 py-1 rounded-full text-sm ${category===cat? 'bg-primary text-white':'bg-muted/20 text-muted-foreground'}`}>
+                <button key={cat} type="button" onClick={() => setCategory(cat)} className={`rounded-full px-3 py-1 text-xs ${category === cat ? "bg-primary text-white" : "bg-muted/20 text-muted-foreground"}`}>
                   {cat}
                 </button>
               ))}
@@ -96,7 +102,7 @@ export default function AddExerciseModal({ exercises = [], isLoading, onClose, o
                         e.stopPropagation();
                         toggleSelect(ex.id);
                       }}
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors ${selectedIds.includes(ex.id) ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"}`}
+                      className={`flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors ${selectedIds.includes(ex.id) ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"}`}
                     >
                       {selectedIds.includes(ex.id) ? <Check className="size-4" /> : null}
                     </button>

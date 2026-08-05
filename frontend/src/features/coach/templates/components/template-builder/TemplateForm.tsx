@@ -1,25 +1,26 @@
-"use client"
+"use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { templateFormSchema, type TemplateFormValues } from "@/features/coach/templates/schemas/template.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
-interface TemplateCreateFormProps {
+interface TemplateFormProps {
   defaultName?: string;
   defaultDescription?: string;
   onSubmit: (values: TemplateFormValues) => void | Promise<void>;
 }
 
-export type TemplateCreateFormHandle = {
+export type TemplateFormHandle = {
   submit: () => void;
   reset: () => void;
 };
 
-const TemplateCreateForm = forwardRef<TemplateCreateFormHandle, TemplateCreateFormProps>(function TemplateCreateForm(
+const TemplateForm = forwardRef<TemplateFormHandle, TemplateFormProps>(function TemplateForm(
   { defaultName = "", defaultDescription = "", onSubmit },
   ref,
 ) {
@@ -89,4 +90,4 @@ const TemplateCreateForm = forwardRef<TemplateCreateFormHandle, TemplateCreateFo
   );
 });
 
-export default TemplateCreateForm;
+export default TemplateForm;

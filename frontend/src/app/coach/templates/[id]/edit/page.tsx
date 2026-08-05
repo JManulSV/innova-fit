@@ -1,5 +1,5 @@
-import EditTemplateScreen from "@/features/coach/templates/screens/edit/EditTemplateScreen";
+import EditTemplatePage from "@/features/coach/templates/pages/EditTemplate";
 
 export default function TemplateEditPage() {
-  return <EditTemplateScreen />;
+  return <EditTemplatePage />;
 }

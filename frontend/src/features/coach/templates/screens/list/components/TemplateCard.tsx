@@ -107,9 +107,9 @@ export default function TemplateCard({ template, onDelete, hasMoreExercises }: T
       <CardContent className="space-y-4 px-5 py-1">
         <div className="space-y-2 border-border">
           {preview.map((exercise, index) => (
-            <div key={exercise.id} className="flex items-start justify-between gap-4 text-sm">
+            <div key={exercise.id} className="flex items-start justify-between gap-4 text-sm ">
               <div className="min-w-0">
-                <Text className="truncate font-medium text-card-foreground">
+                <Text className="truncate font-medium text-sm text-card-foreground">
                   {index + 1}. {exercise.name}
                 </Text>
               </div>

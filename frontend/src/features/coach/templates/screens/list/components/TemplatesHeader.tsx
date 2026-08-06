@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FilePlus, Sparkles } from "lucide-react";
+import { FilePlus, Sparkles, WandSparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { H1, Text } from "@/components/typography";
 
@@ -25,10 +25,16 @@ export default function TemplatesHeader() {
         </div>
       </div>
 
-      <Button onClick={() => router.push("/coach/templates/create")} className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
-        <FilePlus className="size-4" />
-        Nueva plantilla
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={() => router.push("/coach/templates/assign")} variant="outline" size="lg">
+          <WandSparkles className="size-4" />
+          Nueva asignación
+        </Button>
+        <Button onClick={() => router.push("/coach/templates/create")} className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
+          <FilePlus className="size-4" />
+          Nueva plantilla
+        </Button>
+      </div>
     </header>
   );
 }

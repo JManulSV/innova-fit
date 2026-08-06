@@ -11,11 +11,11 @@ import DeleteExerciseDialog from "../exercise-delete/DeleteExerciseDialog";
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   const router = useRouter();
   return (
-    <div className="rounded-3xl border border-border bg-card p-5 flex flex-col gap-3 h-full min-h-44 hover:border-primary dark:hover:border-primary transition-colors hover:-translate-y-0.5 hover:shadow-md">
+    <div className="flex h-full min-h-44 flex-col gap-3 rounded-3xl border border-border bg-card p-4 transition-colors hover:-translate-y-0.5 hover:border-primary hover:shadow-md dark:hover:border-primary sm:p-5">
       {/* Title + Badge */}
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h3 className="font-semibold text-base">
+          <h3 className="text-base font-semibold sm:text-lg">
             <Link
               href={`/coach/exercises/${exercise.id}`}
               aria-label={`Ver ${exercise.name}`}
@@ -37,7 +37,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
       {exercise.instructions && (
         <Collapsible>
           <CollapsibleTrigger
-            className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-primary cursor-pointer"
+            className="flex cursor-pointer items-center gap-1 text-xs font-semibold uppercase tracking-wider text-primary"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -56,11 +56,11 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
       )}
 
       {/* Actions */}
-      <div className="flex justify-between gap-2 mt-auto pt-2 border-t border-border">
+      <div className="mt-auto flex flex-col gap-2 border-t border-border pt-2 sm:flex-row">
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 cursor-pointer *:hover:text-primary dark:hover:text-primary hover:border-primary dark:hover:border-primary "
+          className="w-full cursor-pointer *:hover:text-primary hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary sm:flex-1"
           onClick={(e) => {
             e.stopPropagation();
             router.push(`/coach/exercises/${exercise.id}/edit`);
@@ -68,14 +68,14 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
         >
           <Pencil className="h-4 w-4" /> Editar
         </Button>
-        <DeleteExerciseDialog
+          <DeleteExerciseDialog
           exerciseId={exercise.id}
           buttonLabel="Eliminar"
           trigger={
             <Button
               variant="destructive"
               size="sm"
-              className="flex-1 cursor-pointer"
+              className="w-full cursor-pointer sm:flex-1"
               onClick={(e) => {
                 e.stopPropagation();
               }}

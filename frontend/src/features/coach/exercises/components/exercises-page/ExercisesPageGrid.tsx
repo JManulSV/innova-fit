@@ -13,10 +13,10 @@ export default function ExercisesPageGrid({ exercises, isLoading }: ExercisesPag
   }
 
   if (!exercises || exercises.length === 0) {
-    return <p>No exercises found.</p>;
+    return <p className="text-sm text-muted-foreground">No exercises found.</p>;
   }
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {exercises.map((exercise: Exercise) => (
         <ExerciseCard key={exercise.id} exercise={exercise} />
       ))}

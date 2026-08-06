@@ -5,7 +5,7 @@ import { Page } from '@/components/design-system/page'
 
 export default function AuthLayout() {
   return (
-    <Page className='grid lg:grid-cols-2 py-0'>
+    <Page className='grid min-h-svh lg:grid-cols-2 py-0'>
         <BrandPanel />
         <LoginForm />
     </Page>

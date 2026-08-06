@@ -39,8 +39,8 @@ export default function LoginForm() {
     };
 
     return (
-        <section className="flex items-center justify-center p-8 lg:p-20">
-           <div className="w-full max-w-md space-y-6">
+        <section className="flex min-h-full items-center justify-center px-4 py-6 lg:px-20 lg:py-20">
+           <div className="w-full max-w-md space-y-6 rounded-2xl border bg-card p-6 shadow-sm lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
 
                 <div>
                     <H2>Bienvenido de nuevo</H2>

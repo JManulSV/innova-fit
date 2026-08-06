@@ -25,7 +25,37 @@ function getStatusVariant(status?: string) {
 export default function ClientsPageTable({ clients }: ClientsPageTableProps) {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-      <Table className="min-w-full">
+      <div className="md:hidden">
+        <div className="divide-y divide-border">
+          {clients.map((client) => (
+            <div key={client.id} className="p-4">
+              <div className="flex items-start justify-between gap-3">
+                <Link href={`/coach/clients/${client.id}`} className="flex min-w-0 flex-1 items-center gap-3 no-underline">
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">
+                    {client.name?.slice(0, 2).toUpperCase() || '??'}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="truncate font-medium text-foreground">{client.name}</div>
+                    <div className="truncate text-sm text-muted-foreground">{client.email}</div>
+                  </div>
+                </Link>
+
+                <ClientDropdownMenu clientId={client.id} />
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                <Badge variant={getStatusVariant('active')}>
+                  {getStatusLabel('active')}
+                </Badge>
+                <span>Plantilla: —</span>
+                <span>Actividad: Invitación enviada</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Table className="hidden min-w-full md:table">
         <TableHeader>
           <TableRow className="bg-background">
             <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground">

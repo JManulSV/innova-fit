@@ -36,6 +36,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/clients', ClientController::class);
     Route::get('/clients/{id}/assigned-workouts', [ClientController::class, 'assignedWorkouts']);
 
-    Route::get('/coach/dashboard', [DashboardController::class, 'index'])
-        ->middleware('role:coach');
+    Route::get('/dashboard', [DashboardController::class, '__invoke']);
 });

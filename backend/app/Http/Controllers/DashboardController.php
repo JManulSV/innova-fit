@@ -7,14 +7,10 @@ use App\Services\DashboardService;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request, DashboardService $service){
-        $coach = $request->user();
-        $dashboardData = $service->coachDashboard($coach);
-        
+    public function __invoke(DashboardService $service)
+    {
+        $data = $service->getDashboardData();
 
-        return response()->json([
-            'success' => 'true',
-            'data' => $dashboardData,
-        ]);
+        return response()->json($data);
     }
 }

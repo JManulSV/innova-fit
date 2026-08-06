@@ -50,6 +50,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function isCoach(): bool
+    {
+        return $this->role === 'coach';
+    }
+
     public function clients() 
     {
         return $this->hasMany(User::class, 'coach_id');

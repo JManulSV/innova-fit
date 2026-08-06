@@ -13,7 +13,7 @@ export default function ClientShell({
 
       <ClientHeader />
 
-      <main className="flex-1 px-4 py-4 pb-24">
+      <main className="flex-1 px-4 py-4 pb-[calc(8rem+env(safe-area-inset-bottom))]">
         {children}
       </main>
 

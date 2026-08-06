@@ -3,6 +3,8 @@
 import { ClipboardCheck, HomeIcon, UserCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 
 export default function BottomNavigation() {
@@ -12,7 +14,7 @@ export default function BottomNavigation() {
   const items = [
     {
       label: "Inicio",
-      href: "/client",
+      href: "/client/dashboard",
       icon: HomeIcon,
     },
     {
@@ -29,49 +31,40 @@ export default function BottomNavigation() {
 
   return (
     <nav
-      className="
-      fixed
-      bottom-0
-      left-0
-      right-0
-      bg-white
-      border-t
-      shadow-lg
-      "
+      aria-label="Navegación principal"
+      className={cn(
+        "fixed inset-x-0 z-50 border-t border-border/70 bg-background/95 shadow-[0_-12px_32px_-24px_rgba(0,0,0,0.35)] backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        "bottom-[env(safe-area-inset-bottom)] pb-3"
+      )}
     >
-      <div className="flex justify-around py-3">
+      <div className="mx-auto grid max-w-md grid-cols-3 gap-1 px-3 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
 
         {items.map((item) => {
 
           const Icon = item.icon;
 
-          const active = pathname === item.href;
+          const active =
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`) ||
+            (item.href === "/client/workout" &&
+              (pathname.startsWith("/client/routines") ||
+                pathname.startsWith("/client/workout-session")));
 
           return (
-            <Link
+            <Button
               key={item.href}
-              href={item.href}
-              className={`
-                flex
-                flex-col
-                items-center
-                text-xs
-                transition-colors
-
-                ${
-                  active
-                    ? "text-blue-600"
-                    : "text-gray-500"
-                }
-              `}
+              asChild
+              variant="ghost"
+              className={cn(
+                "h-14 min-h-11 flex-col gap-1 rounded-2xl px-2 text-xs text-muted-foreground transition-colors",
+                active && "bg-primary/10 text-primary"
+              )}
             >
-              <Icon className="w-6 h-6" />
-
-              <span>
-                {item.label}
-              </span>
-
-            </Link>
+              <Link href={item.href} aria-current={active ? "page" : undefined}>
+                <Icon className="size-5" />
+                <span className="font-medium leading-none">{item.label}</span>
+              </Link>
+            </Button>
           );
 
         })}

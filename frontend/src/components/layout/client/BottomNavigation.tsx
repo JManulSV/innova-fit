@@ -33,7 +33,7 @@ export default function BottomNavigation() {
     <nav
       aria-label="Navegación principal"
       className={cn(
-        "fixed inset-x-0 z-50 border-t border-border/70 bg-background/95 shadow-[0_-12px_32px_-24px_rgba(0,0,0,0.35)] backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        "fixed inset-x-0 z-50 border-t border-border/70 bg-background/95 shadow-[0_-12px_32px_-24px_rgba(0,0,0,0.35)] backdrop-blur supports-backdrop-filter:bg-background/80",
         "bottom-[env(safe-area-inset-bottom)] pb-3"
       )}
     >

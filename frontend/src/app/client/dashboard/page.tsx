@@ -1,17 +1,5 @@
-"use client"
-import LogoutButton from '@/components/LogoutButton'
-import RoutinesGrid from '@/features/client/my-routine/components/RoutinesGrid'
-import { useAuthStore } from '@/stores/auth-store'
+import DashboardPage from "@/features/client/dashboard/page";
 
-function ClientDashboard() {
-    const {user} = useAuthStore()
-  return (
-    <div>
-      Dashboard Client - {user?.email}
-      <RoutinesGrid />
-      <LogoutButton />
-    </div>
-  )
-} 
-
-export default ClientDashboard
+export default function ClientDashboardPage() {
+  return <DashboardPage />;
+}

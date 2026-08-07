@@ -1,74 +1,125 @@
-import { Check } from "lucide-react";
-import { WorkoutExerciseLog } from "../hooks/use-workout-session";
+"use client";
 
-interface WorkoutTableProps {
-    exercise: WorkoutExerciseLog;
-    handleFinishSet: (exercise_id: number, set_number: number) => void;
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Check, Plus, Minus } from "lucide-react";
+import { WorkoutSessionExercise } from "../types";
+
+interface WorkoutExerciseTableProps {
+  exercise: WorkoutSessionExercise;
+  exerciseIndex: number;
+  onSetRepsChange: (exerciseIndex: number, setIndex: number, delta: number) => void;
+  onSetWeightChange: (exerciseIndex: number, setIndex: number, delta: number) => void;
+  onSetRepsInput: (exerciseIndex: number, setIndex: number, value: number) => void;
+  onSetWeightInput: (exerciseIndex: number, setIndex: number, value: number) => void;
+  onCompleteSet: (exerciseIndex: number, setIndex: number) => void;
+  onAddSet: (exerciseIndex: number) => void;
 }
 
-export default function WorkoutExerciseTable({exercise, handleFinishSet}: WorkoutTableProps) {
-  
-  if(!exercise){
-    return <div>Cargando...</div>;
-  }
-  
-  const numberOfSeries = exercise.completed_sets;
-  
+export default function WorkoutExerciseTable({
+  exercise,
+  exerciseIndex,
+  onSetRepsChange,
+  onSetWeightChange,
+  onSetRepsInput,
+  onSetWeightInput,
+  onCompleteSet,
+  onAddSet,
+}: WorkoutExerciseTableProps) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-100 shadow-sm bg-white p-2">
-      <table className="min-w-full divide-y divide-gray-100 text-sm">
-        {/* Encabezado con fondo sutil y texto claro pero legible */}
-        <thead className="bg-gray-50 text-xs font-semibold uppercase tracking-wider text-gray-500">
-          <tr>
-            <th className="px-4 py-3 text-left">Serie</th>
-            <th className="px-4 py-3 text-center">Reps</th>
-            <th className="px-4 py-3 text-center">Peso</th>
-            <th className="px-4 py-3 text-right"></th>
-          </tr>
-        </thead>
-        
-        {/* Cuerpo de la tabla */}
-        <tbody className="divide-y divide-gray-100 bg-white">
-          {exercise.sets.map((item, index) => (
-            <tr 
-              key={index} 
-              className="hover:bg-slate-50/80 transition-colors"
-            >
-              {/* Columna Serie: Badge numérico estilizado */}
-              <td className="whitespace-nowrap px-4 py-3.5 font-medium text-gray-900">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600">
-                    {index + 1}
-                  </span>
-                  <span className="text-gray-400 font-normal text-sm">
-                    {exercise.completed_reps} x — Kg
-                  </span>
-                </div>
-              </td>
-              
-              {/* Columna Repeticiones */}
-              <td className="whitespace-nowrap px-4 py-3.5 text-center font-semibold text-gray-700">
-                {exercise.completed_reps}
-              </td>
-              
-              {/* Columna Peso */}
-              <td className="whitespace-nowrap px-4 py-3.5 text-center text-gray-500">
-                <span className="font-medium text-gray-700">—</span> <span className="text-xs text-gray-400">Kg</span>
-              </td>
-              
-              {/* Columna Acción (Aquí puedes meter tu input o botón) */}
-              <td className="whitespace-nowrap px-4 py-3.5 text-right text-gray-500">
-                <span 
-                  onClick={() => handleFinishSet(exercise.id, index)}
-                  className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold border  ${item.finish ? 'border-emerald-200 text-emerald-700 bg-emerald-50' : 'border-gray-200 text-gray-700, bg-gray-50'}`}
+    <div className="space-y-2.5">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <span>#</span>
+        <span>N. sets</span>
+        <span>Peso</span>
+        <span className="sr-only">Estado</span>
+      </div>
+
+      {exercise.sets.map((set, setIndex) => {
+        const isCompleted = set.status === "completed";
+
+        return (
+          <div key={set.id} className={isCompleted ? "rounded-lg bg-background p-3" : "rounded-lg bg-card p-3 transition-colors"}>
+            <div className="grid grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-md border border-border/60 bg-background/80 px-2 py-1.5">
+              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-muted-foreground">#{setIndex + 1}</p>
+
+              <div className="flex min-w-0 items-center gap-1.5">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-xs"
+                  onClick={() => onSetRepsChange(exerciseIndex, setIndex, -1)}
+                  disabled={isCompleted}
                 >
-                  <Check className="h-4 w-4" />
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <Minus />
+                </Button>
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  value={set.performedReps}
+                  onChange={(event) => onSetRepsInput(exerciseIndex, setIndex, Number(event.target.value || 0))}
+                  disabled={isCompleted}
+                  className="h-8 min-w-0 flex-1 text-center"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-xs"
+                  onClick={() => onSetRepsChange(exerciseIndex, setIndex, 1)}
+                  disabled={isCompleted}
+                >
+                  <Plus />
+                </Button>
+              </div>
+
+              <div className="flex min-w-0 items-center gap-1.5">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-xs"
+                  onClick={() => onSetWeightChange(exerciseIndex, setIndex, -1)}
+                  disabled={isCompleted}
+                >
+                  <Minus />
+                </Button>
+                <Input
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  value={set.performedWeight}
+                  onChange={(event) => onSetWeightInput(exerciseIndex, setIndex, Number(event.target.value || 0))}
+                  disabled={isCompleted}
+                  className="h-8 min-w-0 flex-1 text-center"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-xs"
+                  onClick={() => onSetWeightChange(exerciseIndex, setIndex, 1)}
+                  disabled={isCompleted}
+                >
+                  <Plus />
+                </Button>
+              </div>
+
+              <Button
+                type="button"
+                variant={isCompleted ? "default" : "secondary"}
+                size="icon-sm"
+                onClick={() => onCompleteSet(exerciseIndex, setIndex)}
+                disabled={isCompleted}
+              >
+                <Check />
+              </Button>
+            </div>
+          </div>
+        );
+      })}
+
+      <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => onAddSet(exerciseIndex)}>
+        + Añadir serie
+      </Button>
     </div>
-  )
+  );
 }

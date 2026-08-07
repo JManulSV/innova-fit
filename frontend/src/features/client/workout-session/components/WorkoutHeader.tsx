@@ -1,21 +1,25 @@
-import { WorkoutExerciseLog } from "../hooks/use-workout-session";
+"use client";
+
+import { Badge } from "@/components/ui/badge";
+import { WorkoutSessionExercise } from "../types";
 
 interface WorkoutHeaderProps {
-  exercises: WorkoutExerciseLog[];
-  currentExercise: WorkoutExerciseLog;
+  exercise: WorkoutSessionExercise;
   currentIndex: number;
+  totalExercises: number;
 }
 
-export default function WorkoutHeader({ exercises, currentExercise, currentIndex }: WorkoutHeaderProps) {
-    
-    if(!currentExercise){
-        return <div>Cargando...</div>;
-    }
-
+export default function WorkoutHeader({ exercise, currentIndex, totalExercises }: WorkoutHeaderProps) {
   return (
-    <div>
-        <p className="text-gray-700">Ejercicio {currentIndex + 1} de {exercises.length}</p>
-        <h2 className="text-3xl font-bold">{currentExercise.name}</h2>
+    <div className="space-y-2.5">
+      <p className="text-xs text-muted-foreground">
+        Ejercicio {currentIndex + 1} - {totalExercises}
+      </p>
+
+      <div className="space-y-2">
+        <h2 className="text-2xl font-black tracking-tight sm:text-3xl">{exercise.name}</h2>
+        <Badge variant="secondary">{exercise.muscleGroup}</Badge>
+      </div>
     </div>
-  )
+  );
 }

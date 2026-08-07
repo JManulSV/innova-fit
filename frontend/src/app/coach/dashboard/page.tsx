@@ -54,7 +54,7 @@ const QUICK_ACTIONS = [
 ]
 
 export default function CoachDashboard() {
-  const { data, isLoading, error } = useDashboard()
+  const { data, isLoading, error } = useDashboard();
 
   const stats: Stats | undefined = data?.stats
   const recentUsers: RecentUser[] = data?.recent ?? []

@@ -11,7 +11,7 @@ export async function GET(){
             return Response.json({ error: 'Unauthorized' },{ status: 401 });
         }
 
-        const response = await laravelApi.get('/coach/dashboard', {
+        const response = await laravelApi.get('/dashboard', {
             headers: {
                 'Authorization': `Bearer ${token}`,
 

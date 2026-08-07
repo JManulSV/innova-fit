@@ -5,6 +5,5 @@ export function useDashboard(){
     return useQuery({
         queryKey: ['dashboard'],
         queryFn: getDashboard,
-        select: (response) => response.data,
     });
 }

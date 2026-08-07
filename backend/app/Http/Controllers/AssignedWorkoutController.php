@@ -32,11 +32,14 @@ class AssignedWorkoutController extends Controller
 
         //2. Search models
         $client = User::where('role', 'client')->findOrFail($validated['client_id']);
-        $template = $validated['template_id'] ? WorkoutDayTemplate::findOrFail($validated['template_id']) : null;
+        $coach = $request->user();
+        $templateId = $validated['template_id'] ?? null;
+        $template = $templateId ? WorkoutDayTemplate::findOrFail($templateId) : null;
 
         //3. Call service
         $assignedWorkout = $service->AssignedWorkout(
             $client,
+            $coach,
             $template,
             $validated['notes'] ?? null,
             $validated['name'] ?? null,

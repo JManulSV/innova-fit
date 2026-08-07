@@ -51,6 +51,7 @@ class DevelopmentSeeder extends Seeder
         foreach ($clients as $client) {
             $assignedWorkout = AssignedWorkout::factory()->create([
                 'client_id' => $client->id,
+                'coach_id' => $coach->id,
                 'template_id' => $templates->random()->id,
                 'assigned_date' => now()->subDays(1)->format('Y-m-d'),
                 'start_date' => now()->format('Y-m-d'),

@@ -13,13 +13,14 @@ class AssignWorkoutService {
 
     public function duplicateTemplate(
     User $client,
+    User $coach,
     WorkoutDayTemplate $template,
     ?string $notes = null,
     ?string $name = null,
     ?string $startDate = null,
     ?string $endDate = null
     ) {
-        return DB::transaction(function () use ($client, $template, $notes, $name, $startDate, $endDate) {
+        return DB::transaction(function () use ($client, $coach, $template, $notes, $name, $startDate, $endDate) {
 
             $assignedWorkoutCreated = AssignedWorkout::create([
                 'client_id' => $client->id,
@@ -29,6 +30,7 @@ class AssignWorkoutService {
                 'assigned_date' => now()->toDateString(),
                 'start_date' => $startDate,
                 'end_date' => $endDate,
+                'coach_id' => $coach->id,
                 'status' => 'active',
             ]);
 
@@ -54,17 +56,19 @@ class AssignWorkoutService {
 
     public function AssignedWorkout(
         User $client,
-        WorkoutDayTemplate $template,
+        User $coach,
+        ?WorkoutDayTemplate $template = null,
         ?string $notes = null,
         ?string $name = null,
         ?string $startDate = null,
         ?string $endDate = null,
         array $exercises = []
     ){
-        return DB::transaction(function () use ($client, $template, $notes, $name, $startDate, $endDate, $exercises) {
+        return DB::transaction(function () use ($client, $coach, $template, $notes, $name, $startDate, $endDate, $exercises) {
             $assignedWorkoutCreated = AssignedWorkout::create([
                 'client_id' => $client->id,
-                'template_id' => $template?->id,
+                'coach_id' => $coach->id,
+                'template_id' => $template ? $template->id : null,
                 'name' => $name ?? $template?->name ?? 'Nueva rutina',
                 'notes' => $notes,
                 'assigned_date' => now()->toDateString(),

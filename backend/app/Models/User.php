@@ -79,4 +79,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(AssignedWorkout::class, 'client_id');
     }
+
+    public function assignedWorkoutsAsCoach()
+    {
+        return $this->hasMany(AssignedWorkout::class, 'coach_id');
+    }
 }

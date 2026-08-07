@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\WorkoutDayTemplate;
+use App\Models\AssignedWorkoutExercise;
+use App\Models\Coach;
 
 class AssignedWorkout extends Model
 {
     use HasFactory;
     protected $fillable = [
         'client_id',
+        'coach_id',
         'template_id',
         'name',
         'notes',
@@ -27,6 +32,11 @@ class AssignedWorkout extends Model
     public function client()
     {
         return $this->belongsTo(User::class, 'client_id');
+    }
+
+    public function coach()
+    {
+        return $this->belongsTo(User::class, 'coach_id');
     }
 
     public function template()

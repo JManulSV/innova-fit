@@ -4,6 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
 import { SessionProvider } from "@/providers/session-providers";
 import { ThemeProvider } from "@/providers/theme-provider";
+import RegisterSW from "@/components/RegisterSW";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
           <ThemeProvider>
             <SessionProvider>
               {children}
+              <RegisterSW />
             </SessionProvider>
           </ThemeProvider>
         </QueryProvider>

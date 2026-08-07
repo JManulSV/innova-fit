@@ -1,10 +1,9 @@
-export function parseDashboardDate(value: string | Date) {
+export function parseRoutineDate(value: string | Date) {
   if (value instanceof Date) {
     return value;
   }
 
-  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/;
-  const match = value.match(dateOnly);
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
 
   if (match) {
     const [, year, month, day] = match;
@@ -14,15 +13,15 @@ export function parseDashboardDate(value: string | Date) {
   return new Date(value);
 }
 
-export function formatDashboardDate(value: string | Date) {
-  const date = parseDashboardDate(value);
+export function formatRoutineDate(value: string | Date) {
+  const date = parseRoutineDate(value);
 
   if (Number.isNaN(date.getTime())) {
     return "Sin fecha";
   }
 
   return new Intl.DateTimeFormat("es-MX", {
-    weekday: "short",
+    weekday: "long",
     day: "2-digit",
     month: "short",
     year: "numeric",

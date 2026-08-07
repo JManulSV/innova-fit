@@ -34,7 +34,7 @@ export default function BottomNavigation() {
       aria-label="Navegación principal"
       className={cn(
         "fixed inset-x-0 z-50 border-t border-border/70 bg-background/95 shadow-[0_-12px_32px_-24px_rgba(0,0,0,0.35)] backdrop-blur supports-backdrop-filter:bg-background/80",
-        "bottom-[env(safe-area-inset-bottom)] pb-3"
+        "bottom-[env(safe-area-inset-bottom)]"
       )}
     >
       <div className="mx-auto grid max-w-md grid-cols-3 gap-1 px-3 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
@@ -56,7 +56,7 @@ export default function BottomNavigation() {
               asChild
               variant="ghost"
               className={cn(
-                "h-14 min-h-11 flex-col gap-1 rounded-2xl px-2 text-xs text-muted-foreground transition-colors",
+                "h-14 min-h-11 flex-col gap-1 rounded-2xl px-3 py-1 text-xs text-muted-foreground transition-colors",
                 active && "bg-primary/10 text-primary"
               )}
             >

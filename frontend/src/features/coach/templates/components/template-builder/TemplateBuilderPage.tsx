@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Container } from "@/components/design-system/container";
 import { Page, PageDescription, PageHeader, PageTitle, PageTitleGroup } from "@/components/design-system/page";
@@ -49,6 +50,7 @@ export default function TemplateBuilderPage({
   const [exerciseError, setExerciseError] = useState<string | null>(null);
   const formRef = useRef<TemplateFormHandle | null>(null);
   const hasInitializedExercises = useRef(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (initialExercises.length > 0 && !hasInitializedExercises.current) {
@@ -64,7 +66,15 @@ export default function TemplateBuilderPage({
     }
 
     setExerciseError(null);
-    await onSubmit(values, selectedExercises);
+    try {
+      await onSubmit(values, selectedExercises);
+      router.push("/coach/templates");
+    } catch (err) {
+      // leave error handling to parent; log for debugging
+      // do not navigate on failure
+      // eslint-disable-next-line no-console
+      console.error(err);
+    }
   };
 
   const handleCancel = () => {

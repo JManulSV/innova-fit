@@ -29,7 +29,7 @@ export function SessionProvider({
 
     useEffect(() => {
         if (error) {
-        setIsCheckingAuth(false);
+            setIsCheckingAuth(false);
         }
     }, [error, setIsCheckingAuth]);
 

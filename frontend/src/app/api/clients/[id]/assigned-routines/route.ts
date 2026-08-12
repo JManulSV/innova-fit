@@ -12,7 +12,7 @@ export async function POST(_request: Request,) {
 
         const body = await _request.json();
 
-        const response = await laravelApi.post(`/assign-workout`, body, {
+        const response = await laravelApi.post(`/assigned-workouts`, body, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

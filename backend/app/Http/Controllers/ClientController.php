@@ -111,27 +111,4 @@ class ClientController extends Controller
         ]);
     }
 
-    public function assignedWorkouts(string $id)
-    {
-        $client = User::findOrFail($id);
-
-        $this->authorize('view', $client);
-
-        $assignedWorkouts = $client->assignedWorkouts()
-            ->with('exercises.exercise', 'client')
-            ->orderBy('start_date', 'desc')
-            ->paginate(10);
-        
-        return response()->json([
-            'success' => true,
-            'data' => $assignedWorkouts,
-            'pagination' => [
-                'current_page' => $assignedWorkouts->currentPage(),
-                'last_page' => $assignedWorkouts->lastPage(),
-                'per_page' => $assignedWorkouts->perPage(),
-                'total' => $assignedWorkouts->total(),
-            ],
-            'message' => 'Client workouts retrieved successfully',
-        ]);
-    }
 }

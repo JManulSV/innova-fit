@@ -18,15 +18,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
-    Route::post('/assign-workout', [AssignedWorkoutController::class, 'store']);
-    Route::get('/assigned-workouts/{id}', [AssignedWorkoutController::class, 'clientWorkouts']);
-    Route::get('/assigned-workout/{id}', [AssignedWorkoutController::class, 'show']);
-    Route::get('/my-workouts', [AssignedWorkoutController::class, 'myAssignedWorkouts']);
+    Route::post('/assigned-workouts', [AssignedWorkoutController::class, 'store']);
+    Route::get('/clients/{id}/assigned-workouts', [AssignedWorkoutController::class, 'clientWorkouts']);
+    Route::get('/assigned-workouts/{id}', [AssignedWorkoutController::class, 'show']);
+    Route::get('/my-assigned-workouts', [AssignedWorkoutController::class, 'myAssignedWorkouts']);
     Route::post('/assigned-workouts/{id}/logs', [WorkoutExerciseLogController::class, 'storeLogs']);
 
-    Route::patch('/assigned-workout-exercise/{id}', [AssignedWorkoutExerciseController::class, 'update']);
+    Route::patch('/assigned-workout-exercises/{id}', [AssignedWorkoutExerciseController::class, 'update']);
 
-    Route::post('/workout-exercise-log', [WorkoutExerciseLogController::class, 'store']);
+    Route::post('/workout-exercise-logs', [WorkoutExerciseLogController::class, 'store']);
+    Route::get('/assigned-workout-exercises/{id}/logs', [WorkoutProgressController::class, 'exerciseLogs']);
 
     Route::apiResource('/exercises', ExerciseController::class);
     Route::apiResource('/workout-day-templates', WorkoutDayTemplateController::class);
@@ -34,7 +35,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/progress/summary', [WorkoutProgressController::class, 'progressSummary']);
 
     Route::apiResource('/clients', ClientController::class);
-    Route::get('/clients/{id}/assigned-workouts', [ClientController::class, 'assignedWorkouts']);
-
     Route::get('/dashboard', [DashboardController::class, '__invoke']);
 });

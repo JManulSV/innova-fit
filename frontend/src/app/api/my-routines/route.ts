@@ -6,7 +6,7 @@ export async function GET(){
         const cookiesStore = await cookies();
         const token = cookiesStore.get('auth-token')?.value;
 
-        const response = await laravelApi.get('/my-workouts', {
+        const response = await laravelApi.get('/my-assigned-workouts', {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },

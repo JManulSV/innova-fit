@@ -1,6 +1,8 @@
 import api from "@/lib/api";
 
-export async function getClients() {
-    const response = await api.get('/api/clients');
+import type { ClientsFilters } from "../types/clients.types";
+
+export async function getClients(filters: ClientsFilters) {
+    const response = await api.get('/api/clients', { params: filters });
     return response.data;
 }

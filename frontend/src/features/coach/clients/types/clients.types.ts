@@ -42,3 +42,8 @@ export interface EditClientResponse {
     data: Client;
     message: string;
 }
+
+export interface ClientsFilters {
+    search: string;
+    status: "all" | "active" | "inactive";
+}

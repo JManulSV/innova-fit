@@ -2,7 +2,7 @@ import laravelApi from "@/lib/laravel-api";
 import { ClientsResponse } from "@/features/coach/clients/types/clients.types";
 import { cookies } from "next/headers";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         const cookiesStore = await cookies();
         const token = cookiesStore.get('auth-token')?.value;
@@ -10,11 +10,14 @@ export async function GET() {
         if (!token) {
             return Response.json({ error: 'No autorizado' }, { status: 401 });
         }
+
+        const { searchParams } = new URL(request.url);
         
         const response = await laravelApi.get<ClientsResponse>('/clients', {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
+            params: Object.fromEntries(searchParams.entries()),
         });
     
         return Response.json(response.data);

@@ -1,16 +1,32 @@
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Search } from "lucide-react"
+import type { ClientsFilters } from "../../types/clients.types";
 
-function ClientsPageFilterBar() {
+interface ClientsPageFilterBarProps {
+  filter: ClientsFilters; 
+  setFilter: React.Dispatch<React.SetStateAction<ClientsFilters>>;
+}
+
+function ClientsPageFilterBar({ filter, setFilter }: ClientsPageFilterBarProps) {
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="relative w-full lg:max-w-sm">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input type="text" placeholder="Buscar cliente..." className="pl-10" />
+          <Input
+            type="text"
+            placeholder="Buscar cliente..."
+            className="pl-10"
+            value={filter.search}
+            onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
+          />
         </div>
 
-        <Tabs defaultValue="all" className="w-full lg:w-auto">
+        <Tabs
+          value={filter.status}
+          onValueChange={(value: string) => setFilter((prev) => ({ ...prev, status: value as ClientsFilters["status"] }))}
+          className="w-full lg:w-auto"
+        >
             <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
                 <TabsTrigger value="all" className="cursor-pointer data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Todos</TabsTrigger>
                 <TabsTrigger value="active" className="cursor-pointer data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Activos</TabsTrigger>

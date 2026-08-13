@@ -17,11 +17,21 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         $coach = $request->user();
+        $search = trim((string) $request->input('search', ''));
 
-        $users = User::where('role', 'client')
-            ->where('coach_id', $coach->id)
-            ->orderBy('name', 'asc')
-            ->paginate(10);
+        $query = User::where('role', 'client')
+            ->where('coach_id', $coach->id);
+
+        if ($search !== '') {
+            $searchLower = strtolower($search);
+
+            $query->where(function ($q) use ($searchLower) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . $searchLower . '%'])
+                  ->orWhereRaw('LOWER(email) LIKE ?', ['%' . $searchLower . '%']);
+            });
+        }
+
+        $users = $query->orderBy('name', 'asc')->paginate(10);
 
         return response()->json([
             'success' => true,

@@ -2,10 +2,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import ClientDropdownMenu from './ClientDropdownMenu'
+import ClientsPageTableLoading from './ClientsPageTableLoading'
 import { Client } from '../../types/clients.types'
 
 interface ClientsPageTableProps {
   clients: Client[]
+  isLoading?: boolean
 }
 
 function getStatusLabel(status?: string) {
@@ -22,94 +24,116 @@ function getStatusVariant(status?: string) {
   return 'outline'
 }
 
-export default function ClientsPageTable({ clients }: ClientsPageTableProps) {
+export default function ClientsPageTable({ clients, isLoading = false }: ClientsPageTableProps) {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
       <div className="md:hidden">
-        <div className="divide-y divide-border">
-          {clients.map((client) => (
-            <div key={client.id} className="p-4">
-              <div className="flex items-start justify-between gap-3">
-                <Link href={`/coach/clients/${client.id}`} className="flex min-w-0 flex-1 items-center gap-3 no-underline">
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">
-                    {client.name?.slice(0, 2).toUpperCase() || '??'}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="truncate font-medium text-foreground">{client.name}</div>
-                    <div className="truncate text-sm text-muted-foreground">{client.email}</div>
+        {isLoading ? (
+          <div className="space-y-3 p-4">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="animate-pulse rounded-xl border border-border bg-muted/40 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-muted" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-28 rounded bg-muted" />
+                    <div className="h-3 w-40 rounded bg-muted" />
                   </div>
-                </Link>
-
-                <ClientDropdownMenu clientId={client.id} />
+                </div>
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="divide-y divide-border">
+            {clients.map((client) => (
+              <div key={client.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <Link href={`/coach/clients/${client.id}`} className="flex min-w-0 flex-1 items-center gap-3 no-underline">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">
+                      {client.name?.slice(0, 2).toUpperCase() || '??'}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="truncate font-medium text-foreground">{client.name}</div>
+                      <div className="truncate text-sm text-muted-foreground">{client.email}</div>
+                    </div>
+                  </Link>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                <Badge variant={getStatusVariant('active')}>
-                  {getStatusLabel('active')}
-                </Badge>
-                <span>Plantilla: —</span>
-                <span>Actividad: Invitación enviada</span>
+                  <ClientDropdownMenu clientId={client.id} />
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                  <Badge variant={getStatusVariant('active')}>
+                    {getStatusLabel('active')}
+                  </Badge>
+                  <span>Plantilla: —</span>
+                  <span>Actividad: Invitación enviada</span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      <Table className="hidden min-w-full md:table">
-        <TableHeader>
-          <TableRow className="bg-background">
-            <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground">
-              Cliente
-            </TableHead>
-            <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground">
-              Plantilla asignada
-            </TableHead>
-            <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground">
-              Última actividad
-            </TableHead>
-            <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground text-right">
-              Estado
-            </TableHead>
-            <TableHead className="px-4 py-3" />
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {clients.map((client) => (
-            <TableRow key={client.id} className="group hover:bg-muted/50">
-              <TableCell className="whitespace-nowrap px-4 py-2">
-                <Link href={`/coach/clients/${client.id}`} className="flex items-center gap-3 no-underline">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">
-                    {client.name?.slice(0, 2).toUpperCase() || '??'}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="font-medium text-foreground hover:underline">{client.name}</div>
-                    <div className="text-xs text-muted-foreground">{client.email}</div>
-                  </div>
-                </Link>
-              </TableCell>
-
-              <TableCell className="px-4 py-4 text-sm text-muted-foreground">
-                {'—'}
-              </TableCell>
-
-              <TableCell className="px-4 py-4 text-sm text-muted-foreground">
-                {'Invitación enviada'}
-              </TableCell>
-
-              <TableCell className="px-4 py-4 text-right">
-                <Badge variant={getStatusVariant('active')}>
-                  {getStatusLabel('active')}
-                </Badge>
-              </TableCell>
-
-              <TableCell className="px-4 py-4 text-right">
-                <ClientDropdownMenu clientId={client.id} />
-              </TableCell>
+      {isLoading ? (
+        <Table className="hidden min-w-full md:table">
+          <ClientsPageTableLoading />
+        </Table>
+      ) : (
+        <Table className="hidden min-w-full md:table">
+          <TableHeader>
+            <TableRow className="bg-background">
+              <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground">
+                Cliente
+              </TableHead>
+              <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground">
+                Plantilla asignada
+              </TableHead>
+              <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground">
+                Última actividad
+              </TableHead>
+              <TableHead className="px-4 py-3 text-xs font-medium uppercase tracking-[0.02em] text-muted-foreground text-right">
+                Estado
+              </TableHead>
+              <TableHead className="px-4 py-3" />
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+
+          <TableBody>
+            {clients.map((client) => (
+              <TableRow key={client.id} className="group hover:bg-muted/50">
+                <TableCell className="whitespace-nowrap px-4 py-2">
+                  <Link href={`/coach/clients/${client.id}`} className="flex items-center gap-3 no-underline">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">
+                      {client.name?.slice(0, 2).toUpperCase() || '??'}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="font-medium text-foreground hover:underline">{client.name}</div>
+                      <div className="text-xs text-muted-foreground">{client.email}</div>
+                    </div>
+                  </Link>
+                </TableCell>
+
+                <TableCell className="px-4 py-4 text-sm text-muted-foreground">
+                  {'—'}
+                </TableCell>
+
+                <TableCell className="px-4 py-4 text-sm text-muted-foreground">
+                  {'Invitación enviada'}
+                </TableCell>
+
+                <TableCell className="px-4 py-4 text-right">
+                  <Badge variant={getStatusVariant('active')}>
+                    {getStatusLabel('active')}
+                  </Badge>
+                </TableCell>
+
+                <TableCell className="px-4 py-4 text-right">
+                  <ClientDropdownMenu clientId={client.id} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   )
 }

@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { LoginFormData, loginSchema } from "../schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
+import InputField from "@/components/form/input-field";
 
 export default function LoginForm() {
 
@@ -47,24 +48,25 @@ export default function LoginForm() {
                     <Muted className="mt-2 text-base">Ingresá tus datos para ver tu rutina y tu progreso.</Muted>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="flex flex-col space-y-2">
-                        <label className="font-mono" htmlFor="email"><Mono>Correo</Mono></label>
-                        <Input className={`${errors.email?.message && 'border-destructive'}`} type="email" id="email" placeholder="Email" disabled={isPending} {...register("email")} />
-                            {errors.email && (
-                                <p className={cn(errors.email && "text-destructive text-xs")}>
-                                    {errors.email.message}
-                                </p>
-                            )}
-                    </div>
-                    <div className="flex flex-col space-y-2">
-                        <label className="font-mono" htmlFor="password"><Mono>Contraseña</Mono></label>
-                        <Input className={`${errors.password?.message && 'border-destructive'}`} type="password" id="password" placeholder="Password" disabled={isPending} {...register("password")} />
-                        {errors.password && (
-                                <p className={cn(errors.password && 'text-destructive text-xs')}>
-                                    {errors.password.message}
-                                </p>
-                        )}
-                    </div>
+                    <InputField
+                        name="email"
+                        label="Email"
+                        type="email"
+                        placeholder="Email"
+                        error={errors.email}
+                        isDisabled={isPending}
+                        register={register}
+                    />
+
+                    <InputField
+                        name="password"
+                        label="Contraseña"
+                        type="password"
+                        placeholder="Password"
+                        error={errors.password}
+                        isDisabled={isPending}
+                        register={register}
+                    />
 
                     <div className="flex items-center justify-between">
                         <label className="flex items-center gap-2">

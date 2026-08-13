@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\WorkoutExerciseLogResource;
+use App\Http\Resources\WorkoutProgressSummaryResource;
 use App\Models\AssignedWorkoutExercise;
 use Illuminate\Http\Request;
 
@@ -80,10 +81,9 @@ class WorkoutProgressController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
+            'data' => new WorkoutProgressSummaryResource([
                 'total_exercises' => $totalExercises,
                 'completed_exercises' => $totalCompletedExercises,
-
                 'last_completed_exercise' => $lastCompletedExercise
                     ? [
                         'id' => $lastCompletedExercise->id,
@@ -93,7 +93,7 @@ class WorkoutProgressController extends Controller
                             ->max('completed_at'),
                     ]
                     : null,
-            ],
+            ]),
             'message' => 'Progress summary retrieved successfully',
         ]);
     }

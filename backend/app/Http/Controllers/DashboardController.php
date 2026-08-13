@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DashboardResource;
 use Illuminate\Http\Request;
 use App\Services\DashboardService;
 
@@ -11,6 +12,10 @@ class DashboardController extends Controller
     {
         $data = $service->getDashboardData();
 
-        return response()->json($data);
+        return response()->json([
+            'success' => true,
+            'data' => new DashboardResource($data),
+            'message' => 'Dashboard retrieved successfully',
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\WorkoutDayTemplate;
 use App\Http\Resources\WorkoutDayTemplateResource;
+use App\Http\Resources\WorkoutDayTemplateDetailResource;
 use App\Http\Requests\StoreWorkoutDayTemplateRequest;
 use App\Http\Requests\UpdateWorkoutDayTemplateRequest;
 use Illuminate\Http\Request;
@@ -32,11 +33,10 @@ class WorkoutDayTemplateController extends Controller
     public function show(int $id)
     {
         $workoutDayTemplate = WorkoutDayTemplate::with('exercises')->findOrFail($id);
-        // $workoutDayTemplate = WorkoutDayTemplate::findOrFail($id);
 
         return response()->json([
             'success' => true,
-            'data' => $workoutDayTemplate,
+            'data' => new WorkoutDayTemplateDetailResource($workoutDayTemplate),
             'message' => 'Workout day template retrieved successfully',
         ]);
     }
@@ -71,7 +71,9 @@ class WorkoutDayTemplateController extends Controller
            
             return response()->json([
                 'success' => true,
-                'data' => $workoutDayTemplate,
+                'data' => new WorkoutDayTemplateDetailResource(
+                    $workoutDayTemplate->load('exercises')
+                ),
                 'message' => 'Workout day template created successfully',
             ], 201);
             
@@ -114,7 +116,9 @@ class WorkoutDayTemplateController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $updateWorkoutDayTemplate,
+                'data' => new WorkoutDayTemplateDetailResource(
+                    $updateWorkoutDayTemplate->load('exercises')
+                ),
                 'message' => 'Workout day template updated successfully',
             ]);
         } catch (\Throwable $th) {

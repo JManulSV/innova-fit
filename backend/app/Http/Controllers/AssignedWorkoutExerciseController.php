@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateAssignedWorkoutExerciseRequest;
+use App\Http\Resources\AssignedWorkoutExerciseResource;
 use App\Models\AssignedWorkoutExercise;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,9 @@ class AssignedWorkoutExerciseController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $assignedWorkoutExercise,
+            'data' => new AssignedWorkoutExerciseResource(
+                $assignedWorkoutExercise->load('exercise')
+            ),
             'message' => 'Assigned workout exercise updated successfully',
         ], 200);
     }

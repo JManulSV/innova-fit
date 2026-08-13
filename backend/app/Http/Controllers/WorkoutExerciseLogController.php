@@ -114,7 +114,7 @@ class WorkoutExerciseLogController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $createdLogs,
+            'data' => WorkoutExerciseLogResource::collection($createdLogs),
             'message' => 'Workout exercise logs created successfully',
         ], 201);
     }

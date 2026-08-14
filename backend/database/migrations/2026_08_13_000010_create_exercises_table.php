@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->text('instructions')->nullable();
-            $table->json('muscle_groups')->nullable();
+            // $table->json('muscle_groups')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

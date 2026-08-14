@@ -36,4 +36,10 @@ class Exercise extends Model
             ->withPivot('sets', 'reps', 'rest_seconds', 'exercise_order')
             ->withTimestamps();
     }
+
+    public function bodyParts()
+    {
+        return $this->belongsToMany(BodyPart::class, 'exercise_body_part');
+    }
+
 }

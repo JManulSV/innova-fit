@@ -34,15 +34,15 @@ Feature Page
 
         ↓
 
-Feature Hook (TanStack Query)
+Feature Components
+
+        ↓
+
+Feature Hooks (TanStack Query)
 
         ↓
 
 Feature Service
-
-        ↓
-
-Next.js API Route
 
         ↓
 
@@ -89,6 +89,7 @@ Hooks should:
 * Expose the query or mutation state.
 * Manage cache invalidation.
 * Connect services with the UI.
+* Keep server-state logic out of components and pages.
 
 Hooks should NOT:
 
@@ -144,34 +145,16 @@ await clientService.createClient(data);
 
 ## Next.js API Routes
 
-The frontend never communicates directly with Laravel.
+The frontend can use Next.js API routes when a feature needs a BFF layer, but this is not a required part of every feature.
 
-Every request goes through a Next.js API Route.
+Use them when the request needs to:
 
-Responsibilities:
+* Forward authentication.
+* Hide backend details.
+* Normalize external data.
+* Keep browser code isolated from backend specifics.
 
-* Forward requests.
-* Handle authentication.
-* Hide backend implementation details.
-* Act as the Backend for Frontend (BFF).
-
-Flow:
-
-```text
-Feature Hook
-
-↓
-
-Service
-
-↓
-
-/api/clients
-
-↓
-
-Laravel
-```
+If a feature does not need that layer, the service can communicate with the API client directly.
 
 ---
 
@@ -327,7 +310,7 @@ Follow the project's philosophy:
 
 # Barrel Files
 
-Feature hook directories should expose an index.ts.
+Feature hook directories may expose an `index.ts` when it improves import clarity.
 
 Example:
 

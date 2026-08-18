@@ -98,8 +98,8 @@ features/
     ├── components/
     ├── hooks/
     ├── services/
-    ├── schemas.ts
-    └── types.ts
+    ├── schemas/
+    └── types/
 ```
 
 Features should remain independent whenever possible.
@@ -137,7 +137,7 @@ Pages should not contain business logic or API communication.
 
 ## components/
 
-Contains reusable UI components that belong to the feature.
+Contains UI components that belong to the feature.
 
 ### Small components
 
@@ -180,10 +180,14 @@ components/
 exercise-form/
 
 ├── ExerciseForm.tsx
-├── ExerciseFormFields.tsx
-├── ExerciseForm.types.ts
-└── index.ts
+├── components/
+│   ├── GeneralInfoSection.tsx
+│   └── FormActions.tsx
+├── constants.ts
+└── ExerciseFormError.tsx
 ```
+
+An `index.ts` file is optional and should only be added when it clearly improves imports.
 
 Create a dedicated folder when a component:
 
@@ -192,6 +196,17 @@ Create a dedicated folder when a component:
 * Has custom types.
 * Has configuration.
 * Has complex logic.
+
+Feature components often group by screen or workflow, for example:
+
+```text
+components/
+
+├── exercises-page/
+├── exercise-form/
+├── exercise-details/
+└── exercise-delete/
+```
 
 ---
 
@@ -206,10 +221,11 @@ Example:
 ```text
 hooks/
 
-├── useExercises.ts
-├── useExercise.ts
-├── useCreateExercise.ts
-└── useUpdateExercise.ts
+├── use-exercises.ts
+├── use-exercise.ts
+├── use-create-exercise.ts
+├── use-edit-exercise.ts
+└── use-delete-exercise.ts
 ```
 
 Hooks are the entry point for data operations.
@@ -227,7 +243,11 @@ Example:
 ```text
 services/
 
-└── exercise.service.ts
+├── get-exercises.ts
+├── get-exercise.ts
+├── create-exercise.ts
+├── edit-exercise.ts
+└── delete-exercise.ts
 ```
 
 Responsibilities:
@@ -244,7 +264,7 @@ Services should not contain React logic.
 
 Contains feature validation schemas.
 
-If the file becomes large, promote it into a folder.
+Schemas usually live inside a `schemas/` folder for feature-sized domains.
 
 Example:
 
@@ -263,7 +283,7 @@ Do not split prematurely.
 
 Contains feature TypeScript types.
 
-If the file grows significantly, promote it into a folder.
+Types usually live inside a `types/` folder for feature-sized domains.
 
 Example:
 

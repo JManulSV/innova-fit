@@ -143,6 +143,19 @@ ExerciseTable
 DeleteDialog
 ```
 
+Feature components are often grouped by screen or workflow when the feature is large enough.
+
+Example:
+
+```text
+components/
+
+├── exercises-page/
+├── exercise-form/
+├── exercise-details/
+└── exercise-delete/
+```
+
 Feature components may use:
 
 * Design System components.
@@ -185,9 +198,11 @@ components/
 exercise-table/
 
 ├── ExerciseTable.tsx
+├── components/
+│   ├── TableHeader.tsx
+│   └── TableActions.tsx
 ├── ExerciseTable.columns.tsx
-├── ExerciseTable.types.ts
-└── index.ts
+└── ExerciseTable.types.ts
 ```
 
 Another example:
@@ -198,9 +213,11 @@ components/
 exercise-form/
 
 ├── ExerciseForm.tsx
-├── ExerciseFormFields.tsx
-├── ExerciseForm.types.ts
-└── index.ts
+├── components/
+│   ├── GeneralInfoSection.tsx
+│   └── FormActions.tsx
+├── constants.ts
+└── ExerciseFormError.tsx
 ```
 
 Create a dedicated directory when a component:
@@ -329,6 +346,10 @@ exercise-table/
 exercise-form/
 
 client-selector/
+
+exercise-details/
+
+exercises-page/
 ```
 
 The main component should match the folder name.
@@ -340,6 +361,8 @@ exercise-table/
 
 ExerciseTable.tsx
 ```
+
+An `index.ts` barrel is optional and should only be added when it clearly improves imports.
 
 ---
 

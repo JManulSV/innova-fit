@@ -89,6 +89,8 @@ Laravel API
 
 Each layer has a single responsibility.
 
+For this project, the feature page is the composition boundary. It wires data hooks into screen-specific components such as list, form, details, and delete workflows.
+
 ---
 
 # Pages
@@ -137,10 +139,10 @@ Components build the feature's user interface.
 
 Examples:
 
-* ExerciseForm
-* ExerciseTable
-* DeleteDialog
-* ExerciseCard
+* `ExercisesPageHeader`
+* `ExerciseForm`
+* `ExerciseDetailMain`
+* `DeleteExerciseDialog`
 
 Components should:
 
@@ -148,6 +150,8 @@ Components should:
 * Receive data through props.
 * Handle user interactions.
 * Compose smaller components.
+
+Large features may group components by workflow or screen, for example `exercises-page/`, `exercise-form/`, `exercise-details/`, and `exercise-delete/`.
 
 Components should NOT:
 
@@ -184,7 +188,7 @@ useExercise()
 
 useCreateExercise()
 
-useUpdateExercise()
+useEditExercise()
 ```
 
 Hooks may:
@@ -241,7 +245,7 @@ Each feature owns its own TypeScript types.
 Examples:
 
 ```text
-types.ts
+types/
 ```
 
 Types define:
@@ -263,7 +267,7 @@ Each feature owns its validation schemas.
 Examples:
 
 ```text
-schemas.ts
+schemas/
 ```
 
 Schemas define:
@@ -361,6 +365,8 @@ architecture/
 design-system/
 ```
 
+Key supporting documents include `routing.md`, `forms.md`, and `state-management.md`.
+
 A feature may include a `README.md` only when it contains:
 
 * Complex business rules.
@@ -382,8 +388,9 @@ Before implementing a feature:
 4. Review available shadcn/ui components.
 5. Reuse existing hooks and services whenever possible.
 6. Keep Pages focused on composition.
-7. Keep business logic inside Hooks.
-8. Keep API communication inside Services.
+7. Group Components by screen or workflow when the feature grows.
+8. Keep business logic inside Hooks.
+9. Keep API communication inside Services.
 
 ---
 

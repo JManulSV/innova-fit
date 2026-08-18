@@ -26,10 +26,16 @@ export interface Exercise {
     name:          string;
     description:   string;
     instructions:  null | string;
-    muscle_groups: string[] | null;
+    body_parts:    BodyPart[];
     created_at:    Date;
     updated_at:    Date;
     deleted_at:    null;
+}
+
+export interface BodyPart {
+    id:   number;
+    name: string;
+    slug: string;
 }
 
 export interface Link {
@@ -41,14 +47,14 @@ export interface Link {
 
 export interface ExerciseCreateRequest {
     name: string;
-    muscle_groups: string[]|null;
+    body_parts_ids: number[]|null;
     description: string|null;
     instructions: string|null;
 }
 
 export interface ExerciseUpdateRequest {
     name: string;
-    muscle_groups: string[]|null;
+    body_parts_ids: number[]|null;
     description: string|null;
     instructions: string|null;
 }

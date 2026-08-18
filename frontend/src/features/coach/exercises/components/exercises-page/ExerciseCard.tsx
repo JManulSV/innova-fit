@@ -26,9 +26,9 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
           </h3>
           <Muted>{exercise.description}</Muted>
         </div>
-        {exercise.muscle_groups?.[0] && (
+        {exercise.body_parts?.[0] && (
           <Badge variant="secondary" className="shrink-0">
-            <Mono className="text-xs">{exercise.muscle_groups[0].toUpperCase()}</Mono>
+            <Mono className="text-xs">{exercise.body_parts[0].name.toUpperCase()}</Mono>
           </Badge>
         )}
       </div>

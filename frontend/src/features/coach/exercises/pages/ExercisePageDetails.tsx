@@ -14,6 +14,8 @@ import { Mono } from "@/components/typography";
 export default function ExercisePageDetails() {
   const params = useParams();
   const id = params?.id as string | undefined;
+  const router = useRouter();
+  const { data: exercise, isLoading, isError } = useExercise(id);
   
   if (!id) {
     return (
@@ -26,8 +28,6 @@ export default function ExercisePageDetails() {
     );
   }
   
-  const { data: exercise, isLoading, isError } = useExercise(id);
-  const router = useRouter();
   function handleBack() {
     router.back();
   }
@@ -61,14 +61,13 @@ export default function ExercisePageDetails() {
         <div className="md:col-span-2">
           <ExerciseDetailMain
             title={exercise.name}
-            bodyPart={exercise.muscle_groups?.[0]}
             description={exercise.description}
             instructions={exercise.instructions}
           />
         </div>
         <div className="md:col-span-1">
           <ExerciseDetailSidebar 
-            bodyPart={exercise.muscle_groups} 
+            bodyParts={exercise.body_parts ?? []} 
             exerciseId={exercise.id}
           />
         </div>

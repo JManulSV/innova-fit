@@ -25,8 +25,8 @@ class StoreExerciseRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'muscle_groups' => 'nullable|array',
-            'muscle_groups.*' => 'string|max:255',
+            'body_parts_ids' => 'required|array|min:1',
+            'body_parts_ids.*' => 'integer|exists:body_parts,id',
             'instructions' => 'nullable|string',
         ];
     }

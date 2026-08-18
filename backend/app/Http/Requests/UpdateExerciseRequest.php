@@ -25,8 +25,8 @@ class UpdateExerciseRequest extends FormRequest
         return [
             'name' => 'sometimes|string|max:255',
             'description' => 'sometimes|nullable|string',
-            'muscle_groups' => 'sometimes|nullable|array',
-            'muscle_groups.*' => 'string|max:255',
+            'body_parts_ids' => 'sometimes|array',
+            'body_parts_ids.*' => 'integer|exists:body_parts,id',
             'instructions' => 'sometimes|nullable|string',
         ];
     }

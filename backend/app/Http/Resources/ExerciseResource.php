@@ -18,7 +18,7 @@ class ExerciseResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'muscle_groups' => $this->muscle_groups,
+            'body_parts' => BodyPartResource::collection($this->whenLoaded('bodyParts')),
             'instructions' => $this->when($request->query('include') === 'details', $this->instructions),
             'sets' => $this->when(isset($this->pivot), $this->pivot->sets ?? null),
             'reps' => $this->when(isset($this->pivot), $this->pivot->reps ?? null),

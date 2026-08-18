@@ -6,6 +6,7 @@ use App\Models\BodyPart;
 use App\Models\Exercise;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Exercise>
@@ -42,7 +43,10 @@ class ExerciseFactory extends Factory
                     ->take(2 - $bodyParts->count());
 
                 $bodyParts = $bodyParts->merge(
-                    $names->map(fn (string $name) => BodyPart::firstOrCreate(['name' => $name]))
+                    $names->map(fn (string $name) => BodyPart::firstOrCreate(
+                        ['name' => $name],
+                        ['slug' => Str::slug($name)]
+                    ))
                 );
             }
 

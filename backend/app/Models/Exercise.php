@@ -15,15 +15,7 @@ class Exercise extends Model
         'name',
         'description',
         'instructions',
-        'muscle_groups',
     ];
-
-    protected function casts():array
-    {
-        return [
-            'muscle_groups' => 'array',
-        ];
-    }
 
     public function coach()
     {

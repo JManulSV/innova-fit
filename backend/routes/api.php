@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssignedWorkoutController;
+use App\Http\Controllers\BodyPartController;
 use App\Http\Controllers\AssignedWorkoutExerciseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
@@ -36,4 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('/clients', ClientController::class);
     Route::get('/dashboard', [DashboardController::class, '__invoke']);
+
+    Route::get('/body-parts', [BodyPartController::class, 'index']);
 });

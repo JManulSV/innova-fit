@@ -6,12 +6,6 @@ interface CollapsedExerciseCardProps {
   onClick?: () => void;
 }
 
-const CIRCLED_NUMBERS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
-
-function getPositionLabel(position: number): string {
-  return CIRCLED_NUMBERS[position - 1] ?? `${position}.`;
-}
-
 export function CollapsedExerciseCard({
   exercise,
   position,
@@ -32,9 +26,11 @@ export function CollapsedExerciseCard({
       className="flex w-full items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-left"
       onClick={onClick}
     >
-      <span className="shrink-0 text-xl text-muted-foreground">
-        {getPositionLabel(position)}
-      </span>
+      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-muted-foreground/10">
+        <span className="shrink-0 text-xs text-muted-foreground">
+          {position}
+        </span>
+      </div>
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium">{exercise.name}</p>
         <p className="text-sm text-muted-foreground">{details}</p>

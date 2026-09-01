@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Minus, Plus, CheckCircle2 } from "lucide-react";
+import { Minus, Plus, CheckCircle2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { ActiveExerciseForm, SessionExercise } from "../types";
+import styles from "./ActiveExerciseCard.module.css";
 
 interface ActiveExerciseCardProps {
   exercise: SessionExercise;
@@ -99,13 +100,13 @@ export function ActiveExerciseCard({
   ].filter(Boolean);
 
   return (
-    <div className="rounded-xl border border-primary bg-card p-4 shadow-sm">
+    <div className={`${styles.enter} rounded-xl border border-primary bg-card p-4 shadow-sm`}>
       {/* Header */}
-      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      <p className="mb-1 text-xs  text-primary uppercase tracking-wide">
         Ejercicio {index + 1} de {total}
       </p>
-      <h2 className="mb-1 text-xl font-black">{exercise.name}</h2>
-      <p className="mb-4 text-sm text-muted-foreground">
+      <h2 className="mb-1 text-xl font-semibold">{exercise.name}</h2>
+      <p className="mb-4 text-xs text-muted-foreground">
         Objetivo: {objectiveParts.join(" · ")}
       </p>
 
@@ -172,9 +173,10 @@ export function ActiveExerciseCard({
       {/* Complete button */}
       <Button
         className="w-full"
+        size={"lg"}
         onClick={() => onComplete(index, form)}
       >
-        <CheckCircle2 className="mr-2 h-4 w-4" />
+        <Check className="mr-2 h-4 w-4" />
         Completar ejercicio
       </Button>
     </div>

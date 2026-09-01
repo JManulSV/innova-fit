@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Page } from "@/components/design-system/page";
-import { Container } from "@/components/design-system/container";
 import {
   Dialog,
   DialogContent,
@@ -42,37 +40,25 @@ export default function WorkoutSessionPage({
 
   if (isPending || session.phase === "loading") {
     return (
-      <Page>
-        <Container>
-          <div className="flex h-48 items-center justify-center text-muted-foreground">
-            Cargando entrenamiento...
-          </div>
-        </Container>
-      </Page>
+      <div className="flex h-full items-center justify-center text-muted-foreground">
+        Cargando entrenamiento...
+      </div>
     );
   }
 
   if (isError || !routine) {
     return (
-      <Page>
-        <Container>
-          <div className="flex h-48 items-center justify-center text-muted-foreground">
-            No se pudo cargar la rutina.
-          </div>
-        </Container>
-      </Page>
+      <div className="flex h-full items-center justify-center text-muted-foreground">
+        No se pudo cargar la rutina.
+      </div>
     );
   }
 
   if (session.exercises.length === 0) {
     return (
-      <Page>
-        <Container>
-          <div className="flex h-48 items-center justify-center text-muted-foreground">
-            Esta rutina no tiene ejercicios.
-          </div>
-        </Container>
-      </Page>
+      <div className="flex h-full items-center justify-center text-muted-foreground">
+        Esta rutina no tiene ejercicios.
+      </div>
     );
   }
 
@@ -117,20 +103,21 @@ export default function WorkoutSessionPage({
   const total = exercises.length;
 
   return (
-    <Page>
-      <Container size="narrow">
-        <div className="flex min-h-screen flex-col gap-4 pb-24 pt-4">
-          {/* Top bar */}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background px-4 pt-3">
+      <div className="mx-auto grid h-full min-h-0 w-full max-w-[430px] grid-rows-[auto,1fr,auto] overflow-hidden">
+        {/* Header */}
+        <div className="sticky top-0 z-20 space-y-3 border-b border-border/50 bg-background/35 pb-3 shadow-[0_10px_30px_-24px_rgba(0,0,0,0.35)] backdrop-blur-3xl supports-[backdrop-filter]:bg-background/25">
           <WorkoutTopBar
             elapsedSeconds={elapsedSeconds}
             onOpenNavigator={() => setIsNavigatorOpen(true)}
           />
 
-          {/* Progress header */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold">{routine.name}</p>
-              <span className="text-sm text-muted-foreground">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-display text-lg font-semibold leading-tight">
+                {routine.name}
+              </p>
+              <span className="font-mono text-xs text-muted-foreground">
                 {completedCount}/{total}
               </span>
             </div>
@@ -141,8 +128,10 @@ export default function WorkoutSessionPage({
               />
             </div>
           </div>
+        </div>
 
-          {/* Exercise list */}
+        {/* Exercise list */}
+        <div className="min-h-0 overflow-y-auto overscroll-contain py-4 pr-1">
           <div className="space-y-3">
             {exercises.map((exercise, index) => {
               if (exercise.status === "completed") {
@@ -181,8 +170,8 @@ export default function WorkoutSessionPage({
           </div>
         </div>
 
-        {/* Sticky bottom action */}
-        <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">
+        {/* Bottom action */}
+        <div className="sticky bottom-0 z-20 border-t border-border/50 bg-background/35 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 shadow-[0_-10px_30px_-24px_rgba(0,0,0,0.35)] backdrop-blur-3xl supports-[backdrop-filter]:bg-background/25">
           <Button
             className="w-full"
             size="lg"
@@ -194,7 +183,7 @@ export default function WorkoutSessionPage({
               : `Finalizar entrenamiento · ${completedCount}/${total}`}
           </Button>
         </div>
-      </Container>
+      </div>
 
       {/* Navigator sheet */}
       <WorkoutNavigatorSheet
@@ -233,6 +222,6 @@ export default function WorkoutSessionPage({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Page>
+    </div>
   );
 }

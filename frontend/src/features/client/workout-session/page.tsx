@@ -152,6 +152,7 @@ export default function WorkoutSessionPage({
                     exercise={exercise}
                     index={index}
                     onEdit={session.editExercise}
+                    onClick={session.selectExercise}
                   />
                 );
               }
@@ -173,6 +174,7 @@ export default function WorkoutSessionPage({
                   key={exercise.assignedWorkoutExerciseId}
                   exercise={exercise}
                   position={index + 1}
+                  onClick={() => session.selectExercise(index)}
                 />
               );
             })}

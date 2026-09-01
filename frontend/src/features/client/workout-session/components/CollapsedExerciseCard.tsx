@@ -3,6 +3,7 @@ import type { SessionExercise } from "../types";
 interface CollapsedExerciseCardProps {
   exercise: SessionExercise;
   position: number;
+  onClick?: () => void;
 }
 
 const CIRCLED_NUMBERS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
@@ -14,6 +15,7 @@ function getPositionLabel(position: number): string {
 export function CollapsedExerciseCard({
   exercise,
   position,
+  onClick,
 }: CollapsedExerciseCardProps) {
   const details = [
     `${exercise.targetSets} series`,
@@ -25,8 +27,14 @@ export function CollapsedExerciseCard({
     .filter(Boolean)
     .join(" · ");
 
+  const Wrapper = onClick ? "button" : "div";
+
   return (
-    <div className="flex items-center gap-3 px-4 py-3">
+    <Wrapper
+      type={onClick ? "button" : undefined}
+      className="flex w-full items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-left"
+      onClick={onClick}
+    >
       <span className="shrink-0 text-xl text-muted-foreground">
         {getPositionLabel(position)}
       </span>
@@ -35,6 +43,6 @@ export function CollapsedExerciseCard({
         <p className="text-sm text-muted-foreground">{details}</p>
       </div>
       <span className="shrink-0 text-muted-foreground">›</span>
-    </div>
+    </Wrapper>
   );
 }

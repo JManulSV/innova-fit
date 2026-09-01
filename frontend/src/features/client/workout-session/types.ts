@@ -1,48 +1,38 @@
-export type WorkoutSessionPhase = "loading" | "active" | "summary_pending" | "finished" | "cancelled" | "error";
+export type WorkoutPhase = "loading" | "active" | "finished";
 
-export type WorkoutExerciseStatus = "pending" | "current" | "completed";
+export type ExerciseStatus = "pending" | "active" | "completed";
 
-export type WorkoutSetStatus = "pending" | "editing" | "completed";
-
-export type WorkoutRestStatus = "hidden" | "running" | "finished" | "skipped";
-
-export interface WorkoutSessionSet {
-  id: string;
-  targetReps: number;
-  targetWeight: number;
-  performedReps: number;
-  performedWeight: number;
-  status: WorkoutSetStatus;
+export interface ExerciseLog {
+  assignedWorkoutExerciseId: number;
+  completedSets: number;
+  completedReps: number;
+  performedWeight: number | null;
+  notes: string | null;
+  completedAt: string;
 }
 
-export interface WorkoutSessionExercise {
-  id: number;
+export interface SessionExercise {
   assignedWorkoutExerciseId: number;
-  order: number;
   name: string;
-  muscleGroup: string;
   targetSets: number;
   targetReps: number;
-  suggestedWeight: number;
-  restSeconds: number;
-  status: WorkoutExerciseStatus;
-  forcedCompleted: boolean;
-  sets: WorkoutSessionSet[];
-}
-
-export interface WorkoutSessionRest {
-  status: WorkoutRestStatus;
-  exerciseIndex: number | null;
-  setIndex: number | null;
-  totalSeconds: number;
-  remainingSeconds: number;
+  suggestedWeight: number | null;
+  order: number;
+  status: ExerciseStatus;
+  log: ExerciseLog | null;
 }
 
 export interface WorkoutSessionState {
-  phase: WorkoutSessionPhase;
-  exercises: WorkoutSessionExercise[];
-  currentExerciseIndex: number;
-  workoutStartedAt: number | null;
+  phase: WorkoutPhase;
+  exercises: SessionExercise[];
+  currentIndex: number;
+  startedAt: number;
   elapsedSeconds: number;
-  rest: WorkoutSessionRest;
+}
+
+export interface ActiveExerciseForm {
+  sets: number;
+  reps: number;
+  weight: number | null;
+  notes: string;
 }

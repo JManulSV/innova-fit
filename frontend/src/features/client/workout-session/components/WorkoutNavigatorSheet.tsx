@@ -1,30 +1,38 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { CheckCircle2, ChevronRight, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
-import { WorkoutSessionExercise } from "../types";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import type { SessionExercise } from "../types";
 
 interface WorkoutNavigatorSheetProps {
   open: boolean;
-  exercises: WorkoutSessionExercise[];
-  currentExerciseIndex: number;
+  exercises: SessionExercise[];
+  currentIndex: number;
   onOpenChange: (open: boolean) => void;
   onSelectExercise: (index: number) => void;
 }
 
-export default function WorkoutNavigatorSheet({
+export function WorkoutNavigatorSheet({
   open,
   exercises,
-  currentExerciseIndex,
+  currentIndex,
   onOpenChange,
   onSelectExercise,
 }: WorkoutNavigatorSheetProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="h-[82vh] rounded-t-3xl sm:max-w-none" showCloseButton={false}>
+      <SheetContent
+        side="bottom"
+        className="h-[82vh] rounded-t-3xl sm:max-w-none"
+        showCloseButton={false}
+      >
         <SheetHeader className="border-b px-4 py-4">
           <SheetTitle className="text-xl">Tu rutina</SheetTitle>
         </SheetHeader>
@@ -32,36 +40,49 @@ export default function WorkoutNavigatorSheet({
         <div className="overflow-y-auto px-4 py-4">
           <div className="space-y-2">
             {exercises.map((exercise, index) => {
-              const isCurrent = index === currentExerciseIndex;
-              const isCompleted = exercise.status === "completed";
-              const completedSets = exercise.sets.filter((set) => set.status === "completed").length;
+              const isCurrent = index === currentIndex;
+              const isCompleted = exercise.log !== null;
 
               return (
                 <Button
-                  key={exercise.id}
+                  key={exercise.assignedWorkoutExerciseId}
                   type="button"
                   variant="outline"
                   className={cn(
                     "h-auto w-full justify-between border p-4 text-left",
-                    isCurrent && "border-primary ring-1 ring-primary/30",
+                    isCurrent && "border-primary ring-1 ring-primary/30"
                   )}
                   onClick={() => {
                     onSelectExercise(index);
                     onOpenChange(false);
                   }}
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Badge variant={isCompleted ? "default" : "secondary"}>{index + 1}</Badge>
-                      <span className="font-medium">{exercise.name}</span>
+                  <div className="flex items-center gap-3">
+                    {isCompleted ? (
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-green-500" />
+                    ) : (
+                      <Circle
+                        className={cn(
+                          "h-5 w-5 shrink-0",
+                          isCurrent
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        )}
+                      />
+                    )}
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">
+                        {index + 1}. {exercise.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {exercise.targetSets} series · {exercise.targetReps} reps
+                        {exercise.suggestedWeight != null
+                          ? ` · ${exercise.suggestedWeight} kg`
+                          : ""}
+                      </p>
                     </div>
-                    <p className="text-sm text-muted-foreground">{exercise.muscleGroup}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {completedSets}/{exercise.sets.length} series
-                    </p>
                   </div>
-
-                  <ChevronRight className="size-4 text-muted-foreground" />
+                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                 </Button>
               );
             })}

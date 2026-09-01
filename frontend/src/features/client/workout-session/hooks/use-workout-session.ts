@@ -1,530 +1,225 @@
-"use client";
-
-import { useEffect, useMemo, useReducer, useRef } from "react";
-import { Routine, RoutineExercise } from "../../my-routine/types";
-import {
-  WorkoutSessionExercise,
-  WorkoutSessionSet,
+import { useEffect, useReducer, useRef } from "react";
+import type { Routine, RoutineExercise } from "@/features/client/my-routine/types";
+import type {
+  ExerciseLog,
+  ExerciseStatus,
+  SessionExercise,
+  WorkoutPhase,
   WorkoutSessionState,
 } from "../types";
 
-type SetTarget = "performedReps" | "performedWeight";
+// ---------------------------------------------------------------------------
+// Actions
+// ---------------------------------------------------------------------------
+
+type CompleteExercisePayload = Omit<ExerciseLog, "assignedWorkoutExerciseId" | "completedAt">;
 
 type WorkoutSessionAction =
   | { type: "initialize"; routine: Routine }
-  | { type: "set-current-exercise"; index: number }
-  | { type: "previous-exercise" }
-  | { type: "next-exercise" }
-  | { type: "update-set"; exerciseIndex: number; setIndex: number; target: SetTarget; delta: number }
-  | { type: "set-set-value"; exerciseIndex: number; setIndex: number; target: SetTarget; value: number }
-  | { type: "complete-set"; exerciseIndex: number; setIndex: number }
-  | { type: "add-set"; exerciseIndex: number }
-  | { type: "finish-exercise"; exerciseIndex: number }
-  | { type: "start-rest"; exerciseIndex: number; setIndex: number; seconds: number }
-  | { type: "add-rest-time"; seconds: number }
-  | { type: "tick-workout" }
-  | { type: "tick-rest" }
-  | { type: "skip-rest" }
-  | { type: "finish-workout" };
+  | { type: "complete-exercise"; index: number; log: CompleteExercisePayload }
+  | { type: "edit-exercise"; index: number }
+  | { type: "select-exercise"; index: number }
+  | { type: "tick" }
+  | { type: "finish" };
 
-const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
-const createSet = (exercise: RoutineExercise, base?: WorkoutSessionSet): WorkoutSessionSet => ({
-  id: createId(),
-  targetReps: base?.targetReps ?? exercise.reps,
-  targetWeight: base?.targetWeight ?? (exercise.weight ?? 0),
-  performedReps: base?.performedReps ?? exercise.reps,
-  performedWeight: base?.performedWeight ?? (exercise.weight ?? 0),
-  status: "pending",
-});
-
-const cloneExerciseAsRoutine = (exercise: WorkoutSessionExercise): RoutineExercise => ({
-  id: exercise.id,
-  assigned_workout_id: exercise.assignedWorkoutExerciseId,
-  exercise_id: exercise.id,
-  exercise_name: exercise.name,
-  sets: exercise.targetSets,
-  reps: exercise.targetReps,
-  rest_seconds: exercise.restSeconds,
-  exercise_order: exercise.order,
-  created_at: new Date(),
-  updated_at: new Date(),
-  weight: exercise.suggestedWeight,
-  exercise: {
-    id: exercise.id,
-    coach_id: 0,
-    name: exercise.name,
-    description: "",
-    instructions: "",
-    muscle_groups: [exercise.muscleGroup],
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: null,
-  },
-});
-
-const mapExercise = (exercise: RoutineExercise): WorkoutSessionExercise => ({
-  id: exercise.id,
-  assignedWorkoutExerciseId: exercise.assigned_workout_id,
-  order: exercise.exercise_order,
-  name: exercise.exercise_name,
-  muscleGroup: exercise.exercise.muscle_groups?.[0] ?? "Sin grupo",
-  targetSets: exercise.sets,
-  targetReps: exercise.reps,
-  suggestedWeight: exercise.weight ?? 0,
-  restSeconds: exercise.rest_seconds,
-  status: "pending",
-  forcedCompleted: false,
-  sets: Array.from({ length: exercise.sets }, () => createSet(exercise)),
-});
-
-function deriveExerciseStatus(
-  exercise: WorkoutSessionExercise,
-  index: number,
-  currentExerciseIndex: number,
-): WorkoutSessionExercise {
-  const isCompleted = isExerciseCompleted(exercise);
-  const isCurrent = index === currentExerciseIndex;
-
+function mapExercise(ex: RoutineExercise): SessionExercise {
   return {
-    ...exercise,
-    status: exercise.forcedCompleted || isCompleted ? "completed" : isCurrent ? "current" : "pending",
-    sets: exercise.sets.map((set) => ({
-      ...set,
-      status: set.status,
-    })),
+    assignedWorkoutExerciseId: ex.id,
+    name: ex.exercise_name,
+    targetSets: ex.sets,
+    targetReps: ex.reps,
+    suggestedWeight: ex.weight ?? null,
+    order: ex.exercise_order,
+    status: "pending",
+    log: null,
   };
 }
 
-const initialState: WorkoutSessionState = {
+function deriveStatus(
+  exercise: SessionExercise,
+  index: number,
+  currentIndex: number
+): ExerciseStatus {
+  if (exercise.log !== null) return "completed";
+  if (index === currentIndex) return "active";
+  return "pending";
+}
+
+function updateExercises(
+  exercises: SessionExercise[],
+  index: number,
+  updater: (ex: SessionExercise) => SessionExercise
+): SessionExercise[] {
+  return exercises.map((ex, i) => (i === index ? updater(ex) : ex));
+}
+
+// ---------------------------------------------------------------------------
+// Initial state
+// ---------------------------------------------------------------------------
+
+const INITIAL_STATE: WorkoutSessionState = {
   phase: "loading",
   exercises: [],
-  currentExerciseIndex: 0,
-  workoutStartedAt: null,
+  currentIndex: 0,
+  startedAt: 0,
   elapsedSeconds: 0,
-  rest: {
-    status: "hidden",
-    exerciseIndex: null,
-    setIndex: null,
-    totalSeconds: 0,
-    remainingSeconds: 0,
-  },
 };
 
-function clampIndex(index: number, length: number) {
-  if (length <= 0) {
-    return 0;
-  }
+// ---------------------------------------------------------------------------
+// Reducer
+// ---------------------------------------------------------------------------
 
-  return Math.min(Math.max(index, 0), length - 1);
-}
-
-function updateExercise(
-  exercises: WorkoutSessionExercise[],
-  index: number,
-  updater: (exercise: WorkoutSessionExercise) => WorkoutSessionExercise,
-) {
-  return exercises.map((exercise, exerciseIndex) =>
-    exerciseIndex === index ? updater(exercise) : exercise,
-  );
-}
-
-function isExerciseCompleted(exercise: WorkoutSessionExercise) {
-  return exercise.sets.length > 0 && exercise.sets.every((set) => set.status === "completed");
-}
-
-function reducer(state: WorkoutSessionState, action: WorkoutSessionAction): WorkoutSessionState {
+function reducer(
+  state: WorkoutSessionState,
+  action: WorkoutSessionAction
+): WorkoutSessionState {
   switch (action.type) {
     case "initialize": {
-      const exercises = action.routine.exercises
-        .slice()
-        .sort((left, right) => left.exercise_order - right.exercise_order)
-        .map(mapExercise);
-
+      const sorted = [...action.routine.exercises].sort(
+        (a, b) => a.exercise_order - b.exercise_order
+      );
+      const exercises = sorted.map(mapExercise);
       return {
-        ...initialState,
         phase: "active",
         exercises,
-        currentExerciseIndex: 0,
-        workoutStartedAt: Date.now(),
+        currentIndex: 0,
+        startedAt: Date.now(),
+        elapsedSeconds: 0,
       };
     }
-    case "set-current-exercise": {
-      return {
-        ...state,
-        currentExerciseIndex: clampIndex(action.index, state.exercises.length),
-      };
-    }
-    case "previous-exercise": {
-      return {
-        ...state,
-        currentExerciseIndex: clampIndex(state.currentExerciseIndex - 1, state.exercises.length),
-      };
-    }
-    case "next-exercise": {
-      return {
-        ...state,
-        currentExerciseIndex: clampIndex(state.currentExerciseIndex + 1, state.exercises.length),
-      };
-    }
-    case "update-set": {
-      return {
-        ...state,
-        exercises: updateExercise(state.exercises, action.exerciseIndex, (exercise) => ({
-          ...exercise,
-          sets: exercise.sets.map((set, setIndex) => {
-            if (setIndex !== action.setIndex) {
-              return set;
-            }
 
-            const nextValue = Math.max(0, set[action.target] + action.delta);
-
-            return {
-              ...set,
-              [action.target]: nextValue,
-              status: "editing",
-            };
-          }),
-        })),
-      };
-    }
-    case "set-set-value": {
-      return {
-        ...state,
-        exercises: updateExercise(state.exercises, action.exerciseIndex, (exercise) => ({
-          ...exercise,
-          sets: exercise.sets.map((set, setIndex) => {
-            if (setIndex !== action.setIndex) {
-              return set;
-            }
-
-            return {
-              ...set,
-              [action.target]: Math.max(0, action.value),
-              status: "editing",
-            };
-          }),
-        })),
-      };
-    }
-    case "complete-set": {
-      const exerciseIndex = action.exerciseIndex;
-
-      return {
-        ...state,
-        exercises: updateExercise(state.exercises, exerciseIndex, (exercise) => {
-          const set = exercise.sets[action.setIndex];
-
-          if (!set || set.status === "completed") {
-            return exercise;
-          }
-
-          const nextSets = exercise.sets.map((currentSet, setIndex) =>
-            setIndex === action.setIndex
-              ? {
-                  ...currentSet,
-                  status: "completed",
-                }
-              : currentSet,
-          );
-
-          return {
-            ...exercise,
-            forcedCompleted: false,
-            sets: nextSets,
-          };
-        }),
-        rest:
-          state.exercises[exerciseIndex]?.restSeconds && state.exercises[exerciseIndex].restSeconds > 0
-            ? {
-                status: "running",
-                exerciseIndex,
-                setIndex: action.setIndex,
-                totalSeconds: state.exercises[exerciseIndex].restSeconds,
-                remainingSeconds: state.exercises[exerciseIndex].restSeconds,
-              }
-            : {
-                ...state.rest,
-                status: "hidden",
-                exerciseIndex,
-                setIndex: action.setIndex,
-                totalSeconds: 0,
-                remainingSeconds: 0,
-              },
-      };
-    }
-    case "add-set": {
-      return {
-        ...state,
-        exercises: updateExercise(state.exercises, action.exerciseIndex, (exercise) => {
-          const sourceSet = exercise.sets[exercise.sets.length - 1] ?? exercise.sets[0];
-          const routineExercise = cloneExerciseAsRoutine(exercise);
-
-          return {
-            ...exercise,
-            sets: [...exercise.sets, createSet(routineExercise, sourceSet)],
-          };
-        }),
-      };
-    }
-    case "finish-exercise": {
-      return {
-        ...state,
-        exercises: updateExercise(state.exercises, action.exerciseIndex, (exercise) => ({
-          ...exercise,
-          forcedCompleted: true,
-          status: "completed",
-        })),
-      };
-    }
-    case "start-rest": {
-      return {
-        ...state,
-        rest: {
-          status: action.seconds > 0 ? "running" : "hidden",
-          exerciseIndex: action.exerciseIndex,
-          setIndex: action.setIndex,
-          totalSeconds: action.seconds,
-          remainingSeconds: action.seconds,
-        },
-      };
-    }
-    case "add-rest-time": {
-      if (state.rest.status !== "running") {
-        return state;
-      }
-
-      return {
-        ...state,
-        rest: {
-          ...state.rest,
-          totalSeconds: state.rest.totalSeconds + action.seconds,
-          remainingSeconds: state.rest.remainingSeconds + action.seconds,
-        },
-      };
-    }
-    case "tick-workout": {
-      if (!state.workoutStartedAt || state.phase !== "active") {
-        return state;
-      }
-
-      return {
-        ...state,
-        elapsedSeconds: state.elapsedSeconds + 1,
-      };
-    }
-    case "tick-rest": {
-      if (state.rest.status !== "running") {
-        return state;
-      }
-
-      if (state.rest.remainingSeconds <= 1) {
-        return {
-          ...state,
-          rest: {
-            ...state.rest,
-            status: "hidden",
-            remainingSeconds: 0,
-            totalSeconds: 0,
+    case "complete-exercise": {
+      const exercises = updateExercises(
+        state.exercises,
+        action.index,
+        (ex) => ({
+          ...ex,
+          log: {
+            assignedWorkoutExerciseId: ex.assignedWorkoutExerciseId,
+            completedSets: action.log.completedSets,
+            completedReps: action.log.completedReps,
+            performedWeight: action.log.performedWeight,
+            notes: action.log.notes,
+            completedAt: "", // se asigna al momento del POST
           },
-        };
-      }
+        })
+      );
 
-      return {
-        ...state,
-        rest: {
-          ...state.rest,
-          remainingSeconds: state.rest.remainingSeconds - 1,
-        },
-      };
+      // Avanzar al siguiente ejercicio pendiente (sin log)
+      const nextIndex = exercises.findIndex((ex) => ex.log === null);
+      const currentIndex =
+        nextIndex !== -1 ? nextIndex : state.currentIndex;
+
+      return { ...state, exercises, currentIndex };
     }
-    case "skip-rest": {
-      return {
-        ...state,
-        rest: {
-          ...state.rest,
-          status: "hidden",
-          remainingSeconds: 0,
-          totalSeconds: 0,
-        },
-      };
+
+    case "edit-exercise": {
+      const exercises = updateExercises(
+        state.exercises,
+        action.index,
+        (ex) => ({ ...ex, log: null })
+      );
+      return { ...state, exercises, currentIndex: action.index };
     }
-    case "finish-workout": {
-      return {
-        ...state,
-        phase: "summary_pending",
-      };
+
+    case "select-exercise": {
+      const clamped = Math.max(
+        0,
+        Math.min(action.index, state.exercises.length - 1)
+      );
+      return { ...state, currentIndex: clamped };
     }
+
+    case "tick": {
+      return { ...state, elapsedSeconds: state.elapsedSeconds + 1 };
+    }
+
+    case "finish": {
+      return { ...state, phase: "finished" };
+    }
+
     default:
       return state;
   }
 }
 
-function useWorkoutSession(routine?: Routine) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+// ---------------------------------------------------------------------------
+// Hook
+// ---------------------------------------------------------------------------
+
+export function useWorkoutSession(routine: Routine | undefined) {
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const initializedRoutineId = useRef<number | null>(null);
 
+  // Initialize once per routine
   useEffect(() => {
-    if (!routine || initializedRoutineId.current === routine.id) {
-      return;
-    }
-
-    dispatch({ type: "initialize", routine });
+    if (!routine) return;
+    if (initializedRoutineId.current === routine.id) return;
     initializedRoutineId.current = routine.id;
+    dispatch({ type: "initialize", routine });
   }, [routine]);
 
+  // Workout timer
   useEffect(() => {
-    if (state.phase !== "active" || !state.workoutStartedAt) {
-      return;
-    }
+    if (state.phase !== "active" || state.startedAt === 0) return;
+    const id = setInterval(() => dispatch({ type: "tick" }), 1000);
+    return () => clearInterval(id);
+  }, [state.phase, state.startedAt]);
 
-    const timer = window.setInterval(() => {
-      dispatch({ type: "tick-workout" });
-    }, 1000);
+  // ---------------------------------------------------------------------------
+  // Derived state
+  // ---------------------------------------------------------------------------
 
-    return () => window.clearInterval(timer);
-  }, [state.phase, state.workoutStartedAt]);
+  const exercises: SessionExercise[] = state.exercises.map((ex, i) => ({
+    ...ex,
+    status: deriveStatus(ex, i, state.currentIndex),
+  }));
 
-  useEffect(() => {
-    if (state.rest.status !== "running") {
-      return;
-    }
+  const currentExercise = exercises[state.currentIndex] ?? null;
+  const completedCount = exercises.filter((ex) => ex.log !== null).length;
+  const progressPercent =
+    exercises.length > 0
+      ? Math.round((completedCount / exercises.length) * 100)
+      : 0;
 
-    const timer = window.setInterval(() => {
-      dispatch({ type: "tick-rest" });
-    }, 1000);
+  // ---------------------------------------------------------------------------
+  // Actions
+  // ---------------------------------------------------------------------------
 
-    return () => window.clearInterval(timer);
-  }, [state.rest.status]);
+  function completeExercise(index: number, log: CompleteExercisePayload) {
+    dispatch({ type: "complete-exercise", index, log });
+  }
 
-  const activeExercise = state.exercises[state.currentExerciseIndex] ?? null;
-  const exercises = useMemo(
-    () => state.exercises.map((exercise, index) => deriveExerciseStatus(exercise, index, state.currentExerciseIndex)),
-    [state.exercises, state.currentExerciseIndex],
-  );
-  const currentExercise = exercises[state.currentExerciseIndex] ?? null;
-  const isCurrentExerciseComplete = currentExercise ? isExerciseCompleted(currentExercise) : false;
-  const isLastExercise = state.currentExerciseIndex === state.exercises.length - 1;
-  const completedExercisesCount = useMemo(
-    () => state.exercises.filter((exercise) => isExerciseCompleted(exercise)).length,
-    [state.exercises],
-  );
-  const progressPercent = state.exercises.length
-    ? Math.round((completedExercisesCount / state.exercises.length) * 100)
-    : 0;
+  function editExercise(index: number) {
+    dispatch({ type: "edit-exercise", index });
+  }
 
-  const updateSetReps = (exerciseIndex: number, setIndex: number, delta: number) => {
-    dispatch({ type: "update-set", exerciseIndex, setIndex, target: "performedReps", delta });
-  };
+  function selectExercise(index: number) {
+    dispatch({ type: "select-exercise", index });
+  }
 
-  const updateSetWeight = (exerciseIndex: number, setIndex: number, delta: number) => {
-    dispatch({ type: "update-set", exerciseIndex, setIndex, target: "performedWeight", delta });
-  };
-
-  const setSetReps = (exerciseIndex: number, setIndex: number, value: number) => {
-    dispatch({ type: "set-set-value", exerciseIndex, setIndex, target: "performedReps", value });
-  };
-
-  const setSetWeight = (exerciseIndex: number, setIndex: number, value: number) => {
-    dispatch({ type: "set-set-value", exerciseIndex, setIndex, target: "performedWeight", value });
-  };
-
-  const completeSet = (exerciseIndex: number, setIndex: number) => {
-    dispatch({ type: "complete-set", exerciseIndex, setIndex });
-  };
-
-  const restartWorkout = () => {
-    if (!routine) {
-      return;
-    }
-
-    dispatch({ type: "initialize", routine });
-  };
-
-  const addSet = (exerciseIndex: number) => {
-    dispatch({ type: "add-set", exerciseIndex });
-  };
-
-  const previousExercise = () => {
-    dispatch({ type: "previous-exercise" });
-  };
-
-  const nextExercise = () => {
-    if (isLastExercise) {
-      dispatch({ type: "finish-workout" });
-      return;
-    }
-
-    dispatch({ type: "next-exercise" });
-  };
-
-  const finishExercise = (exerciseIndex: number) => {
-    dispatch({ type: "finish-exercise", exerciseIndex });
-
-    if (exerciseIndex >= state.exercises.length - 1) {
-      dispatch({ type: "finish-workout" });
-      return;
-    }
-
-    dispatch({ type: "next-exercise" });
-  };
-
-  const selectExercise = (index: number) => {
-    dispatch({ type: "set-current-exercise", index });
-  };
-
-  const addRestTime = () => {
-    dispatch({ type: "add-rest-time", seconds: 15 });
-  };
-
-  const skipRest = () => {
-    dispatch({ type: "skip-rest" });
-  };
-
-  const finishWorkout = () => {
-    dispatch({ type: "finish-workout" });
-  };
-
-  const restartRest = () => {
-    if (state.rest.exerciseIndex === null || state.rest.setIndex === null) {
-      return;
-    }
-
-    const exercise = state.exercises[state.rest.exerciseIndex];
-
-    dispatch({
-      type: "start-rest",
-      exerciseIndex: state.rest.exerciseIndex,
-      setIndex: state.rest.setIndex,
-      seconds: exercise?.restSeconds ?? 0,
-    });
-  };
+  function finishWorkout() {
+    dispatch({ type: "finish" });
+  }
 
   return {
-    ...state,
-    activeExercise,
-    currentExercise,
-    completedExercisesCount,
-    progressPercent,
-    isCurrentExerciseComplete,
-    isLastExercise,
+    // State
+    phase: state.phase as WorkoutPhase,
     exercises,
-    updateSetReps,
-    updateSetWeight,
-    setSetReps,
-    setSetWeight,
-    completeSet,
-    addSet,
-    restartWorkout,
-    finishExercise,
-    previousExercise,
-    nextExercise,
+    currentIndex: state.currentIndex,
+    elapsedSeconds: state.elapsedSeconds,
+    // Derived
+    currentExercise,
+    completedCount,
+    progressPercent,
+    // Actions
+    completeExercise,
+    editExercise,
     selectExercise,
-    addRestTime,
-    skipRest,
-    restartRest,
     finishWorkout,
   };
 }
-
-export { useWorkoutSession };

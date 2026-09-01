@@ -11,6 +11,10 @@ export default function BottomNavigation() {
 
   const pathname = usePathname();
 
+  if (pathname.startsWith("/client/workout-session")) {
+    return null;
+  }
+
   const items = [
     {
       label: "Inicio",

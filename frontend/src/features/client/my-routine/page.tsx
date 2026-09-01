@@ -10,8 +10,9 @@ import WeeklyRoutineCard from "./components/weekly-routine-card";
 export default function MyRoutinePage() {
   const { data, isLoading, isError } = useDashboard();
 
-  const weekRoutines = data?.week_workouts ?? [];
-  const lastActivity = data?.last_activity;
+  const weekRoutines = data?.data.week_workouts ?? [];
+  const lastActivity = data?.data.last_activity;
+  console.log(data);
 
   return (
     <Page>

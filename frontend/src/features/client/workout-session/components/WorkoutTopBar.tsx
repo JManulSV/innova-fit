@@ -39,7 +39,7 @@ export function WorkoutTopBar({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 px-3 py-2">
         <Button
           type="button"
           variant="ghost"

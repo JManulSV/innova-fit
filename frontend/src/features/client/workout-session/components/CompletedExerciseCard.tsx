@@ -26,11 +26,8 @@ export function CompletedExerciseCard({
         .join(" · ")
     : "";
 
-  const Wrapper = onClick ? "button" : "div";
-
   return (
-    <Wrapper
-      type={onClick ? "button" : undefined}
+    <div
       className="flex w-full items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-left"
       onClick={() => onClick?.(index)}
     >
@@ -51,6 +48,6 @@ export function CompletedExerciseCard({
       >
         Editar
       </Button>
-    </Wrapper>
+    </div>
   );
 }

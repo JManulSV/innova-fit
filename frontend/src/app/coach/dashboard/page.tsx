@@ -39,24 +39,24 @@ const QUICK_ACTIONS = [
   {
     title: 'Crear cliente',
     icon: UserPlus,
-    href: 'clients/create',
+    href: '/coach/clients/create',
   },
   {
     title: 'Crear ejercicio',
     icon: Dumbbell,
-    href: 'exercises/create',
+    href: '/coach/exercises/create',
   },
   {
     title: 'Crear plantilla de rutina',
     icon: FilePlus,
-    href: 'templates/create',
+    href: '/coach/templates/create',
   },
 ]
 
 export default function CoachDashboard() {
-  const { data, isLoading, error } = useDashboard();
+  const { data, isLoading, error, refetch } = useDashboard()
 
-  const stats: Stats | undefined = data?.stats
+  const stats: Stats | undefined = data?.stats ?? undefined
   const recentUsers: RecentUser[] = data?.recent ?? []
   const hasStats = Boolean(stats && Object.values(stats).some((value) => value > 0))
 
@@ -67,8 +67,11 @@ export default function CoachDashboard() {
   if (error) {
     return (
       <Page>
-        <Container className='py-8'>
-          <Text>Ocurrió un error al obtener los datos. Intenta nuevamente más tarde.</Text>
+        <Container className='py-8 space-y-4'>
+          <Text>Ocurrió un error al obtener los datos del dashboard.</Text>
+          <Button size='sm' onClick={() => refetch()}>
+            Reintentar
+          </Button>
         </Container>
       </Page>
     )

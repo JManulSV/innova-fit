@@ -7,6 +7,16 @@ import { RecentUser } from "../types/dashboard.type";
 import RecentClientsSkeleton from "./RecentClientsSkeleton";
 import EmptyState from "./EmptyState";
 
+function formatRecentDate(value: string) {
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return 'Fecha no disponible'
+  }
+
+  return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+}
+
 interface RecentClientsProps {
   clients: RecentUser[];
   isLoading?: boolean;
@@ -35,11 +45,11 @@ function RecentClients({ clients, isLoading }: RecentClientsProps) {
           key={client.id}
           href={`/coach/clients/${client.id}`}
           className="flex items-center justify-between border-b border-border px-5 py-3 last:border-b-0 hover:bg-muted/50 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                {getInitials(client.name, "C")}
-              </div>
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+              {getInitials(client.name, "C")}
+            </div>
 
             <Text className="font-medium text-sm leading-none">
               {client.name}
@@ -48,7 +58,7 @@ function RecentClients({ clients, isLoading }: RecentClientsProps) {
 
           <div className="flex items-center gap-3">
             <Muted className="text-xs">
-              {new Date(client.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+              {formatRecentDate(client.created_at)}
             </Muted>
             <ChevronRight className="size-4 text-muted-foreground" />
           </div>

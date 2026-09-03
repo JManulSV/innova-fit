@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { H1, Muted } from '@/components/typography';
 import { ArrowLeftIcon, Edit, Mail, Phone, Target, Trash } from 'lucide-react'
 import Link from 'next/link'
+import { getInitials } from '@/lib/get-initials';
 import DeleteClientDialog from '../client-delete/DeleteClientDialog';
 
 type ClientDetailHeaderProps = {
@@ -22,12 +23,6 @@ export default function ClientDetailHeader({
     goal = 'Metas del Cliente',
     statusLabel = 'Activo',
 }: ClientDetailHeaderProps) {
-    const getInitialsNameAvatar = (name: string) => {
-        const names = name.trim().split(/\s+/).filter(Boolean);
-        const initials = names.map((n) => n[0]).join('');
-        return initials.slice(0, 2).toUpperCase();
-    }
-  
     return (
     <section className="border-b border-border pb-6">
         {/* Button to go back to the clients screen */}
@@ -42,7 +37,7 @@ export default function ClientDetailHeader({
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-4">
             <div className="flex items-center gap-4 mt-4">
                 <div className="w-16 h-16 rounded-xl bg-card p-3 flex items-center justify-center">
-                    <span className="text-2xl font-bold">{getInitialsNameAvatar(clientName)}</span>
+                    <span className="text-2xl font-bold">{getInitials(clientName, "C")}</span>
                 </div>
                 <div>
                     <div className="flex items-center gap-2">

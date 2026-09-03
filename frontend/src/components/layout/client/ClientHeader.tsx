@@ -1,19 +1,14 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Container } from "@/components/design-system/container";
 import { PageDescription, PageTitle } from "@/components/design-system/page";
+import { getInitials } from "@/lib/get-initials";
 import { useAuthStore } from "@/stores/auth-store";
 
 export default function ClientHeader() {
 
   const user = useAuthStore(state => state.user);
 
-  const initials = user?.name
-    ?.split(" ")
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const initials = getInitials(user?.name, "C");
 
   return (
     <header className="border-b border-border/70 bg-card/85 backdrop-blur supports-backdrop-filter:bg-card/70">

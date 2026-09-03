@@ -5,18 +5,13 @@ import { Container } from "@/components/design-system/container";
 import { PageDescription, PageTitle } from "@/components/design-system/page";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getInitials } from "@/lib/get-initials";
 import { useAuthStore } from "@/stores/auth-store";
 
 export default function ClientProfilePage() {
   const user = useAuthStore((state) => state.user);
 
-  const initials = user?.name
-    ?.split(" ")
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const initials = getInitials(user?.name, "C");
 
   return (
     <Container className="py-4">

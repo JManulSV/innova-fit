@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Muted, Text } from "@/components/typography";
 import { Card } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
+import { getInitials } from "@/lib/get-initials";
 import { RecentUser } from "../types/dashboard.type";
 import RecentClientsSkeleton from "./RecentClientsSkeleton";
 import EmptyState from "./EmptyState";
@@ -34,11 +35,11 @@ function RecentClients({ clients, isLoading }: RecentClientsProps) {
           key={client.id}
           href={`/coach/clients/${client.id}`}
           className="flex items-center justify-between border-b border-border px-5 py-3 last:border-b-0 hover:bg-muted/50 transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-              AA
-            </div>
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                {getInitials(client.name, "C")}
+              </div>
 
             <Text className="font-medium text-sm leading-none">
               {client.name}

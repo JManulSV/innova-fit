@@ -1,15 +1,11 @@
 import type { Client } from "../../../clients/types/clients.types";
 import type { Exercise } from "../../../exercises/types/exercise.types";
 import type { TemplateExercise } from "../../../templates/types/templates.type";
+import { getInitials } from "@/lib/get-initials";
 import type { ClientStatus, RoutineExercise } from "./types";
 
 export function getClientInitials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+  return getInitials(name);
 }
 
 export function mapExerciseToRoutine(exercise: Exercise, order: number): RoutineExercise {

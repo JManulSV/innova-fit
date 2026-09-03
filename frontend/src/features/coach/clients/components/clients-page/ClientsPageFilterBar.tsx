@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Search } from "lucide-react"
-import type { ClientsFilters } from "../../types/clients.types";
+import type { ClientsFilters } from "../../filters/clients-filters.schema";
 
 interface ClientsPageFilterBarProps {
   filter: ClientsFilters; 
-  setFilter: React.Dispatch<React.SetStateAction<ClientsFilters>>;
+  setFilter: (next: Partial<ClientsFilters>) => void;
 }
 
 function ClientsPageFilterBar({ filter, setFilter }: ClientsPageFilterBarProps) {
@@ -18,13 +18,17 @@ function ClientsPageFilterBar({ filter, setFilter }: ClientsPageFilterBarProps) 
             placeholder="Buscar cliente..."
             className="pl-10"
             value={filter.search}
-            onChange={(e) => setFilter((prev) => ({ ...prev, search: e.target.value }))}
+            onChange={(e) => setFilter({ search: e.target.value })}
           />
         </div>
 
         <Tabs
           value={filter.status}
-          onValueChange={(value: string) => setFilter((prev) => ({ ...prev, status: value as ClientsFilters["status"] }))}
+          onValueChange={(value) => {
+            if (value === "all" || value === "active" || value === "inactive") {
+              setFilter({ status: value });
+            }
+          }}
           className="w-full lg:w-auto"
         >
             <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">

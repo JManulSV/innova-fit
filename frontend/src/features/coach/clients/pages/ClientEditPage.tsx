@@ -1,27 +1,26 @@
+"use client";
+
 import { useParams, useRouter } from "next/navigation";
-import ClientForm from "../components/client-form/ClientForm";
-import { useClient } from "../hooks/use-client";
-import ClientFormSkeleton from "../components/client-form/components/ClientFormSkeleton";
+import { ArrowLeft } from "lucide-react";
+
 import { Page } from "@/components/design-system/page";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { H2, Mono, Muted } from "@/components/typography";
 
+import ClientForm from "../components/client-form/ClientForm";
+import ClientFormSkeleton from "../components/client-form/components/ClientFormSkeleton";
+import { useClient } from "../hooks/use-client";
+
 function ClientEditPage() {
-  const { id } = useParams();
-  const { data: client, isLoading, isError } = useClient(id as string);
+  const params = useParams<{ id?: string }>();
+  const id = params?.id;
   const router = useRouter();
 
-  // Use optional chaining to avoid reading `name` when `client` is undefined
-  const clientName = client?.name ?? "";
-  
-  const handleBack = () => {
-    router.push('/coach/clients');
-  };
+  const { data: client, isLoading, isError } = useClient(id);
 
   if (isLoading) return <ClientFormSkeleton />;
 
-  if (isError || !client) {
+  if (isError || !client || !id) {
     return <div className="p-6">No se pudo cargar el cliente.</div>;
   }
 
@@ -30,7 +29,11 @@ function ClientEditPage() {
 
       <div className="relative mx-auto flex w-full max-w-4xl flex-col gap-6 px-6 lg:px-8">
         <div className="max-w-2xl space-y-3">
-          <Button onClick={handleBack} variant={'ghost'}  className="flex gap-2 text-sm cursor-pointer text-muted-foreground hover:text-foreground">
+          <Button
+            onClick={() => router.push("/coach/clients")}
+            variant="ghost"
+            className="flex gap-2 text-sm cursor-pointer text-muted-foreground hover:text-foreground"
+          >
             <ArrowLeft className="h-4 w-4" />
             <Mono>Volver a clientes</Mono>
           </Button>
@@ -41,14 +44,14 @@ function ClientEditPage() {
         </div>
         <ClientForm
           mode="edit"
-          clientId={id as string}
+          clientId={id}
           initialValues={{
-            name: clientName,
-            email: client.email || "",
+            name: client.name,
+            email: client.email,
             password: "",
             confirmPassword: "",
           }}
-      />
+        />
       </div>
     </Page>
   );

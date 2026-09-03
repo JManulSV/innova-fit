@@ -12,14 +12,13 @@ import { useClient } from '../hooks/use-client'
 function ClientDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { data: client, isLoading, error, refetch } = useClient(id);
-  console.log('Client data:', client);
 
   if (isLoading) {
     return <ClientDetailSkeleton />
   }
 
-  if (error) {
-    return <ClientDetailError message={error.message} onRetry={() => void refetch()} />
+  if (error || !client) {
+    return <ClientDetailError message={error?.message ?? 'No se pudo cargar el cliente.'} onRetry={() => void refetch()} />
   }
 
   return (
@@ -27,12 +26,12 @@ function ClientDetailPage() {
         <Container>
                 <ClientDetailHeader 
                   clientId={id}
-                  clientName={client?.name || ''}
-                  email={client?.email || ''}
+                  clientName={client.name || ''}
+                  email={client.email || ''}
                   statusLabel='Activo' 
                 />
                 <ClientDetailMetrics 
-                  createAt={client?.created_at || ''}
+                  createAt={client.created_at || ''}
                 />
                 <ClientDetailTabs />
         </Container>

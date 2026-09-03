@@ -70,9 +70,9 @@ export default function ClientDetailHeader({
                     </Link>
                 </Button>
                 <DeleteClientDialog 
-                buttonLabel='Eliminar cliente' 
-                clientId={Number(clientId)} 
-                linkRedirect={`/coach/clients`}
+                    buttonLabel='Eliminar cliente' 
+                    clientId={clientId} 
+                    linkRedirect={`/coach/clients`}
                 />
             </div>
 

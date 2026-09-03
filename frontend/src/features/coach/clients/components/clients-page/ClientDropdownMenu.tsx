@@ -28,7 +28,7 @@ export default function ClientDropdownMenu({ clientId }: ClientDropdownMenuProps
                     </Button>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer text-destructive" asChild>
-                    <DeleteClientDialog buttonLabel='Eliminar' clientId={clientId} />
+                    <DeleteClientDialog buttonLabel='Eliminar' clientId={clientId.toString()} />
                 </DropdownMenuItem>
             </DropdownMenuGroup>
         </DropdownMenuContent>

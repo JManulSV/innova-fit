@@ -11,13 +11,13 @@ import { useRouter } from "next/navigation";
  */
 
 interface DeleteClientDialogProps {
-  clientId?: number;
+  clientId: string;
   buttonLabel?: "Eliminar" | "Eliminar cliente";
   linkRedirect?: string;
 }
 
 function DeleteClientDialog({ clientId, buttonLabel = "Eliminar", linkRedirect }: DeleteClientDialogProps) {
-  const { mutateAsync: deleteClient, isPending } = useDeleteClient(clientId?.toString() || "");
+  const { mutateAsync: deleteClient, isPending } = useDeleteClient(clientId);
   const router = useRouter();
 
   const trigger = (
@@ -33,7 +33,6 @@ function DeleteClientDialog({ clientId, buttonLabel = "Eliminar", linkRedirect }
       description={<Muted>¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.</Muted>}
       trigger={trigger}
       onConfirm={async () => {
-        if (!clientId) return;
         await deleteClient();
         if (linkRedirect) router.replace(linkRedirect);
       }}

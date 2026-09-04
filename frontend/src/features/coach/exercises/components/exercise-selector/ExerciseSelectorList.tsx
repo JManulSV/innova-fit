@@ -38,7 +38,7 @@ export default function ExerciseSelectorList({ exercises, isLoading, selectedExe
         ) : (
           exercises.map((exercise) => {
             const isSelected = selectedExerciseIds.includes(exercise.id);
-            const bodyPartLabel = exercise.body_parts?.[0]?.name?.toUpperCase() ?? "SIN GRUPO";
+            const bodyPartLabel = exercise.body_parts?.[0]?.name?.toUpperCase() ?? "SIN PARTE DEL CUERPO";
 
             return (
               <Card

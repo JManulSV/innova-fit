@@ -1,12 +1,11 @@
 "use client"
-
+import type { BodyPart } from '@/features/coach/body-parts/types/body-parts'
 import { useParams, useRouter } from 'next/navigation'
 import { Page } from '@/components/design-system/page'
 import { H2, Mono, Muted } from '@/components/typography'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { useExercise } from '../hooks/use-exercise'
-import { Exercise } from '../types/exercise.types'
 import ExerciseForm from '../components/exercise-form/ExerciseForm'
 import ExerciseFormSkeleton from '../components/exercise-form/ExerciseFormSkeleton'
 import ExerciseFormError from '../components/exercise-form/ExerciseFormError'
@@ -16,7 +15,7 @@ export default function ExerciseUpdatePage() {
   const router = useRouter()
   const handleBack = () => router.push('/coach/exercises')
 
-  const { data: exercise, isLoading, error } = useExercise(id) as { data: Exercise; isLoading: boolean; error: any }
+  const { data: exercise, isLoading, error } = useExercise(id);
 
   if (isLoading) {
     return <ExerciseFormSkeleton />
@@ -45,7 +44,7 @@ export default function ExerciseUpdatePage() {
               ? {
                   ...exercise,
                   instructions: exercise.instructions ?? undefined,
-                  muscle_groups: exercise.muscle_groups ?? undefined,
+                  body_parts_ids: exercise.body_parts?.map((bodyPart: BodyPart) => bodyPart.id) ?? undefined,
                 }
               : undefined
           }

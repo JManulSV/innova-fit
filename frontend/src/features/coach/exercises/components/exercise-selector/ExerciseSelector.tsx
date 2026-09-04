@@ -6,12 +6,15 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+import { useBodyParts } from "../../../body-parts/hooks/use-body-parts";
+
 import type { Exercise } from "../../types/exercise.types";
 import ExerciseSelectorFooter from "./ExerciseSelectorFooter";
 import ExerciseSelectorHeader from "./ExerciseSelectorHeader";
 import ExerciseSelectorList from "./ExerciseSelectorList";
 import ExerciseSelectorSelectedPanel from "./ExerciseSelectorSelectedPanel";
 import ExerciseSelectorSidebar from "./ExerciseSelectorSidebar";
+import { BodyPart } from "@/features/coach/body-parts/types/body-parts";
 
 type ExerciseSelectorProps = {
   open: boolean;
@@ -25,8 +28,6 @@ type ExerciseSelectorProps = {
   onRemove?: (exerciseId: number) => void;
   onCancel?: () => void;
 };
-
-const BODY_PART_FILTERS = ["Todos", "Pecho", "Espalda", "Piernas", "Hombro", "Brazos"];
 
 export default function ExerciseSelector({
   open,
@@ -43,6 +44,12 @@ export default function ExerciseSelector({
   const isMobile = useIsMobile();
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("Todos");
+  const { data: bodyParts = [] } = useBodyParts();
+
+  const bodyPartFilters = useMemo(
+    () => ["Todos", ...bodyParts.map((bodyPart:BodyPart) => bodyPart.name)],
+    [bodyParts],
+  );
 
   const filteredExercises = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -94,7 +101,7 @@ export default function ExerciseSelector({
           query={query}
           onQueryChange={setQuery}
           activeFilter={activeFilter}
-          filters={BODY_PART_FILTERS}
+          filters={bodyPartFilters}
           onFilterChange={setActiveFilter}
         />
 

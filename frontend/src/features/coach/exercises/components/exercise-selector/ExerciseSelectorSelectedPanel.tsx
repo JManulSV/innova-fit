@@ -31,7 +31,7 @@ export default function ExerciseSelectorSelectedPanel({ exercises, onRemove }: P
             <div key={exercise.id} className="flex items-center justify-between gap-2 rounded-2xl border border-border bg-background px-2.5 py-2">
               <div className="min-w-0">
                 <div className="truncate text-[11px] font-medium lg:text-sm">{exercise.name}</div>
-                <div className="truncate text-[10px] text-muted-foreground lg:text-xs">{exercise.body_parts?.[0]?.name ?? "Sin grupo"}</div>
+                <div className="truncate text-[10px] text-muted-foreground lg:text-xs">{exercise.body_parts?.[0]?.name ?? "Sin parte del cuerpo"}</div>
               </div>
 
               <Button variant="ghost" size="icon-sm" className="lg:size-6" onClick={() => onRemove?.(exercise.id)} aria-label="Quitar ejercicio seleccionado">

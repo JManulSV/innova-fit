@@ -19,12 +19,8 @@ type Props = {
 export default function ExerciseSelectorList({ exercises, isLoading, selectedExerciseIds, onToggleExercise }: Props) {
   return (
     <section className="flex min-h-0 flex-1 flex-col space-y-1.5 overflow-hidden">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:text-sm">Lista</h3>
-        <span className="text-xs text-muted-foreground lg:text-sm">{exercises.length} ejercicios</span>
-      </div>
 
-      <div className="max-h-[24vh] flex-1 space-y-1.5 overflow-y-auto pr-1 lg:max-h-[28vh]">
+      <div className="max-h-[42vh] flex-1 space-y-1.5 overflow-y-auto pr-1">
         {isLoading ? (
           <div className="space-y-3">
             <ExerciseSelectorSkeleton />
@@ -44,28 +40,28 @@ export default function ExerciseSelectorList({ exercises, isLoading, selectedExe
               <Card
                 key={exercise.id}
                 className={cn(
-                  "cursor-pointer border transition-colors hover:border-primary/40 hover:bg-muted/20",
+                  "cursor-pointer py-2 transition-colors hover:border-primary/40 hover:bg-muted/80 ring-0",
                   isSelected && "border-primary/40 bg-primary/5",
                 )}
                 onClick={() => onToggleExercise(exercise)}
               >
-                <CardContent className="flex items-center gap-1.5 px-1.5 py-1.5 lg:gap-1.5 lg:px-2 lg:py-0.5">
+                <CardContent className="flex items-center gap-1.5 lg:gap-1.5 lg:px-2">
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-2xl border border-border bg-muted/30 text-muted-foreground lg:size-8">
                     <Dumbbell className="size-3 lg:size-3" />
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-1.5 lg:gap-1">
+                    <div className="flex items-center justify-between gap-1.5 lg:gap-1">
                       <div className="min-w-0">
-                        <div className="truncate text-[11px] font-semibold lg:text-[0.8rem]">{exercise.name}</div>
-                        <div className="truncate text-[10px] text-muted-foreground lg:text-[0.68rem]">{bodyPartLabel}</div>
+                        <div className="truncate text-xs font-semibold lg:text-sm">{exercise.name}</div>
+                        <div className="truncate text-xs text-muted-foreground font-mono">{bodyPartLabel}</div>
                       </div>
 
                       <Button
                         type="button"
-                        size="icon-sm"
+                        size="icon-lg"
                         variant={isSelected ? "default" : "outline"}
-                        className="shrink-0 rounded-full lg:size-5"
+                        className="shrink-0 rounded-full lg:size-5 p-3"
                         aria-label={isSelected ? "Quitar ejercicio" : "Agregar ejercicio"}
                         aria-pressed={isSelected}
                         onClick={(event) => {
@@ -73,7 +69,7 @@ export default function ExerciseSelectorList({ exercises, isLoading, selectedExe
                           onToggleExercise(exercise);
                         }}
                       >
-                        {isSelected ? <Check className="size-3.5" /> : <span aria-hidden="true" className="text-[10px] leading-none">+</span>}
+                        {isSelected ? <Check className="size-4" /> : <span aria-hidden="true" className="text-base leading-none">+</span>}
                       </Button>
                     </div>
                   </div>

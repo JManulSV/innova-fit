@@ -23,7 +23,6 @@ type ExerciseSelectorProps = {
   selectedExerciseIds?: number[];
   isLoading?: boolean;
   title?: string;
-  description?: string;
   onAdd?: (exercise: Exercise) => void;
   onRemove?: (exerciseId: number) => void;
   onCancel?: () => void;
@@ -36,7 +35,6 @@ export default function ExerciseSelector({
   selectedExerciseIds = [],
   isLoading = false,
   title = "Seleccionar ejercicios",
-  description = "Selecciona uno o varios ejercicios para continuar.",
   onAdd,
   onRemove,
   onCancel,
@@ -93,10 +91,13 @@ export default function ExerciseSelector({
   const selectedCount = selectedExercises.length;
 
   const content = (
-    <div className="flex h-full flex-col">
-      <ExerciseSelectorHeader title={title} description={description} onClose={handleClose} />
+    <div className="flex h-full flex-col ">
+      <ExerciseSelectorHeader 
+        title={title}
+        onClose={handleClose} 
+       />
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 px-4 py-3 overflow-hidden lg:px-4 lg:py-3">
+      <div className="flex min-h-0 flex-1 flex-col  px-4 py-3 overflow-hidden lg:px-4 lg:py-3">
         <ExerciseSelectorSidebar
           query={query}
           onQueryChange={setQuery}
@@ -105,7 +106,7 @@ export default function ExerciseSelector({
           onFilterChange={setActiveFilter}
         />
 
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <ExerciseSelectorList
             exercises={filteredExercises}
             isLoading={isLoading}
@@ -133,7 +134,10 @@ export default function ExerciseSelector({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[86dvh] max-h-[86dvh] w-[min(99vw,120rem)] max-w-none overflow-hidden p-0" showCloseButton={false}>
+      <DialogContent
+        className="h-[86dvh] max-h-[86dvh] w-[min(98vw,550px)]! max-w-none! overflow-hidden p-0"
+        showCloseButton={false}
+      >
         {content}
       </DialogContent>
     </Dialog>

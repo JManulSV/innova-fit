@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { exerciseSchema, ExerciseFormValues } from '../../schemas/exercise.schema'
 import { ExerciseCreateRequest, ExerciseUpdateRequest } from '../../types/exercise.types'
 import { useRouter } from 'next/navigation'
 import GeneralInfoSection from './components/GeneralInfoSection'
 import InstructionsSection from './components/InstructionsSection'
-import MuscleGroupsSection from './components/MuscleGroupsSection'
+import BodyPartsSection from './components/BodyPartsSection'
 import FormActions from './components/FormActions'
 import { useCreateExercise } from '../../hooks/use-create-exercise'
 import { useEditExercise } from '../../hooks/use-edit-exercise'
+import { useBodyParts } from '../../../body-parts/hooks/use-body-parts'
 
 interface ExerciseFormProps {
   type?: 'create' | 'edit'
@@ -18,48 +19,41 @@ interface ExerciseFormProps {
 }
 
 export default function ExerciseForm({ type = 'create', initialValues, exerciseId }: ExerciseFormProps) {
+  const { data: bodyParts = [] } = useBodyParts();
+  console.log(bodyParts);
 
-  const { register, handleSubmit, reset, formState, setValue } = useForm<ExerciseFormValues>({
+  const { register, handleSubmit, reset, formState, setValue, control, getValues } = useForm<ExerciseFormValues>({
     resolver: zodResolver(exerciseSchema),
-    defaultValues: initialValues ?? { name: '', description: '', instructions: '', muscle_groups: [] },
+    defaultValues: initialValues ?? { name: '', description: '', instructions: '', body_parts_ids: [] },
   })
 
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([])
-  const [customGroup, setCustomGroup] = useState('')
-
-  // Initialize selected groups and reset form when initialValues change (edit mode)
+  // Initialize selected body parts and reset form when initialValues change (edit mode)
   useEffect(() => {
     if (initialValues) {
       reset(initialValues)
-      setSelectedGroups(initialValues.muscle_groups ?? [])
     }
   }, [initialValues, reset])
 
-  const { mutateAsync: createExercise, isPending: isCreating, error: createError } = useCreateExercise();
-  const { mutateAsync: editExercise, isPending: isEditing, error: editError } = useEditExercise();
+  const { mutateAsync: createExercise, isPending: isCreating } = useCreateExercise();
+  const { mutateAsync: editExercise, isPending: isEditing } = useEditExercise();
 
   const isPending = isCreating || isEditing;
-  const error = createError || editError;
 
   const router = useRouter();
   
-  useEffect(() => {
-    setValue('muscle_groups', selectedGroups)
-  }, [selectedGroups, setValue])
+  const selectedBodyPartIds = useWatch({ control, name: 'body_parts_ids' }) ?? []
 
-  const toggleGroup = (group: string) => {
-    setSelectedGroups((prev) => (prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group]))
-  }
+  const toggleBodyPart = (bodyPartId: number) => {
+    const currentSelectedIds = getValues('body_parts_ids') ?? []
+    const nextSelectedIds = currentSelectedIds.includes(bodyPartId)
+      ? currentSelectedIds.filter((id) => id !== bodyPartId)
+      : [...currentSelectedIds, bodyPartId]
 
-  const addCustomGroup = () => {
-    const g = customGroup.trim()
-    if (!g) return
-    if (!selectedGroups.includes(g)) setSelectedGroups((s) => [...s, g])
-    setCustomGroup('')
+    setValue('body_parts_ids', nextSelectedIds, { shouldDirty: true, shouldValidate: true })
   }
 
   const handleFormSubmit = async (values: ExerciseFormValues) => {
-    const payload = { ...values, muscle_groups: selectedGroups }
+    const payload = { ...values, body_parts_ids: values.body_parts_ids ?? selectedBodyPartIds }
 
     try {
       if (type === 'create') {
@@ -77,9 +71,21 @@ export default function ExerciseForm({ type = 'create', initialValues, exerciseI
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 w-full">
-      <GeneralInfoSection register={register} errors={formState.errors} />
-      <InstructionsSection register={register} errors={formState.errors} />
-      <MuscleGroupsSection selectedGroups={selectedGroups} onToggle={toggleGroup} customGroup={customGroup} onCustomChange={setCustomGroup} onAddCustom={addCustomGroup} />
+      <GeneralInfoSection 
+        register={register} 
+        errors={formState.errors} 
+      />
+      
+      <InstructionsSection 
+        register={register} 
+        errors={formState.errors} 
+      />
+      
+      <BodyPartsSection
+        bodyParts={bodyParts}
+        selectedBodyPartIds={selectedBodyPartIds}
+        onToggle={toggleBodyPart}
+      />
       <FormActions isLoading={isPending} type={type} />
     </form>
   )

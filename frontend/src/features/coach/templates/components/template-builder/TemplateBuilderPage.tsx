@@ -9,12 +9,12 @@ import { Stack } from "@/components/design-system/stack";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useExercises } from "@/features/coach/exercises/hooks/use-exercises";
+import ExerciseSelector from "@/features/coach/exercises/components/exercise-selector/ExerciseSelector";
 import { useTemplateBuilder } from "@/features/coach/templates/hooks/useTemplateBuilder";
 import type { TemplateFormValues } from "@/features/coach/templates/schemas/template.schema";
 import type { WorkoutTemplateExercise } from "@/features/coach/templates/types/templates.type";
 import TemplateForm, { TemplateFormHandle } from "./TemplateForm";
 import TemplateExercisesList from "./TemplateExercisesList";
-import ExercisePickerModal from "./ExercisePickerModal";
 
 interface TemplateBuilderPageProps {
   title: string;
@@ -72,7 +72,6 @@ export default function TemplateBuilderPage({
     } catch (err) {
       // leave error handling to parent; log for debugging
       // do not navigate on failure
-      // eslint-disable-next-line no-console
       console.error(err);
     }
   };
@@ -131,10 +130,11 @@ export default function TemplateBuilderPage({
         </Stack>
 
         {showAddModal && (
-          <ExercisePickerModal
+          <ExerciseSelector
+            open={showAddModal}
+            onOpenChange={setShowAddModal}
             exercises={exercisesList}
             isLoading={isLoadingExercises}
-            onClose={() => setShowAddModal(false)}
             onAdd={toggleExercise}
             onRemove={deleteExercise}
             selectedExerciseIds={selectedExercises.map((exercise) => exercise.exercise_id)}

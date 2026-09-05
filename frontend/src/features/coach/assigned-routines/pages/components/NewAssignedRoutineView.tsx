@@ -8,7 +8,7 @@ import RoutineStepContent from "./RoutineStepContent";
 import RoutineSummarySidebar from "./RoutineSummarySidebar";
 import AssignmentFooter from "./AssignmentFooter";
 import TemplatePickerDialog from "./TemplatePickerDialog";
-import ExercisePickerDialog from "./ExercisePickerDialog";
+import ExerciseSelector from "@/features/coach/exercises/components/exercise-selector/ExerciseSelector";
 import { NewAssignedRoutinePageVm } from "../../hooks/use-new-assigned-routine-page.types";
 
 
@@ -84,13 +84,14 @@ export default function NewAssignedRoutineView({ vm }: NewAssignedRoutineViewPro
         onSelectTemplate={vm.actions.onSelectTemplate}
       />
 
-      <ExercisePickerDialog
+      <ExerciseSelector
         open={vm.dialogs.exercisePickerOpen}
-        exercises={vm.catalogs.exercises}
-        routineExercises={vm.routine.routineExercises}
-        isLoading={vm.catalogs.isLoadingExercises}
         onOpenChange={(open) => (open ? vm.actions.onOpenExercisePicker(true) : vm.actions.onCloseExercisePicker())}
-        onAddExercises={vm.actions.onAddExercises}
+        exercises={vm.catalogs.exercises}
+        isLoading={vm.catalogs.isLoadingExercises}
+        onAdd={(exercise) => vm.actions.onAddExercises([exercise])}
+        selectedExerciseIds={vm.routine.routineExercises.map((exercise) => exercise.exercise_id)}
+        onRemove={vm.actions.onRemoveExercise}
       />
     </Page>
   );

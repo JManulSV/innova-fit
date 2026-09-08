@@ -8,6 +8,8 @@ use App\Http\Resources\ClientResource;
 use App\Models\AssignedWorkout;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class ClientController extends Controller
 {
@@ -17,21 +19,21 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         $coach = $request->user();
-        $search = trim((string) $request->input('search', ''));
-
-        $query = User::where('role', 'client')
-            ->where('coach_id', $coach->id);
-
-        if ($search !== '') {
-            $searchLower = strtolower($search);
-
-            $query->where(function ($q) use ($searchLower) {
-                $q->whereRaw('LOWER(name) LIKE ?', ['%' . $searchLower . '%'])
-                  ->orWhereRaw('LOWER(email) LIKE ?', ['%' . $searchLower . '%']);
-            });
-        }
-
-        $users = $query->orderBy('name', 'asc')->paginate(10);
+        
+        $users = QueryBuilder::for(User::class)
+            ->where('role', 'client')
+            ->where('coach_id', $coach->id)
+            ->allowedFilters(
+                AllowedFilter::callback('search', function ($query, $value) {
+                    $search = '%' . strtolower(trim((string) $value)) . '%';
+                    $query->where(function ($query) use ($search) {
+                        $query->whereRaw('LOWER(name) like ?', [$search])
+                              ->orWhereRaw('LOWER(email) like ?', [$search]);
+                    });
+                })
+            )
+            ->defaultSort('name')
+            ->paginate(10);
 
         return response()->json([
             'success' => true,

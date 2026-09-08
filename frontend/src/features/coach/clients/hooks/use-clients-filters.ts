@@ -13,8 +13,8 @@ export function useClientsFilters() {
 
   const filter = useMemo<ClientsFilters>(() => {
     return parseClientsFilters({
-      search: searchParams.get("search"),
-      status: searchParams.get("status"),
+      search: searchParams.get("filter[search]"),
+      status: searchParams.get("filter[status]"),
     });
   }, [searchParams]);
 

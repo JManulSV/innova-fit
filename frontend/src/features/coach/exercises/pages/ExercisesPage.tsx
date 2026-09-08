@@ -7,9 +7,13 @@ import { useExercises } from "../hooks/use-exercises";
 import ExercisesPageFilterBar from "../components/exercises-page/ExercisesPageFilterBar";
 import ExercisesPageGrid from "../components/exercises-page/ExercisesPageGrid";
 import ExercisesPageSkeleton from "../components/exercises-page/ExercisesPageSkeleton";
+import { useExercisesFilters } from "../hooks/use-exercises-filters";
+import { useBodyParts } from "../../body-parts/hooks/use-body-parts";
 
 export default function ExercisesPage() {
-  const { data, isPending } = useExercises();
+  const { filters, setFilters } = useExercisesFilters();
+  const { data, isPending } = useExercises(filters);
+  const { data: bodyParts, isPending: isBodyPartsPending, error: bodyPartsError } = useBodyParts();
 
   return (
     <Container>
@@ -20,7 +24,7 @@ export default function ExercisesPage() {
           <>
             <ExercisesPageHeader />
             <div className="space-y-6">
-              <ExercisesPageFilterBar />
+              <ExercisesPageFilterBar filters={filters} setFilters={setFilters} bodyParts={bodyParts ?? []} />
               <ExercisesPageGrid exercises={data ?? []} isLoading={isPending} />
             </div>
           </>

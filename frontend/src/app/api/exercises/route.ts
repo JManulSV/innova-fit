@@ -1,7 +1,8 @@
+import { ExerciseResponse } from '@/features/coach/exercises/types/exercise.types';
 import laravelApi from '@/lib/laravel-api';
 import { cookies } from 'next/headers'
 
-export async function GET(){
+export async function GET(request: Request){
     try {
         const cookiesStore = await cookies();
         const token = cookiesStore.get('auth-token')?.value;
@@ -9,12 +10,16 @@ export async function GET(){
         if (!token) {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
+
+        const { searchParams } = new URL(request.url);
     
-        const response = await laravelApi.get('/exercises', {
+        const response = await laravelApi.get<ExerciseResponse>('/exercises', {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
+            params: Object.fromEntries(searchParams.entries())
         });
+
         return Response.json(response.data);
     } catch (error) {
         console.error('Error fetching exercises:', error);

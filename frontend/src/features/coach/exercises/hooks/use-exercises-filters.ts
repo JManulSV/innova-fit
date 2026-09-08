@@ -1,5 +1,5 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ExerciseFilters } from "../filters/exercise-filters.schema";
 import { parseExerciseFilter, serializeExerciseFilters } from "../filters/exercise-filters";
 
@@ -21,7 +21,7 @@ export function useExercisesFilters() {
         ...next
     };
     const query = serializeExerciseFilters(merge);
-    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
 

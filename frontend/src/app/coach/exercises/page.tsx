@@ -1,7 +1,9 @@
-import ExercisesPage from '@/features/coach/exercises/pages/ExercisesPage'
+"use client";
 
-export default function page() {
+import ExercisesPage from "@/features/coach/exercises/pages/ExercisesPage";
+
+export default function Page() {
   return (
     <ExercisesPage />
-  )
+  );
 }

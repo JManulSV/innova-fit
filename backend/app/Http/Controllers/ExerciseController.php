@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreExerciseRequest;
 use Illuminate\Support\Facades\DB;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\UpdateExerciseRequest;
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
@@ -11,9 +13,28 @@ use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $query = Exercise::with('bodyParts')->orderBy('created_at', 'desc');
+        $coach = $request->user();
+
+        $query = QueryBuilder::for(Exercise::class)
+            ->where('coach_id', $coach->id)
+            ->with('bodyParts')
+            ->allowedFilters([
+                'search' => AllowedFilter::callback('search', function ($query, $value) {
+                    $search = '%' . strtolower(trim((string) $value)) . '%';
+                    $query->where(function ($query) use ($search) {
+                        $query->whereRaw('LOWER(name) like ?', [$search]);
+                    });
+                }),
+                'body_parts' => AllowedFilter::callback('body_parts', function ($query, $value) {
+                    $query->whereHas('bodyParts', function ($query) use ($value) {
+                        $query->whereIn('name', (array) $value);
+                    });
+                }),
+            ])
+            ->orderBy('created_at', 'desc');
+
         $exercisesPaginated = $query->paginate(10);
         
         return response()->json([
